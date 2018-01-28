@@ -28,7 +28,7 @@ require.config({
 define(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
   // 安装
   XEAjax.use(XEAjaxMock)
-  // 定义
+  // Mock 定义
   XEAjaxMock.GET('services/user/list', {status: 200, response: {msg: 'success'}})
 })
 
