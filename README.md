@@ -10,7 +10,7 @@ XEAjax.use(XEAjaxMock)
 XEAjaxMock.GET('services/user/list', {msg: 'success'})
 
 // ./app.js 调用
-XEAjax.getJSON ('services/user/list', {id: 1})
+XEAjax.getJSON ('services/user/list', {id: 1}) // 响应结果：{msg: 'success'}
 ```
 
 ### AMD 安装， 以 require.js 为例
@@ -34,7 +34,7 @@ require(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
 ./app.js
 require(['xe-ajax'], function (XEAjax) {
   // 调用
-  XEAjax.getJSON('services/user/list', {id: 1})
+  XEAjax.getJSON('services/user/list', {id: 1}) // 响应结果：{msg: 'success'}
 })
 ```
 
@@ -46,18 +46,18 @@ npm install xe-ajax-mock --save
 
 ### 部分引入
 ``` shell
-import { GET, POST } from 'xe-ajax'
+import { GET, POST } from 'xe-ajax-mock'
 
-GET ('services/user/list', {id: 1})
-POST ('services/user/save', {id: 1})
+GET('services/user/list', {id: 1})
+POST('services/user/save', {id: 1})
 ```
 
 ### 引入所有
 ``` shell
-import XEAjaxMock from 'xe-ajax'
+import XEAjaxMock from 'xe-ajax-mock'
 
-XEAjaxMock.GET ('services/user/list', {id: 1})
-XEAjaxMock.POST ('services/user/save', {id: 1})
+XEAjaxMock.GET('services/user/list', {id: 1})
+XEAjaxMock.POST('services/user/save', {id: 1})
 ```
 
 ### 混合函数
@@ -81,7 +81,7 @@ XEAjaxMock.custom1()
 ```
 
 ## XEAjaxMock API
-### 'xe-ajax/mock' 提供的便捷方法：
+### 'xe-ajax-mock' 提供的便捷方法：
 * Mock( defines, options )
 * Mock( path, method, xhr, options )
 * GET( path, xhr, options )
@@ -109,7 +109,7 @@ XEAjaxMock.custom1()
 
 ### 全局参数
 ``` shell
-import XEAjaxMock from 'xe-ajax/mock'
+import XEAjaxMock from 'xe-ajax-mock'
 
 XEAjaxMock.setup({
   baseURL: 'http://xuliangzhan.com',
@@ -119,7 +119,7 @@ XEAjaxMock.setup({
 
 ### 示例1
 ``` shell
-import { GET, POST, PUT, PATCH, DELETE } from 'xe-ajax/mock'
+import { GET, POST, PUT, PATCH, DELETE } from 'xe-ajax-mock'
 
 // 对象方式
 GET('services/user/list', {status: 200, response: {msg: 'success'}})
@@ -163,7 +163,7 @@ DELETE('services/user/del', (request, xhr) => {
 
 ### 示例2
 ``` shell
-import XEAjaxMock from 'xe-ajax/mock'
+import XEAjaxMock from 'xe-ajax-mock'
 
 // 快捷定义
 XEAjaxMock.GET('services/user/list', {msg: 'success'})
