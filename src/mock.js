@@ -55,7 +55,10 @@ Object.assign(XEMockService.prototype, {
     this.time = getTime(this.options.timeout)
     return this.getXHR(request).then(function (xhr) {
       next(xhr)
-      mock.options.log && console.info('XEMock URL: ' + request.getUrl() + '\nMethod: ' + request.method.toLocaleUpperCase() + ' => Status: ' + (xhr ? xhr.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
+      if (mock.options.log) {
+        console.info('XEMock URL: ' + request.getUrl() + '\nMethod: ' + request.method.toLocaleUpperCase() + ' => Status: ' + (xhr ? xhr.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
+        console.info(xhr.response)
+      }
     })
   }
 })

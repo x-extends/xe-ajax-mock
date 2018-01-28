@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.0.0
+ * xe-ajax-mock.js v1.1.1
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -75,7 +75,10 @@
       this.time = getTime(this.options.timeout)
       return this.getXHR(request).then(function (xhr) {
         next(xhr)
-        mock.options.log && console.info('XEMock URL: ' + request.getUrl() + '\nMethod: ' + request.method.toLocaleUpperCase() + ' => Status: ' + (xhr ? xhr.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
+        if (mock.options.log) {
+          console.info('XEMock URL: ' + request.getUrl() + '\nMethod: ' + request.method.toLocaleUpperCase() + ' => Status: ' + (xhr ? xhr.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
+          console.info(xhr.response)
+        }
       })
     }
   })
