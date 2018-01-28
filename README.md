@@ -18,21 +18,22 @@ XEAjax.getJSON ('services/user/list', {id: 1}) // 响应结果：{msg: 'success'
 // require 配置
 require.config({
   paths: {
+    // ...,
     'xe-ajax': './dist/xe-ajax.min',
     'xe-ajax-mock': './dist/xe-ajax-mock.min'
   }
 })
 
-./mock.js
-require(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
+// ./mock.js 配置文件
+define(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
   // 安装
   XEAjax.use(XEAjaxMock)
   // 定义
   XEAjaxMock.GET('services/user/list', {status: 200, response: {msg: 'success'}})
 })
 
-./app.js
-require(['xe-ajax'], function (XEAjax) {
+// ./app.js 调用
+define(['xe-ajax'], function (XEAjax) {
   // 调用
   XEAjax.getJSON('services/user/list', {id: 1}) // 响应结果：{msg: 'success'}
 })
