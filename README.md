@@ -47,7 +47,7 @@ npm install xe-ajax --save
 npm install xe-ajax-mock --save
 ```
 
-### 部分引入
+### 部分导入
 ``` shell
 import { GET, POST } from 'xe-ajax-mock'
 
@@ -55,7 +55,7 @@ GET('services/user/list', {id: 1})
 POST('services/user/save', {id: 1})
 ```
 
-### 引入所有
+### 导入所有
 ``` shell
 import XEAjaxMock from 'xe-ajax-mock'
 
