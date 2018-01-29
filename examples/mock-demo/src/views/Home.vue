@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { doGet, getJSON, doPost } from 'xe-ajax'
+import { doGet, getJSON, doPost, jsonp } from 'xe-ajax'
 
 export default {
   data () {
@@ -55,6 +55,10 @@ export default {
         this.userList = response.body
       }).catch(response => {
         this.userList = []
+      })
+      // 跨域调用 jsonp 服务
+      jsonp('http://xuliangzhan.com/jsonp/user/message').then(response => {
+        // response.body = [{name: 'data 1'}, {name: 'data 2'}]
       })
     },
     save () {

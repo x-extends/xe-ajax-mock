@@ -92,6 +92,7 @@ XEAjaxMock.custom1()
 * PUT( path, xhr, options )
 * DELETE( path, xhr, options )
 * PATCH( path, xhr, options )
+* JSONP( path, xhr, options )
 * setup( options )
 
 ### 接受两个参数：
@@ -100,6 +101,7 @@ XEAjaxMock.custom1()
 ### 接受四个参数：
 * path（字符串）请求地址 占位符{key}支持动态路径: 例如: services/list/{key1}/{key2} 匹配 services/list/10/1
 * method（字符串）请求方法 | 默认GET
+* jsonp（字符串）调用jsonp服务回调函数名，例如: 'callback'
 * xhr（对象/方法(request, xhr)）数据或返回数据方法 {status: 200, response: [], headers: {}}
 * options （可选，对象）参数
 
@@ -108,7 +110,9 @@ XEAjaxMock.custom1()
 |------|------|-----|----|
 | baseURL | String | 基础路径 |  |
 | timeout | String | 模拟请求时间 | 默认'20-400' |
-| log | Boolean | 控制台输出 Mock 日志 | true |
+| headers | Object | 设置响应头 |  |
+| error | Boolean | 控制台输出 Mock Error 日志 | true |
+| log | Boolean | 控制台输出 Mock Request 日志 | true |
 
 ### 全局参数
 ``` shell
@@ -127,7 +131,7 @@ XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务越来越多时
 
 ### 示例1
 ``` shell
-import { GET, POST, PUT, PATCH, DELETE } from 'xe-ajax-mock'
+import { GET, POST, PUT, PATCH, DELETE, JSONP } from 'xe-ajax-mock'
 
 // 对象方式
 GET('services/user/list', {status: 200, response: {msg: 'success'}})
@@ -150,7 +154,7 @@ PATCH('services/user/patch', (request, xhr) => {
   return new Promise( (resolve, reject) => {
     setTimeout(() = {
       xhr.status = 200
-      xhr.response = {msg: 'success'}
+      xhr.response = [{msg: 'data 1'}, {msg: 'data 2'}]
       resolve(xhr)
     }, 100)
   })
@@ -166,6 +170,12 @@ DELETE('services/user/del', (request, xhr) => {
     xhr.response = {msg: 'error'}
   }
   return xhr
+})
+// JSONP 跨域调用
+JSONP('http://xuliangzhan.com/jsonp/user/message', (request, xhr) => {
+  // xhr.status = 500 设置调用为失败
+  xhr.response = [{msg: 'data 1'}, {msg: 'data 2'}]
+  resolve(xhr)
 })
 ```
 
@@ -208,7 +218,7 @@ XEAjaxMock([{
 
 ### 正常调用,自动拦截响应
 ``` shell
-import { doGet, getJSON, postJSON, deleteJSON } from 'xe-ajax'
+import { doGet, getJSON, postJSON, deleteJSON, jsonp } from 'xe-ajax'
 
 doGet('services/user/list').then(response => {
   // response.status = 200
@@ -236,6 +246,10 @@ postJSON('services/user/submit').then(data => {
 
 deleteJSON('services/user/del').catch(data => {
   // data = {msg: 'error'}
+})
+
+jsonp('http://xuliangzhan.com/jsonp/user/message').then(response => {
+  // response.body = [{msg: 'data 1'}, {msg: 'data 2'}]
 })
 ```
 
