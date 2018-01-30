@@ -1,9 +1,9 @@
 import XEAjaxMock, * as mock from './src/mock'
 
 /**
- * 函数扩展
+ * 混合函数
  *
- * @param {Object} methods 扩展函数对象
+ * @param {Object} methods 扩展
  */
 function mixin (methods) {
   return Object.assign(XEAjaxMock, methods)

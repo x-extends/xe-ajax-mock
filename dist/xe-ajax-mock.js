@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.2.0
+ * xe-ajax-mock.js v1.2.1
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -20,6 +20,7 @@
     return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
   }
 
+  var global = typeof window === 'undefined' ? this : window
   var defineMockServices = []
   var setupDefaults = {
     baseURL: location.origin,
@@ -155,6 +156,7 @@
     responseHeaders: null,
     ontimeout: null,
     onreadystatechange: null,
+    withCredentials: false,
     response: '',
     responseText: '',
     open: function (method, url, async) {
@@ -173,6 +175,7 @@
       if (this.XEMock_MATE) {
         this.XEMock_MATE.send(this, this.XEMock_REQUEST)
       } else {
+        this.XEMock_XHR.withCredentials = this.withCredentials
         this.XEMock_XHR.send(body)
       }
     },
@@ -289,9 +292,9 @@
   var PATCH = createDefine('PATCH')
 
   /**
-   * 函数扩展
+   * 混合函数
    *
-   * @param {Object} methods 扩展函数对象
+   * @param {Object} methods 扩展
    */
   function mixin (methods) {
     return Object.assign(XEAjaxMock, methods)

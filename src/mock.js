@@ -1,5 +1,6 @@
 import { isArray, isFunction, random } from './util'
 
+var global = typeof window === 'undefined' ? this : window
 var defineMockServices = []
 var setupDefaults = {
   baseURL: location.origin,
@@ -135,6 +136,7 @@ Object.assign(XEXMLHttpRequest.prototype, {
   responseHeaders: null,
   ontimeout: null,
   onreadystatechange: null,
+  withCredentials: false,
   response: '',
   responseText: '',
   open: function (method, url, async) {
@@ -153,6 +155,7 @@ Object.assign(XEXMLHttpRequest.prototype, {
     if (this.XEMock_MATE) {
       this.XEMock_MATE.send(this, this.XEMock_REQUEST)
     } else {
+      this.XEMock_XHR.withCredentials = this.withCredentials
       this.XEMock_XHR.send(body)
     }
   },
