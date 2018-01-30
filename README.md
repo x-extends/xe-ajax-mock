@@ -219,11 +219,10 @@ XEAjaxMock([{
 
 ### 正常调用,自动拦截响应
 ``` shell
-import { doGet, getJSON, postJSON, deleteJSON, jsonp } from 'xe-ajax'
+import { getJSON, postJSON, deleteJSON, jsonp } from 'xe-ajax'
 
-doGet('services/user/list').then(response => {
-  // response.status = 200
-  // response.body = {msg: 'success'}
+getJSON('services/user/list').then(response => {
+  // data = {msg: 'success'}
 })
 getJSON('services/user/list/10/1').then(data => {
   // data = {msg: 'success'}
