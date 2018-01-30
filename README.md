@@ -1,6 +1,6 @@
 # XEAjaxMock 虚拟服务插件 - XEAjax插件
 
-一个基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，使用 ajax+mock 就非常有必要。
+基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，使用 ajax+mock 就非常有必要。
 
 ### 直接引用 script 全局安装，XEAjaxMock 会定义为全局变量
 ``` shell
