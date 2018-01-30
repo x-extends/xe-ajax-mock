@@ -189,6 +189,7 @@ XEAjaxMock.POST('services/user/save', {msg: 'success'})
 XEAjaxMock.PUT('services/user/update', {msg: 'success'})
 XEAjaxMock.DELETE('services/user/delete', {msg: 'success'})
 XEAjaxMock.PATCH('services/user/patch', {msg: 'success'})
+XEAjaxMock.JSONP('services/user/patch', {msg: 'success'})
 
 // 定义单个
 XEAjaxMock('services/user/list', 'GET', (request, xhr) => {
