@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { doGet, getJSON, doPost, jsonp } from 'xe-ajax'
+import { fetchGet, getJSON, postJSON, jsonp } from 'xe-ajax'
 
 export default {
   data () {
@@ -51,8 +51,10 @@ export default {
         this.shoppingList = []
       })
       // 返回 response 对象
-      doGet('services/user/list/page/10/1').then(response => {
-        this.userList = response.body
+      fetchGet('services/user/list/page/10/1').then(response => {
+        response.json().then(data => {
+          this.userList = data
+        })
       }).catch(response => {
         this.userList = []
       })
@@ -64,14 +66,14 @@ export default {
     save () {
       // 保存
       this.loading = true
-      doPost('services/user/save', this.userForm).then(response => {
+      postJSON('services/user/save', this.userForm).then(data => {
         this.loading = false
         this.errorMsg = null
-        this.successMsg = response.body
-      }).catch(response => {
+        this.successMsg = data
+      }).catch(data => {
         this.loading = false
         this.successMsg = null
-        this.errorMsg = response.body
+        this.errorMsg = data
       })
     }
   },
