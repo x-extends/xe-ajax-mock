@@ -13,7 +13,7 @@
   "dependencies": {
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "xe-ajax": "^2.6.1",
+    "xe-ajax": "^2.6.2",
     "xe-ajax-mock": "^1.2.1"
   },
   "devDependencies": {

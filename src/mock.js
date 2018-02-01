@@ -1,4 +1,4 @@
-import { isArray, isFunction, random } from './util'
+import { isFunction, random } from './util'
 
 var global = typeof window === 'undefined' ? this : window
 var defineMockServices = []
@@ -49,7 +49,7 @@ Object.assign(XEMockService.prototype, {
   },
   send: function (mockXHR, request) {
     var mock = this
-    this.time = request.OPTIONS.timeout || getTime(this.options.timeout)
+    this.time = request.timeout || getTime(this.options.timeout)
     return getXHRResponse(mock, request).then(function (xhr) {
       mock.reply(mockXHR, request, xhr)
     })
@@ -61,7 +61,7 @@ Object.assign(XEMockService.prototype, {
       mockXHR.responseText = mockXHR.response = xhr.response ? JSON.stringify(xhr.response) : ''
       mockXHR.responseHeaders = xhr.headers
       mockXHR.readyState = 4
-      if (this.options.error && !request.OPTIONS.getPromiseStatus(mockXHR)) {
+      if (this.options.error && !request.getPromiseStatus(mockXHR)) {
         console.error(request.method + ' ' + url + ' ' + mockXHR.status)
       }
       if (isFunction(mockXHR.onreadystatechange)) {
@@ -103,7 +103,7 @@ function mateMockItem (request) {
 }
 
 function defineMocks (list, options, baseURL) {
-  if (isArray(list)) {
+  if (Array.isArray(list)) {
     list.forEach(function (item) {
       if (item.path) {
         if (!baseURL) {
@@ -198,10 +198,10 @@ Object.assign(XEXMLHttpRequest.prototype, {
 function sendJsonpMock (script, request) {
   var mock = mateMockItem(request)
   if (mock) {
-    mock.time = request.OPTIONS.timeout || getTime(mock.options.timeout)
+    mock.time = request.timeout || getTime(mock.options.timeout)
     return getXHRResponse(mock, request).then(function (xhr) {
       var url = request.getUrl()
-      if (request.OPTIONS.getPromiseStatus(xhr)) {
+      if (request.getPromiseStatus(xhr)) {
         global[request.jsonpCallback](xhr.response)
         if (mock.options.log) {
           console.info('XEMock URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (xhr ? xhr.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
@@ -228,7 +228,7 @@ function sendJsonpMock (script, request) {
   * @param Object options 参数
   */
 function XEAjaxMock (path, method, xhr, options) {
-  defineMocks(isArray(path) ? (options = method, path) : [{path: path, method: method, xhr: xhr}], Object.assign({}, setupDefaults, options))
+  defineMocks(Array.isArray(path) ? (options = method, path) : [{path: path, method: method, xhr: xhr}], Object.assign({}, setupDefaults, options))
   return XEAjaxMock
 }
 
