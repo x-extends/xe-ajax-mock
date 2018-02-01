@@ -9,7 +9,7 @@
 
 // /main.js 安装
 XEAjax.use(XEAjaxMock)
-XEAjaxMock.GET('services/user/list', {msg: 'success'})
+XEAjaxMock.GET('services/user/list', {status: 200, body: {msg: 'success'}})
 
 // ./app.js 调用
 XEAjax.getJSON ('services/user/list', {id: 1}) // 响应结果：{msg: 'success'}
@@ -31,7 +31,7 @@ define(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
   // 安装
   XEAjax.use(XEAjaxMock)
   // Mock 定义
-  XEAjaxMock.GET('services/user/list', {status: 200, response: {msg: 'success'}})
+  XEAjaxMock.GET('services/user/list', {status: 200, body: {msg: 'success'}})
 })
 
 // ./app.js 调用
@@ -66,7 +66,7 @@ XEAjaxMock.POST('services/user/save', {id: 1})
 ### 混合函数
 #### 文件 ./customs.js
 ``` shell
-export function custom1 () {
+export function m1 () {
   console.log('自定义的函数')
 } 
 ```
@@ -80,19 +80,19 @@ import customs from './customs'
 XEAjaxMock.mixin(customs)
 
 // 调用自定义扩展函数
-XEAjaxMock.custom1()
+XEAjaxMock.m1()
 ```
 
 ## XEAjaxMock API
 ### 'xe-ajax-mock' 提供的便捷方法：
 * Mock( defines, options )
-* Mock( path, method, xhr, options )
-* GET( path, xhr, options )
-* POST( path, xhr, options )
-* PUT( path, xhr, options )
-* DELETE( path, xhr, options )
-* PATCH( path, xhr, options )
-* JSONP( path, xhr, options )
+* Mock( path, method, response, options )
+* GET( path, response, options )
+* POST( path, response, options )
+* PUT( path, response, options )
+* DELETE( path, response, options )
+* PATCH( path, response, options )
+* JSONP( path, response, options )
 * setup( options )
 
 ### 接受两个参数：
@@ -102,7 +102,7 @@ XEAjaxMock.custom1()
 * path（字符串）请求地址 占位符{key}支持动态路径: 例如: services/list/{key1}/{key2} 匹配 services/list/10/1
 * method（字符串）请求方法 | 默认GET
 * jsonp（字符串）调用jsonp服务回调函数名，例如: 'callback'
-* xhr（对象/方法(request, xhr)）数据或返回数据方法 {status: 200, response: [], headers: {}}
+* response（对象/方法(request, response)）数据或返回数据方法 {status: 200, body: {}, headers: {}}
 * options （可选，对象）参数
 
 ### 参数说明
@@ -134,48 +134,48 @@ XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务越来越多时
 import { Mock, GET, POST, PUT, PATCH, DELETE, JSONP } from 'xe-ajax-mock'
 
 // 对象方式
-GET('services/user/list', {status: 200, response: {msg: 'success'}})
+GET('services/user/list', {status: 200, body: {msg: 'success'}})
 // 动态路径
-PUT('services/user/list/{pageSize}/{currentPage}', (request, xhr) => {
+PUT('services/user/list/{pageSize}/{currentPage}', (request, response) => {
   // 获取路径参数 request.pathVariable
   // request.pathVariable.pageSize 10
   // request.pathVariable.currentPage 1
-  xhr.status = 200
-  xhr.headers = {'content-type': 'application/json;charset=UTF-8'}
-  xhr.response = {pageVO: this.pathVariable, result: []}
-  return xhr
+  response.status = 200
+  response.headers = {'content-type': 'application/json;charset=UTF-8'}
+  response.body = {pageVO: this.pathVariable, result: []}
+  return response
 })
 // 函数方式
-POST('services/user/save', (request, xhr) => {
-  return {status: 200, response: {msg: 'success'}}
+POST('services/user/save', (request, response) => {
+  return {status: 200, body: {msg: 'success'}}
 })
 // 异步方式
-PATCH('services/user/patch', (request, xhr) => {
+PATCH('services/user/patch', (request, response) => {
   return new Promise( (resolve, reject) => {
     setTimeout(() = {
-      xhr.status = 200
-      xhr.response = [{msg: 'data 1'}, {msg: 'data 2'}]
-      resolve(xhr)
+      response.status = 200
+      response.body = [{msg: 'data 1'}, {msg: 'data 2'}]
+      resolve(response)
     }, 100)
   })
 })
 // 函数方式,模拟后台校验
-DELETE('services/user/del', (request, xhr) => {
+DELETE('services/user/del', (request, response) => {
   // 模拟后台逻辑 对参数进行校验
   if (request.params.id) {
-    xhr.status = 200
-    xhr.response = {msg: 'success'}
+    response.status = 200
+    response.body = {msg: 'success'}
   } else {
-    xhr.status = 500
-    xhr.response = {msg: 'error'}
+    response.status = 500
+    response.body = {msg: 'error'}
   }
-  return xhr
+  return response
 })
 // JSONP 跨域调用
-JSONP('http://xuliangzhan.com/jsonp/user/message', (request, xhr) => {
-  // xhr.status = 500 设置调用为失败
-  xhr.response = [{msg: 'data 1'}, {msg: 'data 2'}]
-  resolve(xhr)
+JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
+  // response.status = 500 设置调用为失败
+  response.body = [{msg: 'data 1'}, {msg: 'data 2'}]
+  resolve(response)
 })
 // 定义多个
 Mock([{
@@ -183,15 +183,15 @@ Mock([{
   children: [{
     method: 'POST',
     path: 'submit',
-    xhr: {status: 200, response: {msg: 'success'}},
+    response: {status: 200, body: {msg: 'success'}},
   },
   {
     method: 'DELETE',
     path : 'del',
-    xhr (request, xhr) {
-      xhr.status = 500
-      xhr.response = {msg: 'error'}
-      return xhr
+    response (request, response) {
+      response.status = 500
+      response.body = {msg: 'error'}
+      return response
     }
   ]
 }])
@@ -202,17 +202,17 @@ Mock([{
 import XEAjaxMock from 'xe-ajax-mock'
 
 // 快捷定义
-XEAjaxMock.GET('services/user/list', {msg: 'success'})
-XEAjaxMock.POST('services/user/save', {msg: 'success'})
-XEAjaxMock.PUT('services/user/update', {msg: 'success'})
-XEAjaxMock.DELETE('services/user/delete', {msg: 'success'})
-XEAjaxMock.PATCH('services/user/patch', {msg: 'success'})
-XEAjaxMock.JSONP('services/user/patch', {msg: 'success'})
+XEAjaxMock.GET('services/user/list', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.POST('services/user/save', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.PUT('services/user/update', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.DELETE('services/user/delete', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.PATCH('services/user/patch', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.JSONP('services/user/patch', {status: 200, body: {msg: 'success'}})
 
 // 定义单个
-XEAjaxMock('services/user/list', 'GET', (request, xhr) => {
-  xhr.response = {msg: 'success'}
-  return xhr
+XEAjaxMock('services/user/list', 'GET', (request, response) => {
+  response.body = {msg: 'success'}
+  return response
 })
 
 // 定义多个
@@ -221,15 +221,15 @@ XEAjaxMock([{
   children: [{
     method: 'POST',
     path: 'submit',
-    xhr: {status: 200, response: {msg: 'success'}},
+    response: {status: 200, body: {msg: 'success'}},
   },
   {
     method: 'DELETE',
     path : 'del',
-    xhr (request, xhr) {
-      xhr.status = 500
-      xhr.response = {msg: 'error'}
-      return xhr
+    response (request, response) {
+      response.status = 500
+      response.body = {msg: 'error'}
+      return response
     }
   ]
 }])

@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.2.4
+ * xe-ajax-mock.js v1.4.0
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -32,22 +32,22 @@
   function getXHRResponse (mock, request) {
     return new Promise(function (resolve, reject) {
       mock.asyncTimeout = setTimeout(function () {
-        Promise.resolve(isFunction(mock.xhr) ? mock.xhr(request, mock.getResponse(null, 200)) : mock.xhr)
-          .then(function (xhr) {
-            resolve(mock.getResponse(xhr, 200))
-          }).catch(function (xhr) {
-            reject(mock.getResponse(xhr, 500))
+        Promise.resolve(isFunction(mock.response) ? mock.response(request, mock.getResponse(null, 200)) : mock.response)
+          .then(function (response) {
+            resolve(mock.getResponse(response, 200))
+          }).catch(function (response) {
+            reject(mock.getResponse(response, 500))
           })
       }, mock.time)
     })
   }
 
-  function XEMockService (path, method, xhr, options) {
+  function XEMockService (path, method, response, options) {
     if (path && method) {
       this.path = path
       this.method = method
       this.time = 0
-      this.xhr = xhr
+      this.response = response
       this.options = options
       this.asyncTimeout = null
     } else {
@@ -56,26 +56,26 @@
   }
 
   Object.assign(XEMockService.prototype, {
-    getResponse: function (xhr, status) {
-      if (xhr && xhr.response !== undefined && xhr.status !== undefined) {
-        xhr.headers = Object.assign({}, setupDefaults.headers, xhr.headers)
-        return xhr
+    getResponse: function (response, status) {
+      if (response && response.body !== undefined && response.status !== undefined) {
+        response.headers = Object.assign({}, setupDefaults.headers, response.headers)
+        return response
       }
-      return {status: status, response: xhr, headers: Object.assign({}, setupDefaults.headers)}
+      return {status: status, body: response, headers: Object.assign({}, setupDefaults.headers)}
     },
     send: function (mockXHR, request) {
       var mock = this
       this.time = request.timeout || getTime(this.options.timeout)
-      return getXHRResponse(mock, request).then(function (xhr) {
-        mock.reply(mockXHR, request, xhr)
+      return getXHRResponse(mock, request).then(function (response) {
+        mock.reply(mockXHR, request, response)
       })
     },
-    reply: function (mockXHR, request, xhr) {
+    reply: function (mockXHR, request, response) {
       if (mockXHR.readyState !== 4) {
         var url = request.getUrl()
-        mockXHR.status = xhr.status
-        mockXHR.responseText = mockXHR.response = xhr.response ? JSON.stringify(xhr.response) : ''
-        mockXHR.responseHeaders = xhr.headers
+        mockXHR.status = response.status
+        mockXHR.responseText = mockXHR.response = response.body ? JSON.stringify(response.body) : ''
+        mockXHR.responseHeaders = response.headers
         mockXHR.readyState = 4
         if (this.options.error && !request.getPromiseStatus(mockXHR)) {
           console.error(request.method + ' ' + url + ' ' + mockXHR.status)
@@ -84,8 +84,8 @@
           mockXHR.onreadystatechange()
         }
         if (this.options.log) {
-          console.info('XEMock URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (xhr ? xhr.status : 'canceled') + ' => Time: ' + this.time + 'ms')
-          console.info(xhr.response)
+          console.info('XEMock URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + this.time + 'ms')
+          console.info(response.body)
         }
       }
     }
@@ -126,9 +126,9 @@
             baseURL = /\w+:\/{2}.*/.test(item.path) ? '' : options.baseURL
           }
           item.path = (baseURL ? baseURL.replace(/\/$/, '') + '/' : '') + item.path.replace(/^\//, '')
-          if (item.xhr) {
+          if (item.response) {
             item.method = String(item.method || 'get')
-            defineMockServices.push(new XEMockService(item.path, item.method, item.xhr, options))
+            defineMockServices.push(new XEMockService(item.path, item.method, item.response, options))
           }
           defineMocks(item.children, options, item.path)
         }
@@ -215,18 +215,18 @@
     var mock = mateMockItem(request)
     if (mock) {
       mock.time = request.timeout || getTime(mock.options.timeout)
-      return getXHRResponse(mock, request).then(function (xhr) {
+      return getXHRResponse(mock, request).then(function (response) {
         var url = request.getUrl()
-        if (request.getPromiseStatus(xhr)) {
-          global[request.jsonpCallback](xhr.response)
+        if (request.getPromiseStatus(response)) {
+          global[request.jsonpCallback](response.body)
           if (mock.options.log) {
-            console.info('XEMock URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (xhr ? xhr.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
-            console.info(xhr.response)
+            console.info('XEMock URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
+            console.info(response.body)
           }
         } else {
           script.onerror({type: 'error'})
           if (mock.options.error) {
-            console.error('JSONP ' + url + ' ' + xhr.status)
+            console.error('JSONP ' + url + ' ' + response.status)
           }
         }
       })
@@ -240,11 +240,11 @@
     *
     * @param Array/String path 路径数组/请求路径
     * @param String method 请求方法
-    * @param Object/Function xhr 数据或返回数据方法
+    * @param Object/Function response 数据或返回数据方法
     * @param Object options 参数
     */
-  function XEAjaxMock (path, method, xhr, options) {
-    defineMocks(Array.isArray(path) ? (options = method, path) : [{path: path, method: method, xhr: xhr}], Object.assign({}, setupDefaults, options))
+  function XEAjaxMock (path, method, response, options) {
+    defineMocks(Array.isArray(path) ? (options = method, path) : [{path: path, method: method, response: response}], Object.assign({}, setupDefaults, options))
     return XEAjaxMock
   }
 
@@ -271,13 +271,13 @@
   }
 
   function createDefine (method) {
-    return function (url, xhr, options) {
-      return XEAjaxMock(url, method, xhr, options)
+    return function (url, response, options) {
+      return XEAjaxMock(url, method, response, options)
     }
   }
 
-  function JSONP (url, xhr, options) {
-    return XEAjaxMock(url, 'GET', xhr, Object.assign({jsonp: 'callback'}, options))
+  function JSONP (url, response, options) {
+    return XEAjaxMock(url, 'GET', response, Object.assign({jsonp: 'callback'}, options))
   }
 
   var Mock = XEAjaxMock
