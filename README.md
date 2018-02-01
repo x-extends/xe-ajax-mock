@@ -131,7 +131,7 @@ XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务越来越多时
 
 ### 示例1
 ``` shell
-import { GET, POST, PUT, PATCH, DELETE, JSONP } from 'xe-ajax-mock'
+import { Mock, GET, POST, PUT, PATCH, DELETE, JSONP } from 'xe-ajax-mock'
 
 // 对象方式
 GET('services/user/list', {status: 200, response: {msg: 'success'}})
@@ -177,6 +177,24 @@ JSONP('http://xuliangzhan.com/jsonp/user/message', (request, xhr) => {
   xhr.response = [{msg: 'data 1'}, {msg: 'data 2'}]
   resolve(xhr)
 })
+// 定义多个
+Mock([{
+  path: 'services/user',
+  children: [{
+    method: 'POST',
+    path: 'submit',
+    xhr: {status: 200, response: {msg: 'success'}},
+  },
+  {
+    method: 'DELETE',
+    path : 'del',
+    xhr (request, xhr) {
+      xhr.status = 500
+      xhr.response = {msg: 'error'}
+      return xhr
+    }
+  ]
+}])
 ```
 
 ### 示例2

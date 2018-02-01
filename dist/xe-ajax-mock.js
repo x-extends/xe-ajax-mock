@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.2.1
+ * xe-ajax-mock.js v1.2.4
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -7,10 +7,6 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : (global.XEAjaxMock = factory())
 }(this, function () {
   'use strict'
-
-  var isArray = Array.isArray || function (val) {
-    return Object.prototype.toString.call(val) === '[object Array]'
-  }
 
   function isFunction (obj) {
     return typeof obj === 'function'
@@ -30,18 +26,18 @@
     log: true
   }
 
-/**
- * 响应结果
- */
+  /**
+   * 响应结果
+   */
   function getXHRResponse (mock, request) {
     return new Promise(function (resolve, reject) {
       mock.asyncTimeout = setTimeout(function () {
         Promise.resolve(isFunction(mock.xhr) ? mock.xhr(request, mock.getResponse(null, 200)) : mock.xhr)
-        .then(function (xhr) {
-          resolve(mock.getResponse(xhr, 200))
-        }).catch(function (xhr) {
-          reject(mock.getResponse(xhr, 500))
-        })
+          .then(function (xhr) {
+            resolve(mock.getResponse(xhr, 200))
+          }).catch(function (xhr) {
+            reject(mock.getResponse(xhr, 500))
+          })
       }, mock.time)
     })
   }
@@ -69,7 +65,7 @@
     },
     send: function (mockXHR, request) {
       var mock = this
-      this.time = request.OPTIONS.timeout || getTime(this.options.timeout)
+      this.time = request.timeout || getTime(this.options.timeout)
       return getXHRResponse(mock, request).then(function (xhr) {
         mock.reply(mockXHR, request, xhr)
       })
@@ -81,7 +77,7 @@
         mockXHR.responseText = mockXHR.response = xhr.response ? JSON.stringify(xhr.response) : ''
         mockXHR.responseHeaders = xhr.headers
         mockXHR.readyState = 4
-        if (this.options.error && !request.OPTIONS.getPromiseStatus(mockXHR)) {
+        if (this.options.error && !request.getPromiseStatus(mockXHR)) {
           console.error(request.method + ' ' + url + ' ' + mockXHR.status)
         }
         if (isFunction(mockXHR.onreadystatechange)) {
@@ -123,7 +119,7 @@
   }
 
   function defineMocks (list, options, baseURL) {
-    if (isArray(list)) {
+    if (Array.isArray(list)) {
       list.forEach(function (item) {
         if (item.path) {
           if (!baseURL) {
@@ -140,9 +136,9 @@
     }
   }
 
-/**
- * 虚拟请求 XMLHttpRequest
- */
+  /**
+   * 虚拟请求 XMLHttpRequest
+   */
   function XEXMLHttpRequest (request) {
     this.XEMock_MATE = null
     this.XEMock_XHR = null
@@ -212,16 +208,16 @@
     }
   })
 
-/**
- * 虚拟请求 jsonp
- */
+  /**
+   * 虚拟请求 jsonp
+   */
   function sendJsonpMock (script, request) {
     var mock = mateMockItem(request)
     if (mock) {
-      mock.time = request.OPTIONS.timeout || getTime(mock.options.timeout)
+      mock.time = request.timeout || getTime(mock.options.timeout)
       return getXHRResponse(mock, request).then(function (xhr) {
         var url = request.getUrl()
-        if (request.OPTIONS.getPromiseStatus(xhr)) {
+        if (request.getPromiseStatus(xhr)) {
           global[request.jsonpCallback](xhr.response)
           if (mock.options.log) {
             console.info('XEMock URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (xhr ? xhr.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
@@ -239,31 +235,31 @@
     }
   }
 
-/**
-  * XEAjaxMock 虚拟服务
-  *
-  * @param Array/String path 路径数组/请求路径
-  * @param String method 请求方法
-  * @param Object/Function xhr 数据或返回数据方法
-  * @param Object options 参数
-  */
+  /**
+    * XEAjaxMock 虚拟服务
+    *
+    * @param Array/String path 路径数组/请求路径
+    * @param String method 请求方法
+    * @param Object/Function xhr 数据或返回数据方法
+    * @param Object options 参数
+    */
   function XEAjaxMock (path, method, xhr, options) {
-    defineMocks(isArray(path) ? (options = method, path) : [{path: path, method: method, xhr: xhr}], Object.assign({}, setupDefaults, options))
+    defineMocks(Array.isArray(path) ? (options = method, path) : [{path: path, method: method, xhr: xhr}], Object.assign({}, setupDefaults, options))
     return XEAjaxMock
   }
 
-/**
- * 设置全局参数
- *
- * @param Object options 参数
- */
+  /**
+   * 设置全局参数
+   *
+   * @param Object options 参数
+   */
   function setup (options) {
     Object.assign(setupDefaults, options)
   }
 
-/**
- * 初始化安装
- */
+  /**
+   * 初始化安装
+   */
   function install (XEAjax) {
     XEAjax.setup({
       getXMLHttpRequest: function (request) {
