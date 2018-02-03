@@ -175,7 +175,7 @@ DELETE('services/user/del', (request, response) => {
 JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
   // response.status = 500 设置调用为失败
   response.body = [{msg: 'data 1'}, {msg: 'data 2'}]
-  resolve(response)
+  return response
 })
 // 定义多个
 Mock([{
