@@ -220,6 +220,18 @@ function sendJsonpMock (script, request) {
 }
 
 /**
+ * jsonp 请求结束
+ * @param { Element } script script节点
+ * @param { XEResquest } request 请求
+ */
+function sendEndJsonpMock (script, request) {
+  var mock = mateMockItem(request)
+  if (!mock) {
+    document.body.removeChild(script)
+  }
+}
+
+/**
   * XEAjaxMock 虚拟服务
   *
   * @param Array/String path 路径数组/请求路径
@@ -250,7 +262,7 @@ export function install (XEAjax) {
       return new XEXMLHttpRequest(request)
     },
     sendJSONP: sendJsonpMock,
-    sendEndJSONP: function () {}
+    sendEndJSONP: sendEndJsonpMock
   })
 }
 
