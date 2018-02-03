@@ -266,8 +266,8 @@ deleteJSON('services/user/del').catch(data => {
   // data = {msg: 'error'}
 })
 
-jsonp('http://xuliangzhan.com/jsonp/user/message').then(response => {
-  // response.body = [{msg: 'data 1'}, {msg: 'data 2'}]
+jsonp('http://xuliangzhan.com/jsonp/user/message').then(data => {
+  // data = [{msg: 'data 1'}, {msg: 'data 2'}]
 })
 ```
 
