@@ -1,4 +1,4 @@
-import { isFunction, random } from './util'
+import { isArray, isFunction, random, arrayEach, objectAssign } from './util'
 
 var global = typeof window === 'undefined' ? this : window
 var defineMockServices = []
@@ -39,13 +39,13 @@ function XEMockService (path, method, response, options) {
   }
 }
 
-Object.assign(XEMockService.prototype, {
+objectAssign(XEMockService.prototype, {
   getResponse: function (response, status) {
     if (response && response.body !== undefined && response.status !== undefined) {
-      response.headers = Object.assign({}, setupDefaults.headers, response.headers)
+      response.headers = objectAssign({}, setupDefaults.headers, response.headers)
       return response
     }
-    return {status: status, body: response, headers: Object.assign({}, setupDefaults.headers)}
+    return {status: status, body: response, headers: objectAssign({}, setupDefaults.headers)}
   },
   send: function (mockXHR, request) {
     var mock = this
@@ -68,7 +68,7 @@ Object.assign(XEMockService.prototype, {
         mockXHR.onreadystatechange()
       }
       if (this.options.log) {
-        console.info('XEMock URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + this.time + 'ms')
+        console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + this.time + 'ms')
         console.info(response.body)
       }
     }
@@ -93,7 +93,7 @@ function mateMockItem (request) {
       item.pathVariable = {}
       done = matchs && matchs.length === pathVariable.length + 2 && !matchs[matchs.length - 1]
       if (done && pathVariable.length) {
-        pathVariable.forEach(function (key, index) {
+        arrayEach(pathVariable, function (key, index) {
           item.pathVariable[key] = matchs[index + 1]
         })
       }
@@ -103,8 +103,8 @@ function mateMockItem (request) {
 }
 
 function defineMocks (list, options, baseURL) {
-  if (Array.isArray(list)) {
-    list.forEach(function (item) {
+  if (isArray(list)) {
+    arrayEach(list, function (item) {
       if (item.path) {
         if (!baseURL) {
           baseURL = /\w+:\/{2}.*/.test(item.path) ? '' : options.baseURL
@@ -129,7 +129,7 @@ function XEXMLHttpRequest (request) {
   this.XEMock_REQUEST = request
 }
 
-Object.assign(XEXMLHttpRequest.prototype, {
+objectAssign(XEXMLHttpRequest.prototype, {
   timeout: 0,
   status: 0,
   readyState: 0,
@@ -204,7 +204,7 @@ function sendJsonpMock (script, request) {
       if (request.getPromiseStatus(response)) {
         global[request.jsonpCallback](response.body)
         if (mock.options.log) {
-          console.info('XEMock URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
+          console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
           console.info(response.body)
         }
       } else {
@@ -240,7 +240,7 @@ function sendEndJsonpMock (script, request) {
   * @param Object options 参数
   */
 function XEAjaxMock (path, method, response, options) {
-  defineMocks(Array.isArray(path) ? (options = method, path) : [{path: path, method: method, response: response}], Object.assign({}, setupDefaults, options))
+  defineMocks(isArray(path) ? (options = method, path) : [{path: path, method: method, response: response}], objectAssign({}, setupDefaults, options))
   return XEAjaxMock
 }
 
@@ -250,7 +250,7 @@ function XEAjaxMock (path, method, response, options) {
  * @param Object options 参数
  */
 export function setup (options) {
-  Object.assign(setupDefaults, options)
+  objectAssign(setupDefaults, options)
 }
 
 /**
@@ -264,6 +264,9 @@ export function install (XEAjax) {
     sendJSONP: sendJsonpMock,
     sendEndJSONP: sendEndJsonpMock
   })
+  if (setupDefaults.log) {
+    console.info('[XEAjax] Ready. Detected XEAjaxMock v' + version)
+  }
 }
 
 function createDefine (method) {
@@ -273,7 +276,7 @@ function createDefine (method) {
 }
 
 export function JSONP (url, response, options) {
-  return XEAjaxMock(url, 'GET', response, Object.assign({jsonp: 'callback'}, options))
+  return XEAjaxMock(url, 'GET', response, objectAssign({jsonp: 'callback'}, options))
 }
 
 export var Mock = XEAjaxMock
@@ -282,5 +285,6 @@ export var POST = createDefine('POST')
 export var PUT = createDefine('PUT')
 export var DELETE = createDefine('DELETE')
 export var PATCH = createDefine('PATCH')
+export var version = '1.4.3'
 
 export default XEAjaxMock

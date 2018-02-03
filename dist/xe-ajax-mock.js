@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.4.2
+ * xe-ajax-mock.js v1.4.3
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -8,12 +8,37 @@
 }(this, function () {
   'use strict'
 
+  var isArray = Array.isArray || function (obj) {
+    return obj ? obj.constructor === Array : false
+  }
+
   function isFunction (obj) {
     return typeof obj === 'function'
   }
 
   function random (min, max) {
     return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
+  }
+
+  var objectAssign = Object.assign || function (target) {
+    for (var source, index = 1, len = arguments.length; index < len; index++) {
+      source = arguments[index]
+      for (var key in source) {
+        if (source.hasOwnProperty(key)) {
+          target[key] = source[key]
+        }
+      }
+    }
+    return target
+  }
+
+  function arrayEach (array, callback, context) {
+    if (array.forEach) {
+      return array.forEach(callback, context)
+    }
+    for (var index = 0, len = array.length || 0; index < len; index++) {
+      callback.call(context || global, array[index], index, array)
+    }
   }
 
   var global = typeof window === 'undefined' ? this : window
@@ -35,7 +60,7 @@
         Promise.resolve(isFunction(mock.response) ? mock.response(request, mock.getResponse(null, 200), mock) : mock.response)
           .then(function (response) {
             resolve(mock.getResponse(response, 200))
-          }).catch(function (response) {
+          })['catch'](function (response) {
             reject(mock.getResponse(response, 500))
           })
       }, mock.time)
@@ -55,13 +80,13 @@
     }
   }
 
-  Object.assign(XEMockService.prototype, {
+  objectAssign(XEMockService.prototype, {
     getResponse: function (response, status) {
       if (response && response.body !== undefined && response.status !== undefined) {
-        response.headers = Object.assign({}, setupDefaults.headers, response.headers)
+        response.headers = objectAssign({}, setupDefaults.headers, response.headers)
         return response
       }
-      return {status: status, body: response, headers: Object.assign({}, setupDefaults.headers)}
+      return {status: status, body: response, headers: objectAssign({}, setupDefaults.headers)}
     },
     send: function (mockXHR, request) {
       var mock = this
@@ -109,7 +134,7 @@
         item.pathVariable = {}
         done = matchs && matchs.length === pathVariable.length + 2 && !matchs[matchs.length - 1]
         if (done && pathVariable.length) {
-          pathVariable.forEach(function (key, index) {
+          arrayEach(pathVariable, function (key, index) {
             item.pathVariable[key] = matchs[index + 1]
           })
         }
@@ -119,8 +144,8 @@
   }
 
   function defineMocks (list, options, baseURL) {
-    if (Array.isArray(list)) {
-      list.forEach(function (item) {
+    if (isArray(list)) {
+      arrayEach(list, function (item) {
         if (item.path) {
           if (!baseURL) {
             baseURL = /\w+:\/{2}.*/.test(item.path) ? '' : options.baseURL
@@ -145,7 +170,7 @@
     this.XEMock_REQUEST = request
   }
 
-  Object.assign(XEXMLHttpRequest.prototype, {
+  objectAssign(XEXMLHttpRequest.prototype, {
     timeout: 0,
     status: 0,
     readyState: 0,
@@ -256,7 +281,7 @@
     * @param Object options 参数
     */
   function XEAjaxMock (path, method, response, options) {
-    defineMocks(Array.isArray(path) ? (options = method, path) : [{path: path, method: method, response: response}], Object.assign({}, setupDefaults, options))
+    defineMocks(isArray(path) ? (options = method, path) : [{path: path, method: method, response: response}], objectAssign({}, setupDefaults, options))
     return XEAjaxMock
   }
 
@@ -266,7 +291,7 @@
    * @param Object options 参数
    */
   function setup (options) {
-    Object.assign(setupDefaults, options)
+    objectAssign(setupDefaults, options)
   }
 
   /**
@@ -280,6 +305,9 @@
       sendJSONP: sendJsonpMock,
       sendEndJSONP: sendEndJsonpMock
     })
+    if (setupDefaults.log) {
+      console.info('[XEAjax] Ready. Detected XEAjaxMock v' + version)
+    }
   }
 
   function createDefine (method) {
@@ -289,7 +317,7 @@
   }
 
   function JSONP (url, response, options) {
-    return XEAjaxMock(url, 'GET', response, Object.assign({jsonp: 'callback'}, options))
+    return XEAjaxMock(url, 'GET', response, objectAssign({jsonp: 'callback'}, options))
   }
 
   var Mock = XEAjaxMock
@@ -298,6 +326,7 @@
   var PUT = createDefine('PUT')
   var DELETE = createDefine('DELETE')
   var PATCH = createDefine('PATCH')
+  var version = '1.4.3'
 
   /**
    * 混合函数
@@ -305,11 +334,11 @@
    * @param {Object} methods 扩展
    */
   function mixin (methods) {
-    return Object.assign(XEAjaxMock, methods)
+    return objectAssign(XEAjaxMock, methods)
   }
 
   mixin({
-    setup: setup, install: install, JSONP: JSONP, Mock: Mock, GET: GET, POST: POST, PUT: PUT, DELETE: DELETE, PATCH: PATCH
+    setup: setup, install: install, JSONP: JSONP, Mock: Mock, GET: GET, POST: POST, PUT: PUT, DELETE: DELETE, PATCH: PATCH, version: version
   })
   XEAjaxMock.mixin = mixin
 

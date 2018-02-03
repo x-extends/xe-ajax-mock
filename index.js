@@ -1,3 +1,4 @@
+import { objectAssign } from './src/util'
 import XEAjaxMock, * as mock from './src/mock'
 
 /**
@@ -6,7 +7,7 @@ import XEAjaxMock, * as mock from './src/mock'
  * @param {Object} methods 扩展
  */
 function mixin (methods) {
-  return Object.assign(XEAjaxMock, methods)
+  return objectAssign(XEAjaxMock, methods)
 }
 
 mixin(mock)
