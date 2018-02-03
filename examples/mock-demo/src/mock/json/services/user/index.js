@@ -1,6 +1,7 @@
 import { GET, POST } from 'xe-ajax-mock'
 
-GET('services/user/list/page/{pageSize}/{currentPage}', (request, response) => {
+GET('services/user/list/page/{pageSize}/{currentPage}', (request, response, context) => {
+  // 通过 context 获取路径参数 context.pathVariable
   response.body = require('./list/page/data.json')
   return response
 })

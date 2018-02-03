@@ -1,4 +1,4 @@
-# XEAjaxMock 虚拟服务插件 - XEAjax插件
+# XEAjaxMock 前端虚拟服务 - XEAjax插件
 
 基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，使用 ajax+mock 就非常有必要。
 
@@ -102,7 +102,7 @@ XEAjaxMock.m1()
 * path（字符串）请求地址 占位符{key}支持动态路径: 例如: services/list/{key1}/{key2} 匹配 services/list/10/1
 * method（字符串）请求方法 | 默认GET
 * jsonp（字符串）调用jsonp服务回调函数名，例如: 'callback'
-* response（对象/方法(request, response)）数据或返回数据方法 {status: 200, body: {}, headers: {}}
+* response（对象/方法(request, response, context)）数据或返回数据方法 {status: 200, body: {}, headers: {}}
 * options （可选，对象）参数
 
 ### 参数说明
@@ -136,13 +136,13 @@ import { Mock, GET, POST, PUT, PATCH, DELETE, JSONP } from 'xe-ajax-mock'
 // 对象方式
 GET('services/user/list', {status: 200, body: {msg: 'success'}})
 // 动态路径
-PUT('services/user/list/{pageSize}/{currentPage}', (request, response) => {
-  // 获取路径参数 request.pathVariable
-  // request.pathVariable.pageSize 10
-  // request.pathVariable.currentPage 1
+PUT('services/user/list/{pageSize}/{currentPage}', (request, response, context) => {
+  // 获取路径参数 context.pathVariable
+  // context.pathVariable.pageSize 10
+  // context.pathVariable.currentPage 1
   response.status = 200
   response.headers = {'content-type': 'application/json;charset=UTF-8'}
-  response.body = {pageVO: this.pathVariable, result: []}
+  response.body = {pageVO: context.pathVariable, result: []}
   return response
 })
 // 函数方式

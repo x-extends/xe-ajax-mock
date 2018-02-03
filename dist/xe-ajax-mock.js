@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.4.0
+ * xe-ajax-mock.js v1.4.1
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -32,7 +32,7 @@
   function getXHRResponse (mock, request) {
     return new Promise(function (resolve, reject) {
       mock.asyncTimeout = setTimeout(function () {
-        Promise.resolve(isFunction(mock.response) ? mock.response(request, mock.getResponse(null, 200)) : mock.response)
+        Promise.resolve(isFunction(mock.response) ? mock.response(request, mock.getResponse(null, 200), mock) : mock.response)
           .then(function (response) {
             resolve(mock.getResponse(response, 200))
           }).catch(function (response) {
