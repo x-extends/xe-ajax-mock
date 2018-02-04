@@ -3,19 +3,20 @@
 
     <h1>{{ title }} + {{ dateStr }}</h1>
 
-    <p>渲染 services/shopping/findList 列表</p>
+    <p>渲染 /api/shopping/findList 列表</p>
     <ul>
       <li v-for="(item, index) in shoppingList" :key="index">{{ item.name }}</li>
     </ul>
 
-    <p>渲染 services/user/list/page/10/1 列表</p>
+    <p>渲染 /api/user/list/page/10/1 列表</p>
     <ul>
       <li v-for="(item, index) in userList" :key="index">{{ item.name }}</li>
     </ul>
 
     <div class="loading-demo" v-show="loading"> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> </div>
 
-    <button @click="save">保存, 模拟服务端校验密码大于六位数</button>
+    <p>模拟服务端校验密码大于六位数</p>
+    <button @click="save">保存</button>
     <input type="test" v-model="userForm.name" placeholder="输入用户名">
     <input type="test" v-model="userForm.password" placeholder="输入密码">
     <div v-show="successMsg">调用成功：{{ successMsg }}</div>
@@ -51,13 +52,13 @@ export default {
       // this.$ajax.getJSON(url)
 
       // 返回响应结果
-      getJSON('services/shopping/findList').then(data => {
+      getJSON('/api/shopping/findList').then(data => {
         this.shoppingList = data
       }).catch(data => {
         this.shoppingList = []
       })
       // 返回 response 对象
-      fetchGet('services/user/list/page/10/1').then(response => {
+      fetchGet('/api/user/list/page/10/1').then(response => {
         if (response.ok) {
           response.json().then(data => {
             this.userList = data
@@ -67,7 +68,7 @@ export default {
         }
       })
       // 返回 data 对象
-      fetchGet('services/user/list/page/10/1').then(response => response.json()).then(data => {
+      fetchGet('/api/user/list/page/10/1').then(response => response.json()).then(data => {
         this.userList = data
       })
       // 跨域调用 jsonp 服务,返回数据
@@ -82,8 +83,8 @@ export default {
     },
     // 使用 ES7 异步
     async findList () {
-      const list = await getJSON('services/shopping/findList')
-      const pageList = await fetchGet('services/user/list/page/10/1').then(response => response.json())
+      const list = await getJSON('/api/shopping/findList')
+      const pageList = await fetchGet('/api/user/list/page/10/1').then(response => response.json())
 
       // 将两个服务数据融合在一起
       this.testList = list.concat(pageList)
@@ -91,7 +92,7 @@ export default {
     save () {
       // 保存
       this.loading = true
-      postJSON('services/user/save', this.userForm).then(data => {
+      postJSON('/api/user/save', this.userForm).then(data => {
         this.loading = false
         this.errorMsg = null
         this.successMsg = data

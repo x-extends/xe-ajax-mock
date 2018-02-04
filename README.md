@@ -13,10 +13,10 @@
 
 // /main.js 安装
 XEAjax.use(XEAjaxMock)
-XEAjaxMock.GET('services/user/list', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.GET('/api/user/list', {status: 200, body: {msg: 'success'}})
 
 // ./app.js 调用
-XEAjax.getJSON ('services/user/list', {id: 1}) // 响应结果：{msg: 'success'}
+XEAjax.getJSON ('/api/user/list', {id: 1}) // 响应结果：{msg: 'success'}
 ```
 
 ### AMD 安装， 以 require.js 为例
@@ -35,13 +35,13 @@ define(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
   // 安装
   XEAjax.use(XEAjaxMock)
   // Mock 定义
-  XEAjaxMock.GET('services/user/list', {status: 200, body: {msg: 'success'}})
+  XEAjaxMock.GET('/api/user/list', {status: 200, body: {msg: 'success'}})
 })
 
 // ./app.js 调用
 define(['xe-ajax'], function (XEAjax) {
   // 调用
-  XEAjax.getJSON('services/user/list', {id: 1}) // 响应结果：{msg: 'success'}
+  XEAjax.getJSON('/api/user/list', {id: 1}) // 响应结果：{msg: 'success'}
 })
 ```
 
@@ -55,16 +55,16 @@ npm install xe-ajax-mock --save
 ``` shell
 import { GET, POST } from 'xe-ajax-mock'
 
-GET('services/user/list', {id: 1})
-POST('services/user/save', {id: 1})
+GET('/api/user/list', {id: 1})
+POST('/api/user/save', {id: 1})
 ```
 
 ### 导入所有
 ``` shell
 import XEAjaxMock from 'xe-ajax-mock'
 
-XEAjaxMock.GET('services/user/list', {id: 1})
-XEAjaxMock.POST('services/user/save', {id: 1})
+XEAjaxMock.GET('/api/user/list', {id: 1})
+XEAjaxMock.POST('/api/user/save', {id: 1})
 ```
 
 ### 混合函数
@@ -103,7 +103,7 @@ XEAjaxMock.m1()
 * defines（数组）定义多个
 * options （可选，对象）参数
 ### 接受四个参数：
-* path（字符串）请求地址 占位符{key}支持动态路径: 例如: services/list/{key1}/{key2} 匹配 services/list/10/1
+* path（字符串）请求地址 占位符{key}支持动态路径: 例如: /api/list/{key1}/{key2} 匹配 /api/list/10/1
 * method（字符串）请求方法 | 默认GET
 * jsonp（字符串）调用jsonp服务回调函数名，例如: 'callback'
 * response（对象/方法(request, response, context)）数据或返回数据方法 {status: 200, body: {}, headers: {}}
@@ -138,9 +138,9 @@ XEAjax+Mock 项目例子请参考 [mock-demo](https://github.com/xuliangzhan/xe-
 import { Mock, GET, POST, PUT, PATCH, DELETE, JSONP } from 'xe-ajax-mock'
 
 // 对象方式
-GET('services/user/list', {status: 200, body: {msg: 'success'}})
+GET('/api/user/list', {status: 200, body: {msg: 'success'}})
 // 动态路径
-PUT('services/user/list/{pageSize}/{currentPage}', (request, response, context) => {
+PUT('/api/user/list/{pageSize}/{currentPage}', (request, response, context) => {
   // 获取路径参数 context.pathVariable
   // context.pathVariable.pageSize 10
   // context.pathVariable.currentPage 1
@@ -150,11 +150,11 @@ PUT('services/user/list/{pageSize}/{currentPage}', (request, response, context) 
   return response
 })
 // 函数方式
-POST('services/user/save', (request, response) => {
+POST('/api/user/save', (request, response) => {
   return {status: 200, body: {msg: 'success'}}
 })
 // 异步方式
-PATCH('services/user/patch', (request, response) => {
+PATCH('/api/user/patch', (request, response) => {
   return new Promise( (resolve, reject) => {
     setTimeout(() = {
       response.status = 200
@@ -164,7 +164,7 @@ PATCH('services/user/patch', (request, response) => {
   })
 })
 // 函数方式,模拟后台校验
-DELETE('services/user/del', (request, response) => {
+DELETE('/api/user/del', (request, response) => {
   // 模拟后台逻辑 对参数进行校验
   if (request.params.id) {
     response.status = 200
@@ -183,7 +183,7 @@ JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
 })
 // 定义多个
 Mock([{
-  path: 'services/user',
+  path: '/api/user',
   children: [{
     method: 'POST',
     path: 'submit',
@@ -206,22 +206,22 @@ Mock([{
 import XEAjaxMock from 'xe-ajax-mock'
 
 // 快捷定义
-XEAjaxMock.GET('services/user/list', {status: 200, body: {msg: 'success'}})
-XEAjaxMock.POST('services/user/save', {status: 200, body: {msg: 'success'}})
-XEAjaxMock.PUT('services/user/update', {status: 200, body: {msg: 'success'}})
-XEAjaxMock.DELETE('services/user/delete', {status: 200, body: {msg: 'success'}})
-XEAjaxMock.PATCH('services/user/patch', {status: 200, body: {msg: 'success'}})
-XEAjaxMock.JSONP('services/user/patch', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.GET('/api/user/list', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.POST('/api/user/save', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.PUT('/api/user/update', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.DELETE('/api/user/delete', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.PATCH('/api/user/patch', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.JSONP('/api/user/patch', {status: 200, body: {msg: 'success'}})
 
 // 定义单个
-XEAjaxMock('services/user/list', 'GET', (request, response) => {
+XEAjaxMock('/api/user/list', 'GET', (request, response) => {
   response.body = {msg: 'success'}
   return response
 })
 
 // 定义多个
 XEAjaxMock([{
-  path: 'services/user',
+  path: '/api/user',
   children: [{
     method: 'POST',
     path: 'submit',
@@ -243,31 +243,31 @@ XEAjaxMock([{
 ``` shell
 import { getJSON, postJSON, putJSON, deleteJSON, patchJSON, jsonp } from 'xe-ajax'
 
-getJSON('services/user/list').then(data => {
+getJSON('/api/user/list').then(data => {
   // data = {msg: 'success'}
 })
 
-getJSON('services/user/list/10/1').then(data => {
+getJSON('/api/user/list/10/1').then(data => {
   // data = {msg: 'success'}
 })
 
-postJSON('services/user/save').catch(data => {
+postJSON('/api/user/save').catch(data => {
   // data = {msg: 'error'}
 })
 
-patchJSON('services/user/patch').then(data => {
+patchJSON('/api/user/patch').then(data => {
   // data = {msg: 'success'}
 })
 
-putJSON('services/user/update').then(data => {
+putJSON('/api/user/update').then(data => {
   // data = {msg: 'success'}
 })
 
-postJSON('services/user/submit').then(data => {
+postJSON('/api/user/submit').then(data => {
   // data = {msg: 'success'}
 })
 
-deleteJSON('services/user/del').then(data => {
+deleteJSON('/api/user/del').then(data => {
   // data
 }).catch(data => {
   // data = {msg: 'error'}
