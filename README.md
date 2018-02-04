@@ -2,6 +2,10 @@
 
 基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，使用 ajax+mock 就非常有必要。
 
+### 兼容性
+任何支持 Promise 的环境都能运行，低版本浏览器使用 babel 转码<br/>
+IE8+、Edge、Chrome、Firefox、Opera、Safari等...
+
 ### 直接引用 script 全局安装，XEAjaxMock 会定义为全局变量
 ``` shell
 <script src="./dist/xe-ajax.min.js" type="text/javascript"></script>
@@ -127,7 +131,7 @@ XEAjaxMock.setup({
 ### 目录结构
 XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务越来越多时，统一目录结构可维护性会更好
 
-请参考 [mock-demo](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/mock-demo) 示例
+XEAjax+Mock 项目例子请参考 [mock-demo](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/mock-demo) 示例
 
 ### 示例1
 ``` shell
@@ -237,16 +241,13 @@ XEAjaxMock([{
 
 ### 正常调用,自动拦截响应
 ``` shell
-import { getJSON, postJSON, deleteJSON, jsonp } from 'xe-ajax'
+import { getJSON, postJSON, putJSON, deleteJSON, patchJSON, jsonp } from 'xe-ajax'
 
-getJSON('services/user/list').then(response => {
+getJSON('services/user/list').then(data => {
   // data = {msg: 'success'}
 })
+
 getJSON('services/user/list/10/1').then(data => {
-  // data = {msg: 'success'}
-})
-
-postJSON('services/save', {id: 111}).then(data => {
   // data = {msg: 'success'}
 })
 
@@ -258,11 +259,17 @@ patchJSON('services/user/patch').then(data => {
   // data = {msg: 'success'}
 })
 
+putJSON('services/user/update').then(data => {
+  // data = {msg: 'success'}
+})
+
 postJSON('services/user/submit').then(data => {
   // data = {msg: 'success'}
 })
 
-deleteJSON('services/user/del').catch(data => {
+deleteJSON('services/user/del').then(data => {
+  // data
+}).catch(data => {
   // data = {msg: 'error'}
 })
 
