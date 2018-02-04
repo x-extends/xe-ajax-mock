@@ -13,8 +13,8 @@
   "dependencies": {
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "xe-ajax": "^3.0.7",
-    "xe-ajax-mock": "^1.4.3"
+    "xe-ajax": "^3.0.8",
+    "xe-ajax-mock": "^1.4.4"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
