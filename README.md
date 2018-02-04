@@ -4,7 +4,7 @@
 
 ### 兼容性
 任何支持 Promise 的环境都能运行，低版本浏览器使用 babel 转码<br/>
-IE8+、Edge、Chrome、Firefox、Opera、Safari等...
+支持 IE8+、Edge、Chrome、Firefox、Opera、Safari等...
 
 ### 直接引用 script 全局安装，XEAjaxMock 会定义为全局变量
 ``` shell
