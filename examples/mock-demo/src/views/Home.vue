@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <h1>{{ title }}</h1>
+    <h1>{{ title }} + {{ dateStr }}</h1>
 
     <p>渲染 services/shopping/findList 列表</p>
     <ul>
@@ -26,11 +26,13 @@
 
 <script>
 import { fetchGet, getJSON, postJSON, jsonp } from 'xe-ajax'
+import { dateToString } from 'xe-utils'
 
 export default {
   data () {
     return {
       title: 'vue + xe-ajax 3.0 + mock 例子',
+      dateStr: dateToString(new Date(), 'MM/dd/yyyy HH:mm:ss'),
       loading: false,
       userList: [],
       shoppingList: [],
