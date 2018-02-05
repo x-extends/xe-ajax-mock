@@ -17,6 +17,6 @@ XEAjaxMock.setup({
 })
 
 // 导入虚拟服务配置
-require('./json/services/shopping')
-require('./json/services/user')
+require('./json/api/shopping')
+require('./json/api/user')
 require('./jsonp/xuliangzhan.com')
