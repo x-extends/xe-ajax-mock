@@ -72,7 +72,7 @@ export default {
         this.userList = data
       })
       // 跨域调用 jsonp 服务,返回数据
-      jsonp('http://xuliangzhan.com/jsonp/user/message').then(data => {
+      jsonp('http://xuliangzhan.com/api/user/message').then(data => {
         // data = [{name: 'data 1'}, {name: 'data 2'}]
       }).catch(data => {
         // data
