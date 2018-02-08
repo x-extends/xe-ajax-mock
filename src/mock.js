@@ -124,9 +124,9 @@ function defineMocks (list, options, baseURL) {
  * 虚拟请求 XMLHttpRequest
  */
 function XEXMLHttpRequest (request) {
-  this.XEMock_MATE = null
-  this.XEMock_XHR = null
-  this.XEMock_REQUEST = request
+  this._mock = null
+  this._xhr = null
+  this._request = request
 }
 
 objectAssign(XEXMLHttpRequest.prototype, {
@@ -140,45 +140,62 @@ objectAssign(XEXMLHttpRequest.prototype, {
   response: '',
   responseText: '',
   open: function (method, url, async) {
-    this.XEMock_MATE = mateMockItem(this.XEMock_REQUEST)
-    if (this.XEMock_MATE) {
+    this._mock = mateMockItem(this._request)
+    if (this._mock) {
       this.readyState = 1
       if (isFunction(this.onreadystatechange)) {
         this.onreadystatechange()
       }
     } else {
-      this.XEMock_XHR = new XMLHttpRequest()
-      this.XEMock_XHR.open(method, url, async)
+      this._xhr = new XMLHttpRequest()
+      this._xhr.open(method, url, async)
     }
   },
   send: function (body) {
-    if (this.XEMock_MATE) {
-      this.XEMock_MATE.send(this, this.XEMock_REQUEST)
+    if (this._mock) {
+      this._mock.send(this, this._request)
     } else {
-      this.XEMock_XHR.withCredentials = this.withCredentials
-      this.XEMock_XHR.send(body)
+      var xhr = this._xhr
+      var mockXHR = this
+      if (this.ontimeout) {
+        xhr.ontimeout = this.ontimeout
+      }
+      xhr.withCredentials = this.withCredentials
+      xhr.onreadystatechange = function () {
+        mockXHR.status = xhr.status
+        mockXHR.readyState = xhr.readyState
+        mockXHR.response = xhr.response
+        xhr.getAllResponseHeaders().trim()
+        if (isFunction(mockXHR.onreadystatechange)) {
+          mockXHR.onreadystatechange()
+        }
+      }
+      xhr.send(body)
     }
   },
   abort: function (response) {
     var mockXHR = this
     setTimeout(function () {
-      if (mockXHR.XEMock_MATE) {
+      if (mockXHR._mock) {
         if (mockXHR.readyState !== 0) {
-          clearTimeout(mockXHR.XEMock_MATE.asyncTimeout)
-          mockXHR.XEMock_MATE.reply(mockXHR, mockXHR.XEMock_REQUEST, response || {status: 0, response: ''})
+          clearTimeout(mockXHR._mock.asyncTimeout)
+          mockXHR._mock.reply(mockXHR, mockXHR._request, response || {status: 0, response: ''})
           mockXHR.readyState = 0
         }
       } else {
-        mockXHR.XEMock_XHR.abort()
+        mockXHR._xhr.abort()
       }
     })
   },
   setRequestHeader: function (name, value) {
-    if (this.XEMock_XHR) {
-      this.XEMock_XHR.setRequestHeader(name, value)
+    if (this._xhr) {
+      this._xhr.setRequestHeader(name, value)
     }
   },
   getAllResponseHeaders: function () {
+    if (this._xhr) {
+      return this._xhr.getAllResponseHeaders()
+    }
     var result = ''
     var responseHeader = this.responseHeaders
     if (responseHeader) {
@@ -285,6 +302,6 @@ export var POST = createDefine('POST')
 export var PUT = createDefine('PUT')
 export var DELETE = createDefine('DELETE')
 export var PATCH = createDefine('PATCH')
-export var version = '1.4.4'
+export var version = '1.4.5'
 
 export default XEAjaxMock
