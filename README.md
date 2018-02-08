@@ -136,7 +136,7 @@ XEAjaxMock.setup({
 ### 目录结构
 XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务越来越多时，统一目录结构可维护性会更好
 
-XEAjax + Mock ES6模块化项目例子请参考 [mock-demo](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/mock-demo) 示例
+XEAjax + Mock ES6模块化项目例子请参考 [mock-demo](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/mock-demo) 示例<br/>
 XEAjax + Mock 基于requirejs项目例子请参考 [cdn-mock-demo](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/cdn-mock-demo) 示例
 
 ### 示例1
