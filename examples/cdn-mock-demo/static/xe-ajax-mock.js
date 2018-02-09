@@ -41,10 +41,29 @@
     }
   }
 
+  function getBaseURL () {
+    var pathname = location.pathname
+    var lastIndex = lastIndexOf(pathname, '/') + 1
+    return location.origin + (lastIndex === pathname.length ? pathname : pathname.substring(0, lastIndex))
+  }
+
+  function lastIndexOf (str, val) {
+    if (isFunction(str.lastIndexOf)) {
+      return str.lastIndexOf(val)
+    } else {
+      for (var len = str.length - 1; len >= 0; len--) {
+        if (val === str[len]) {
+          return len
+        };
+      }
+    }
+    return -1
+  }
+
   var global = typeof window === 'undefined' ? this : window
   var defineMockServices = []
   var setupDefaults = {
-    baseURL: location.origin,
+    baseURL: getBaseURL(),
     timeout: '20-400',
     headers: null,
     error: true,
@@ -206,6 +225,7 @@
           mockXHR.status = xhr.status
           mockXHR.readyState = xhr.readyState
           mockXHR.response = xhr.response
+          mockXHR.responseText = xhr.responseText
           xhr.getAllResponseHeaders().trim()
           if (isFunction(mockXHR.onreadystatechange)) {
             mockXHR.onreadystatechange()
