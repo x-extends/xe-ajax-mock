@@ -1,4 +1,7 @@
-define(['xe-ajax', 'xe-ajax-mock', 'mocksetup'], function (XEAjax, XEAjaxMock) {
+define([
+  'xe-ajax',
+  'xe-ajax-mock'
+], function (XEAjax, XEAjaxMock) {
   XEAjaxMock.GET('/api/shopping/findList', (request, response) => {
     return XEAjax.getJSON('mock/json/api/shopping/findList/data.json').then(function (data) {
       response.body = data

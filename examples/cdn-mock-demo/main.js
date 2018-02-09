@@ -8,7 +8,6 @@ require.config({
     'text': 'static/require-text',
 
     'mock': 'mock/index',
-    'mocksetup': 'mock/mocksetup',
     'shopping-mock': 'mock/json/api/shopping/index',
     'user-mock': 'mock/json/api/user/index',
     'jsonp-user-mock': 'mock/jsonp/xuliangzhan.com/index',
@@ -18,12 +17,16 @@ require.config({
   }
 })
 
-require(['vue', 'xe-ajax', 'xe-ajax-mock', 'router', 'mock'], function (Vue, XEAjax, XEAjaxMock, router) {
+require([
+  'vue',
+  'xe-ajax',
+  'router',
+  'mock'
+], function (Vue, XEAjax, router) {
   // 设置默认参数
   XEAjax.setup({
-    baseURL: 'http://xuliangzhan.com'
+    bodyType: 'FORM_DATA'// 默认已json方式提交，修改为form data方式提交,根据后台支持情况设置
   })
-
   var $app = new Vue({
     el: '#app',
     router: router

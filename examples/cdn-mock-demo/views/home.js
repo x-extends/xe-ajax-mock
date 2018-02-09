@@ -1,4 +1,8 @@
-define(['xe-ajax', 'xe-utils', 'text!views/home.html'], function (XEAjax, XEUtils, tmpl) {
+define([
+  'xe-ajax',
+  'xe-utils',
+  'text!views/home.html'
+], function (XEAjax, XEUtils, tmpl) {
   var exports = {
     template: tmpl,
     data: function () {

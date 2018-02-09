@@ -1,4 +1,7 @@
-define(['xe-ajax', 'xe-ajax-mock', 'mocksetup'], function (XEAjax, XEAjaxMock) {
+define([
+  'xe-ajax',
+  'xe-ajax-mock'
+], function (XEAjax, XEAjaxMock) {
   XEAjaxMock.GET('/api/user/list/page/{pageSize}/{currentPage}', (request, response, context) => {
     return XEAjax.getJSON('mock/json/api/user/list/page/data.json').then(function (data) {
       // 通过 context 获取路径参数 context.pathVariable

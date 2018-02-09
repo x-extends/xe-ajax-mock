@@ -1,4 +1,7 @@
-define(['xe-ajax', 'xe-ajax-mock', 'mocksetup'], function (XEAjax, XEAjaxMock) {
+define([
+  'xe-ajax',
+  'xe-ajax-mock'
+], function (XEAjax, XEAjaxMock) {
   XEAjaxMock.JSONP('http://xuliangzhan.com/api/user/list', (request, response, context) => {
     return XEAjax.getJSON('mock/jsonp/xuliangzhan.com/api/user/list/data.json').then(function (data) {
       response.body = 500
