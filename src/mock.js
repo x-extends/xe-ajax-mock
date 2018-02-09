@@ -165,6 +165,7 @@ objectAssign(XEXMLHttpRequest.prototype, {
         mockXHR.status = xhr.status
         mockXHR.readyState = xhr.readyState
         mockXHR.response = xhr.response
+        mockXHR.responseText = xhr.responseText
         xhr.getAllResponseHeaders().trim()
         if (isFunction(mockXHR.onreadystatechange)) {
           mockXHR.onreadystatechange()
@@ -302,6 +303,6 @@ export var POST = createDefine('POST')
 export var PUT = createDefine('PUT')
 export var DELETE = createDefine('DELETE')
 export var PATCH = createDefine('PATCH')
-export var version = '1.4.5'
+export var version = '1.4.6'
 
 export default XEAjaxMock

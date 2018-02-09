@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.4.5
+ * xe-ajax-mock.js v1.4.6
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -206,6 +206,7 @@
           mockXHR.status = xhr.status
           mockXHR.readyState = xhr.readyState
           mockXHR.response = xhr.response
+          mockXHR.responseText = xhr.responseText
           xhr.getAllResponseHeaders().trim()
           if (isFunction(mockXHR.onreadystatechange)) {
             mockXHR.onreadystatechange()
@@ -343,7 +344,7 @@
   var PUT = createDefine('PUT')
   var DELETE = createDefine('DELETE')
   var PATCH = createDefine('PATCH')
-  var version = '1.4.5'
+  var version = '1.4.6'
 
   /**
    * 混合函数
