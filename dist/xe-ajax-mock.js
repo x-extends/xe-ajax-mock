@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.4.6
+ * xe-ajax-mock.js v1.4.7
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -41,10 +41,29 @@
     }
   }
 
+  function getBaseURL () {
+    var pathname = location.pathname
+    var lastIndex = lastIndexOf(pathname, '/') + 1
+    return location.origin + (lastIndex === pathname.length ? pathname : pathname.substring(0, lastIndex))
+  }
+
+  function lastIndexOf (str, val) {
+    if (isFunction(str.lastIndexOf)) {
+      return str.lastIndexOf(val)
+    } else {
+      for (var len = str.length - 1; len >= 0; len--) {
+        if (val === str[len]) {
+          return len
+        };
+      }
+    }
+    return -1
+  }
+
   var global = typeof window === 'undefined' ? this : window
   var defineMockServices = []
   var setupDefaults = {
-    baseURL: location.origin,
+    baseURL: getBaseURL(),
     timeout: '20-400',
     headers: null,
     error: true,
@@ -344,7 +363,7 @@
   var PUT = createDefine('PUT')
   var DELETE = createDefine('DELETE')
   var PATCH = createDefine('PATCH')
-  var version = '1.4.6'
+  var version = '1.4.7'
 
   /**
    * 混合函数

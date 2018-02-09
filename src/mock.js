@@ -1,9 +1,9 @@
-import { isArray, isFunction, random, arrayEach, objectAssign } from './util'
+import { isArray, isFunction, random, arrayEach, objectAssign, getBaseURL } from './util'
 
 var global = typeof window === 'undefined' ? this : window
 var defineMockServices = []
 var setupDefaults = {
-  baseURL: location.origin,
+  baseURL: getBaseURL(),
   timeout: '20-400',
   headers: null,
   error: true,
@@ -303,6 +303,6 @@ export var POST = createDefine('POST')
 export var PUT = createDefine('PUT')
 export var DELETE = createDefine('DELETE')
 export var PATCH = createDefine('PATCH')
-export var version = '1.4.6'
+export var version = '1.4.7'
 
 export default XEAjaxMock

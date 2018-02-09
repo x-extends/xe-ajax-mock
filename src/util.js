@@ -30,3 +30,22 @@ export function arrayEach (array, callback, context) {
     callback.call(context || global, array[index], index, array)
   }
 }
+
+export function getBaseURL () {
+  var pathname = location.pathname
+  var lastIndex = lastIndexOf(pathname, '/') + 1
+  return location.origin + (lastIndex === pathname.length ? pathname : pathname.substring(0, lastIndex))
+}
+
+export function lastIndexOf (str, val) {
+  if (isFunction(str.lastIndexOf)) {
+    return str.lastIndexOf(val)
+  } else {
+    for (var len = str.length - 1; len >= 0; len--) {
+      if (val === str[len]) {
+        return len
+      };
+    }
+  }
+  return -1
+}
