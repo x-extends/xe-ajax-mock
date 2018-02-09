@@ -10,14 +10,11 @@ define([
     })
   })
   XEAjaxMock.POST('/api/shopping/save', (request, response) => {
-    return XEAjax.getJSON('mock/json/api/shopping/save/data.json').then(function (data) {
-      response.body = data
-      return response
-    })
+    return XEAjax.getJSON('mock/json/api/shopping/save/data.json') // 转发为响应本地json数据
   })
   XEAjaxMock.DELETE('/api/shopping/del/{id}', (request, response) => {
     return XEAjax.getJSON('mock/json/api/shopping/del/data.json').then(function (data) {
-      response.status = 500
+      response.status = 500 // 设置为请求错误
       response.body = data
       return response
     })

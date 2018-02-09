@@ -12,10 +12,7 @@ define([
   XEAjaxMock.POST('/api/user/save', (request, response) => {
       // 模拟后台逻辑
     if (request.body.password && request.body.password.length > 6) {
-      return XEAjax.getJSON('mock/json/api/user/save/data.json').then(function (data) {
-        response.body = data
-        return response
-      })
+      return XEAjax.getJSON('mock/json/api/user/save/data.json')
     }
     response.status = 500
     response.body = {message: '密码不能小于六位数'}
