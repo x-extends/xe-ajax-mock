@@ -23,8 +23,6 @@ define([
     },
     methods: {
       init: function () {
-        // 如果要混合 vue 实例，可以使用 vxe-ajax 安装
-        // this.$ajax.getJSON(url)
         var that = this
         // 返回响应结果
         XEAjax.getJSON('/api/shopping/findList').then(function (data) {
