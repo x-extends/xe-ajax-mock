@@ -168,13 +168,13 @@ POST('/api/user/save', (request, response) => {
 // ES5 require 异步获取资源文件方式
 POST('/api/user/save', (request, response) => {
   response.status = 200
-  return response.require('mock/json/api/user/save/data,json')
+  return response.require('mock/json/api/user/save/data.json')
 })
 
 // ES6 Module require 异步获取资源文件方式
 POST('/api/user/save', (request, response) => {
   response.status = 200
-  response.body = require('mock/json/api/user/save/data,json')
+  response.body = require('mock/json/api/user/save/data.json')
   return response
 })
 
