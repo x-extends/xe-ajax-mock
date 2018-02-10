@@ -1,5 +1,8 @@
 # XEAjaxMock 前端虚拟服务 - XEAjax插件
 
+[![npm version](https://img.shields.io/npm/v/xe-ajax-mock.svg?style=flat-square)](https://www.npmjs.org/package/xe-ajax-mock)
+[![npm downloads](https://img.shields.io/npm/dm/xe-ajax-mock.svg?style=flat-square)](http://npm-stat.com/charts.html?package=xe-ajax-mock)
+
 基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，使用 ajax+mock 就非常有必要。
 
 ### 兼容性
