@@ -50,8 +50,7 @@ define(['xe-ajax'], function (XEAjax) {
 
 ### ES6 Module 安装方式
 ``` shell
-npm install xe-ajax --save
-npm install xe-ajax-mock --save
+npm install xe-ajax xe-ajax-mock --save
 ```
 
 ### 部分导入
