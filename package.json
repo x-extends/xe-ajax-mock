@@ -1,6 +1,6 @@
 {
   "name": "xe-ajax-mock",
-  "version": "1.4.9",
+  "version": "1.5.0",
   "description": "前端虚拟服务 - XEAjax插件",
   "main": "index.js",
   "scripts": {
