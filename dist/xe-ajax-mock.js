@@ -131,7 +131,7 @@
         }
         return Promise.resolve(mock.response).then(function (response) {
           resolve(new XEMockResponse(response, 200))
-        })['catch'](function (response) {
+        }).catch(function (response) {
           reject(new XEMockResponse(response, 500))
         })
       }, mock.time)
