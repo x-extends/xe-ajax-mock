@@ -9,17 +9,16 @@
 任何支持 Promise 的环境都能运行，低版本浏览器使用 babel 转码<br/>
 支持 IE8+、Edge、Chrome、Firefox、Opera、Safari等...
 
-### 直接引用 script 全局安装，XEAjaxMock 会定义为全局变量
+### CDN 安装
+使用 script 方式安装，XEAjax 会定义为全局变量<br/>
+生产环境请使用 xe-ajax-mock.min.js，更小的压缩版本，可以带来更快的速度体验。
+#### cdnjs 获取最新版本, [点击浏览](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)已发布的所有 npm 包的源代码。
 ``` shell
-<script src="./dist/xe-ajax.min.js" type="text/javascript"></script>
-<script src="./dist/xe-ajax-mock.min.js" type="text/javascript"></script>
-
-// /main.js 安装
-XEAjax.use(XEAjaxMock)
-XEAjaxMock.GET('/api/user/list', {status: 200, body: {msg: 'success'}})
-
-// ./app.js 调用
-XEAjax.getJSON ('/api/user/list', {id: 1}) // 响应结果：{msg: 'success'}
+<script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock@1.4.9/dist/xe-ajax-mock.js" type="text/javascript"></script>
+```
+#### unpkg 获取最新版本, [点击浏览](https://unpkg.com/xe-ajax-mock@1.4.9/)已发布的所有 npm 包的源代码
+``` shell
+<script src="https://unpkg.com/xe-ajax-mock@1.4.9/dist/xe-ajax-mock.js" type="text/javascript"></script>
 ```
 
 ### AMD 安装， 以 require.js 为例
