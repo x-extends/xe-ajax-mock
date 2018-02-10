@@ -61,6 +61,7 @@
   }
 
   var global = typeof window === 'undefined' ? this : window
+  var requireMap = {}
   var defineMockServices = []
   var setupDefaults = {
     baseURL: getBaseURL(),
@@ -70,18 +71,69 @@
     log: true
   }
 
+  function parseRequire (response, path) {
+    response.body = null
+    try {
+      response.body = JSON.parse(requireMap[path])
+    } catch (e) {
+      response.body = requireMap[path]
+    }
+    return response
+  }
+
+  function require (path) {
+    var response = this
+    return new Promise(function (resolve, reject) {
+      if (requireMap[path]) {
+        resolve(parseRequire(response, path))
+      } else {
+        var xhr = new XMLHttpRequest()
+        xhr.open('GET', path, true)
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status < 200 && xhr.status >= 300) {
+              if (setupDefaults.error) {
+                console.error('This relative module was not found: ' + path)
+              }
+            }
+            requireMap[path] = xhr.responseText
+            resolve(parseRequire(response, path))
+          }
+        }
+        xhr.send()
+      }
+    })
+  }
+
+  function XEMockResponse (response, status) {
+    if (response && response.body !== undefined && response.status !== undefined) {
+      response.headers = objectAssign({}, setupDefaults.headers, response.headers)
+      objectAssign(this, response)
+    } else {
+      this.status = status
+      this.body = response
+      this.headers = objectAssign({}, setupDefaults.headers)
+    }
+  }
+
+  objectAssign(XEMockResponse.prototype, {
+    require: require
+  })
+
   /**
    * 响应结果
    */
   function getXHRResponse (mock, request) {
     return new Promise(function (resolve, reject) {
       mock.asyncTimeout = setTimeout(function () {
-        Promise.resolve(isFunction(mock.response) ? mock.response(request, mock.getResponse(null, 200), mock) : mock.response)
-          .then(function (response) {
-            resolve(mock.getResponse(response, 200))
-          })['catch'](function (response) {
-            reject(mock.getResponse(response, 500))
-          })
+        if (isFunction(mock.response)) {
+          return resolve(mock.response(request, new XEMockResponse(null, 200), mock))
+        }
+        return Promise.resolve(mock.response).then(function (response) {
+          resolve(new XEMockResponse(response, 200))
+        })['catch'](function (response) {
+          reject(new XEMockResponse(response, 500))
+        })
       }, mock.time)
     })
   }
@@ -100,13 +152,6 @@
   }
 
   objectAssign(XEMockService.prototype, {
-    getResponse: function (response, status) {
-      if (response && response.body !== undefined && response.status !== undefined) {
-        response.headers = objectAssign({}, setupDefaults.headers, response.headers)
-        return response
-      }
-      return {status: status, body: response, headers: objectAssign({}, setupDefaults.headers)}
-    },
     send: function (mockXHR, request) {
       var mock = this
       this.time = request.timeout || getTime(this.options.timeout)
@@ -128,7 +173,7 @@
           mockXHR.onreadystatechange()
         }
         if (this.options.log) {
-          console.info('XEMock URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + this.time + 'ms')
+          console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + this.time + 'ms')
           console.info(response.body)
         }
       }
@@ -282,7 +327,7 @@
         if (request.getPromiseStatus(response)) {
           global[request.jsonpCallback](response.body)
           if (mock.options.log) {
-            console.info('XEMock URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
+            console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
             console.info(response.body)
           }
         } else {

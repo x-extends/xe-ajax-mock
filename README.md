@@ -165,7 +165,20 @@ POST('/api/user/save', (request, response) => {
   return {status: 200, body: {msg: 'success'}}
 })
 
-// 异步方式
+// ES5 require 异步获取资源文件方式
+POST('/api/user/save', (request, response) => {
+  response.status = 200
+  return response.require('mock/json/api/user/save/data,json')
+})
+
+// ES6 Module require 异步获取资源文件方式
+POST('/api/user/save', (request, response) => {
+  response.status = 200
+  response.body = require('mock/json/api/user/save/data,json')
+  return response
+})
+
+// 异步 Promise 方式
 PATCH('/api/user/patch', (request, response) => {
   return new Promise( (resolve, reject) => {
     setTimeout(() = {

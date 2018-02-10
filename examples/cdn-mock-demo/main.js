@@ -27,6 +27,17 @@ require([
   XEAjax.setup({
     bodyType: 'FORM_DATA'// 默认已json方式提交，修改为form data方式提交,根据后台支持情况设置
   })
+
+  XEAjax.interceptors.request.use(function (request, next) {
+    // 请求之前拦截器
+    next()
+  })
+
+  XEAjax.interceptors.response.use(function (response, next) {
+    // 响应之后拦截器
+    next()
+  })
+
   var $app = new Vue({
     el: '#app',
     router: router

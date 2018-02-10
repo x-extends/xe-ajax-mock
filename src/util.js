@@ -1,4 +1,4 @@
-export var isArray = Array.isArray || function isArray (obj) {
+export var isArray = Array.isArray || function (obj) {
   return obj ? obj.constructor === Array : false
 }
 
@@ -10,7 +10,7 @@ export function random (min, max) {
   return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
 }
 
-export var objectAssign = Object.assign || function objectAssign (target) {
+export var objectAssign = Object.assign || function (target) {
   for (var source, index = 1, len = arguments.length; index < len; index++) {
     source = arguments[index]
     for (var key in source) {
