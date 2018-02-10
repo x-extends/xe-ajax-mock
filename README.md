@@ -139,8 +139,9 @@ XEAjaxMock.setup({
 ### 目录结构
 XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务越来越多时，统一目录结构可维护性会更好
 
-ES6 + XEAjax + Mock 项目例子请参考 [mock-demo](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/mock-demo) 示例<br/>
-RequireJS + XEAjax + Mock 项目例子请参考 [cdn-mock-demo](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/cdn-mock-demo) 示例
+ES6 + XEAjax + Mock 项目例子1 请参考 [vue-mock1](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock1) 示例<br/>
+RequireJS + XEAjax + Mock 项目例子2 请参考 [vue-mock2](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock2) 示例
+RequireJS + VXEAjax + Mock 项目例子3 请参考 [vue-mock3](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock3) 示例
 
 ### 示例1
 ``` shell

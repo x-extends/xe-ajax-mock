@@ -348,6 +348,6 @@ export var POST = createDefine('POST')
 export var PUT = createDefine('PUT')
 export var DELETE = createDefine('DELETE')
 export var PATCH = createDefine('PATCH')
-export var version = '1.4.8'
+export var version = '1.4.9'
 
 export default XEAjaxMock
