@@ -178,7 +178,7 @@ POST('/api/user/save', (request, response) => {
   return response
 })
 
-// 异步 Promise 方式
+// Promise 异步方式
 PATCH('/api/user/patch', (request, response) => {
   return new Promise( (resolve, reject) => {
     setTimeout(() = {
@@ -189,7 +189,7 @@ PATCH('/api/user/patch', (request, response) => {
   })
 })
 
-// 函数方式,模拟后台校验
+// 函数方式,简单模拟后台校验
 DELETE('/api/user/del', (request, response) => {
   // 模拟后台逻辑 对参数进行校验
   if (request.params.id) {
