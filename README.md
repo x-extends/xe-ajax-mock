@@ -36,8 +36,13 @@ require.config({
 define(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
   // 安装
   XEAjax.use(XEAjaxMock)
-  // Mock 定义
+  // 定义 Mock 服务
   XEAjaxMock.GET('/api/user/list', {status: 200, body: {msg: 'success'}})
+  // 定义 Mock 服务
+  XEAjaxMock.GET('/api/user/page/{pageSize}/{currentPage}', function (request, response) {
+    // 响应为本地 json 文件数据
+    return response.require('mock/json/api/user/list/data.json')
+  })
 })
 
 // ./app.js 调用
