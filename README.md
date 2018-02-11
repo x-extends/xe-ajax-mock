@@ -48,7 +48,9 @@ define(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
 // ./app.js 调用
 define(['xe-ajax'], function (XEAjax) {
   // 调用
-  XEAjax.getJSON('/api/user/list', {id: 1}) // 响应结果：{msg: 'success'}
+  XEAjax.getJSON('/api/user/list', {id: 1}).then(function (data) {
+    // data = {msg: 'success'}
+  })
 })
 ```
 
