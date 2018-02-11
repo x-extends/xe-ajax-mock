@@ -6,7 +6,7 @@
 基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，使用 ajax+mock 就非常有必要。
 
 ### 兼容性
-任何支持 Promise 的环境都能运行，低版本浏览器使用 babel 转码<br/>
+任何支持 Promise 的环境都能运行，低版本浏览器使用 polyfill<br/>
 支持 IE8+、Edge、Chrome、Firefox、Opera、Safari等...
 
 ### CDN 安装
