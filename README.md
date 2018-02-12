@@ -251,7 +251,7 @@ XEAjaxMock.POST('/api/user/save', {status: 200, body: {msg: 'success'}})
 XEAjaxMock.PUT('/api/user/update', {status: 200, body: {msg: 'success'}})
 XEAjaxMock.DELETE('/api/user/delete', {status: 200, body: {msg: 'success'}})
 XEAjaxMock.PATCH('/api/user/patch', {status: 200, body: {msg: 'success'}})
-XEAjaxMock.JSONP('/api/user/patch', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.JSONP('http://xuliangzhan.com/jsonp/user/message', {status: 200, body: {msg: 'success'}})
 
 // 配置方式定义
 XEAjaxMock.Mock([{
