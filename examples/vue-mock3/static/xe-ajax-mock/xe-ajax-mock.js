@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.5.0
+ * xe-ajax-mock.js v1.5.1
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -84,6 +84,11 @@
   function require (path) {
     var response = this
     return new Promise(function (resolve, reject) {
+      if (path.indexOf('/') === 0) {
+        path = location.origin + path
+      } else if (setupDefaults.baseURL) {
+        path = setupDefaults.baseURL.replace(/\/$/, '') + '/' + path
+      }
       if (requireMap[path]) {
         resolve(parseRequire(response, path))
       } else {
@@ -207,16 +212,19 @@
     })
   }
 
-  function defineMocks (list, options, baseURL) {
+  function defineMocks (list, options, baseURL, first) {
     if (isArray(list)) {
       arrayEach(list, function (item) {
         if (item.path) {
-          if (!baseURL) {
-            baseURL = /\w+:\/{2}.*/.test(item.path) ? '' : options.baseURL
+          if (first && item.path.indexOf('/') === 0) {
+            item.path = location.origin + item.path
+          } else if (first && /\w+:\/{2}.*/.test(item.path)) {
+            item.path = item.path
+          } else {
+            item.path = baseURL.replace(/\/$/, '') + '/' + item.path.replace(/^\//, '')
           }
-          item.path = (baseURL ? baseURL.replace(/\/$/, '') + '/' : '') + item.path.replace(/^\//, '')
           if (item.response) {
-            item.method = String(item.method || 'get')
+            item.method = String(item.method || 'GET')
             defineMockServices.push(new XEMockService(item.path, item.method, item.response, options))
           }
           defineMocks(item.children, options, item.path)
@@ -363,7 +371,8 @@
     * @param Object options 参数
     */
   function XEAjaxMock (path, method, response, options) {
-    defineMocks(isArray(path) ? (options = method, path) : [{path: path, method: method, response: response}], objectAssign({}, setupDefaults, options))
+    var opts = objectAssign({}, setupDefaults, options)
+    defineMocks(isArray(path) ? (options = method, path) : [{path: path, method: method, response: response}], opts, opts.baseURL, true)
     return XEAjaxMock
   }
 
@@ -408,7 +417,7 @@
   var PUT = createDefine('PUT')
   var DELETE = createDefine('DELETE')
   var PATCH = createDefine('PATCH')
-  var version = '1.5.0'
+  var version = '1.5.1'
 
   /**
    * 混合函数
