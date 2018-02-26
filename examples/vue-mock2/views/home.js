@@ -34,7 +34,7 @@ define([
         XEAjax.fetchGet('/api/user/list/page/10/1').then(function (response) {
           if (response.ok) {
             response.json().then(function (data) {
-              that.userList = data
+              that.userList = data.result
             })
           } else {
             that.userList = []
