@@ -37,6 +37,12 @@ define([
             this.userList = []
           }
         })
+        // 跨域调用 jsonp 服务,返回数据
+        this.$ajax.jsonp('http://xuliangzhan.com/api/user/message').then(function (data) {
+          // data = [{name: 'data 1'}, {name: 'data 2'}]
+        }).catch(function (data) {
+          // data
+        })
       },
       save: function () {
         // 保存

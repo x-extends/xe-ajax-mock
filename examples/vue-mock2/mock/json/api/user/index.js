@@ -3,10 +3,10 @@ define([
 ], function (XEAjaxMock) {
   XEAjaxMock.GET('/api/user/list/page/{pageSize}/{currentPage}', function (request, response, context) {
     // 通过 context 获取路径参数 context.pathVariable
-    return response.require('mock/json/api/user/list/page/data.json').then(function (response) {
+    return response.require('mock/json/api/user/list/page/data.json').then(function (resp) {
       // 支持修改最终结果
-      response.body = {page: context.pathVariable, result: response.body}
-      return response
+      resp.body = {page: context.pathVariable, result: resp.body}
+      return resp
     })
   })
   XEAjaxMock.POST('/api/user/save', function (request, response) {

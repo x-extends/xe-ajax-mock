@@ -85,7 +85,7 @@
     return response
   }
 
-  function require (path) {
+  function requireJSON (path) {
     var response = this
     return new Promise(function (resolve, reject) {
       if (path.indexOf('/') === 0) {
@@ -126,7 +126,7 @@
   }
 
   objectAssign(XEMockResponse.prototype, {
-    require: require
+    require: requireJSON
   })
 
   /**

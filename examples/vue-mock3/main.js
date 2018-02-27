@@ -10,24 +10,29 @@ require.config({
     'text': 'static/require/require-text',
 
     'mock': 'mock/index',
+    'mock-setup': 'mock/setup',
     'shopping-mock': 'mock/json/api/shopping/index',
     'user-mock': 'mock/json/api/user/index',
     'jsonp-user-mock': 'mock/jsonp/xuliangzhan.com/index',
 
     'router': 'router/index',
     'home': 'views/home'
+  },
+  shim: {
+    mock: {
+      deps: ['mock-setup']
+    }
   }
 })
 
-require([
+define([
   'vue',
   'xe-ajax',
   'vxe-ajax',
   'xe-utils',
   'vxe-utils',
-  'router',
-  'mock'
-], function (Vue, XEAjax, VXEAjax, XEUtils, VXEUtils, router) {
+  'router'
+].concat(location.hostname.indexOf('localhost') === 0 ? ['mock'] : []), function (Vue, XEAjax, VXEAjax, XEUtils, VXEUtils, router) {
   // 安装
   Vue.use(VXEAjax, XEAjax, true) // 如果第三个参数设置为true，则启动模拟 Promise 模式，通过 this.$ajax 发起的请求 this 默认指向当前vue实例。
   Vue.use(VXEUtils, XEUtils)
@@ -47,7 +52,7 @@ require([
     next()
   })
 
-  var $app = new Vue({
+  return new Vue({
     el: '#app',
     router: router
   })
