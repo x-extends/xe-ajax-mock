@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.5.1
+ * xe-ajax-mock.js v1.5.2
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -41,10 +41,14 @@
     }
   }
 
+  function getLocatOrigin () {
+    return location.origin || (location.protocol + '//' + location.host)
+  }
+
   function getBaseURL () {
     var pathname = location.pathname
     var lastIndex = lastIndexOf(pathname, '/') + 1
-    return location.origin + (lastIndex === pathname.length ? pathname : pathname.substring(0, lastIndex))
+    return getLocatOrigin() + (lastIndex === pathname.length ? pathname : pathname.substring(0, lastIndex))
   }
 
   function lastIndexOf (str, val) {
@@ -85,8 +89,8 @@
     var response = this
     return new Promise(function (resolve, reject) {
       if (path.indexOf('/') === 0) {
-        path = location.origin + path
-      } else if (setupDefaults.baseURL) {
+        path = getLocatOrigin() + path
+      } else if (!/\w+:\/{2}.*/.test(path)) {
         path = setupDefaults.baseURL.replace(/\/$/, '') + '/' + path
       }
       if (requireMap[path]) {
@@ -217,7 +221,7 @@
       arrayEach(list, function (item) {
         if (item.path) {
           if (first && item.path.indexOf('/') === 0) {
-            item.path = location.origin + item.path
+            item.path = getLocatOrigin() + item.path
           } else if (first && /\w+:\/{2}.*/.test(item.path)) {
             item.path = item.path
           } else {
@@ -417,7 +421,8 @@
   var PUT = createDefine('PUT')
   var DELETE = createDefine('DELETE')
   var PATCH = createDefine('PATCH')
-  var version = '1.5.1'
+  var HEAD = createDefine('HEAD')
+  var version = '1.5.2'
 
   /**
    * 混合函数
@@ -429,7 +434,7 @@
   }
 
   mixin({
-    setup: setup, install: install, JSONP: JSONP, Mock: Mock, GET: GET, POST: POST, PUT: PUT, DELETE: DELETE, PATCH: PATCH, version: version
+    setup: setup, install: install, JSONP: JSONP, Mock: Mock, GET: GET, POST: POST, PUT: PUT, DELETE: DELETE, PATCH: PATCH, HEAD: HEAD, version: version
   })
   XEAjaxMock.mixin = mixin
 

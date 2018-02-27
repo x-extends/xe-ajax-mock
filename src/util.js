@@ -31,10 +31,14 @@ export function arrayEach (array, callback, context) {
   }
 }
 
+export function getLocatOrigin () {
+  return location.origin || (location.protocol + '//' + location.host)
+}
+
 export function getBaseURL () {
   var pathname = location.pathname
   var lastIndex = lastIndexOf(pathname, '/') + 1
-  return location.origin + (lastIndex === pathname.length ? pathname : pathname.substring(0, lastIndex))
+  return getLocatOrigin() + (lastIndex === pathname.length ? pathname : pathname.substring(0, lastIndex))
 }
 
 export function lastIndexOf (str, val) {

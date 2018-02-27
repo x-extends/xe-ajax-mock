@@ -1,7 +1,7 @@
 define([
   'xe-ajax-mock'
 ], function (XEAjaxMock) {
-  XEAjaxMock.GET('/api/user/list/page/{pageSize}/{currentPage}', (request, response, context) => {
+  XEAjaxMock.GET('/api/user/list/page/{pageSize}/{currentPage}', function (request, response, context) {
     // 通过 context 获取路径参数 context.pathVariable
     return response.require('mock/json/api/user/list/page/data.json').then(function (response) {
       // 支持修改最终结果
@@ -9,7 +9,7 @@ define([
       return response
     })
   })
-  XEAjaxMock.POST('/api/user/save', (request, response) => {
+  XEAjaxMock.POST('/api/user/save', function (request, response) {
       // 模拟后台逻辑
     if (request.body.password && request.body.password.length >= 6) {
       response.status = 200

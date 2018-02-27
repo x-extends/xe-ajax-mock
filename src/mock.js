@@ -1,4 +1,4 @@
-import { isArray, isFunction, random, arrayEach, objectAssign, getBaseURL } from './util'
+import { isArray, isFunction, random, arrayEach, objectAssign, getBaseURL, getLocatOrigin } from './util'
 
 var global = typeof window === 'undefined' ? this : window
 var requireMap = {}
@@ -24,6 +24,11 @@ function parseRequire (response, path) {
 function require (path) {
   var response = this
   return new Promise(function (resolve, reject) {
+    if (path.indexOf('/') === 0) {
+      path = getLocatOrigin() + path
+    } else if (!/\w+:\/{2}.*/.test(path)) {
+      path = setupDefaults.baseURL.replace(/\/$/, '') + '/' + path
+    }
     if (requireMap[path]) {
       resolve(parseRequire(response, path))
     } else {
@@ -152,7 +157,7 @@ function defineMocks (list, options, baseURL, first) {
     arrayEach(list, function (item) {
       if (item.path) {
         if (first && item.path.indexOf('/') === 0) {
-          item.path = location.origin + item.path
+          item.path = getLocatOrigin() + item.path
         } else if (first && /\w+:\/{2}.*/.test(item.path)) {
           item.path = item.path
         } else {
@@ -352,6 +357,7 @@ export var POST = createDefine('POST')
 export var PUT = createDefine('PUT')
 export var DELETE = createDefine('DELETE')
 export var PATCH = createDefine('PATCH')
-export var version = '1.5.1'
+export var HEAD = createDefine('HEAD')
+export var version = '1.5.2'
 
 export default XEAjaxMock
