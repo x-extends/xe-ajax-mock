@@ -1,5 +1,5 @@
 ### ES6 Module 项目示例1
-vue、vue-router、xe-ajax、xe-utils、xe-ajax-mock
+vue、vue-router、element-ui、xe-ajax、xe-utils、xe-ajax-mock
 
 ### 描述：
 vue: vue 框架<br/>
