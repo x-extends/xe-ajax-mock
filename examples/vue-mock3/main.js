@@ -1,12 +1,12 @@
 require.config({
   paths: {
-    'vue': 'static/vue/vue',
-    'vue-router': 'static/vue-router/vue-router',
-    'xe-utils': 'static/xe-utils/xe-utils',
-    'vxe-utils': 'static/vxe-utils/vxe-utils',
-    'xe-ajax': 'static/xe-ajax/xe-ajax',
-    'vxe-ajax': 'static/vxe-ajax/vxe-ajax',
-    'xe-ajax-mock': 'static/xe-ajax-mock/xe-ajax-mock',
+    'vue': 'https://cdn.jsdelivr.net/npm/vue@2.5.2/dist/vue',
+    'vue-router': 'https://cdn.jsdelivr.net/npm/vue-router@3.0.1/dist/vue-router',
+    'xe-utils': 'https://cdn.jsdelivr.net/npm/xe-utils/dist/xe-utils',
+    'vxe-utils': 'https://cdn.jsdelivr.net/npm/vxe-utils/dist/vxe-utils',
+    'xe-ajax': 'https://cdn.jsdelivr.net/npm/xe-ajax/dist/xe-ajax',
+    'vxe-ajax': 'https://cdn.jsdelivr.net/npm/vxe-ajax/dist/vxe-ajax',
+    'xe-ajax-mock': 'https://cdn.jsdelivr.net/npm/xe-ajax-mock/dist/xe-ajax-mock',
     'text': 'static/require/require-text',
 
     'mock': 'mock/index',
