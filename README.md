@@ -1,9 +1,9 @@
-# XEAjaxMock 前端虚拟服务 - XEAjax插件
+# XEAjaxMock Mock 前端虚拟服务 - XEAjax插件
 
 [![npm version](https://img.shields.io/npm/v/xe-ajax-mock.svg?style=flat-square)](https://www.npmjs.org/package/xe-ajax-mock)
 [![npm downloads](https://img.shields.io/npm/dm/xe-ajax-mock.svg?style=flat-square)](http://npm-stat.com/charts.html?package=xe-ajax-mock)
 
-基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，使用 ajax+mock 就非常有必要。
+基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，使用 mock 使前端独立开发就非常有必要。
 
 ### 兼容性
 任何支持 Promise 的环境都能运行，低版本浏览器使用 polyfill<br/>
@@ -104,6 +104,7 @@ XEAjaxMock.m1()
 * PUT( path, response, options )
 * DELETE( path, response, options )
 * PATCH( path, response, options )
+* HEAD( path, response, options )
 * JSONP( path, response, options )
 * setup( options )
 
@@ -184,17 +185,6 @@ POST('/api/user/save', (request, response) => {
   return response
 })
 
-// Promise 异步方式
-PATCH('/api/user/patch', (request, response) => {
-  return new Promise( (resolve, reject) => {
-    setTimeout(() = {
-      response.status = 200
-      response.body = [{msg: 'data 1'}, {msg: 'data 2'}]
-      resolve(response)
-    }, 100)
-  })
-})
-
 // 函数方式,简单模拟后台校验
 DELETE('/api/user/del', (request, response) => {
   // 模拟后台逻辑 对参数进行校验
@@ -206,6 +196,17 @@ DELETE('/api/user/del', (request, response) => {
     response.body = {msg: 'error'}
   }
   return response
+})
+
+// Promise 异步方式
+PATCH('/api/user/patch', (request, response) => {
+  return new Promise( (resolve, reject) => {
+    setTimeout(() = {
+      response.status = 200
+      response.body = {msg: 'success'}
+      resolve(response)
+    }, 100)
+  })
 })
 
 // JSONP 定义
