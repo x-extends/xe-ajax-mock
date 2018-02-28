@@ -2,7 +2,7 @@
   "name": "vue-mock1",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "Xu Liangzhan <xlz26296x@163.com>",
+  "author": "Xu Liangzhan",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
