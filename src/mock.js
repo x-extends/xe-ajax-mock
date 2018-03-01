@@ -119,7 +119,7 @@ objectAssign(XEMockService.prototype, {
       }
       if (this.options.log) {
         console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + this.time + 'ms')
-        console.info(response.body)
+        console.info(response)
       }
     }
   }
@@ -276,7 +276,7 @@ function sendJsonpMock (script, request) {
         global[request.jsonpCallback](response.body)
         if (mock.options.log) {
           console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
-          console.info(response.body)
+          console.info(response)
         }
       } else {
         script.onerror({type: 'error'})
@@ -358,6 +358,6 @@ export var PUT = createDefine('PUT')
 export var DELETE = createDefine('DELETE')
 export var PATCH = createDefine('PATCH')
 export var HEAD = createDefine('HEAD')
-export var version = '1.5.2'
+export var version = '1.5.3'
 
 export default XEAjaxMock

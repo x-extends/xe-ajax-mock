@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.5.2
+ * xe-ajax-mock.js v1.5.3
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -183,7 +183,7 @@
         }
         if (this.options.log) {
           console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + this.time + 'ms')
-          console.info(response.body)
+          console.info(response)
         }
       }
     }
@@ -340,7 +340,7 @@
           global[request.jsonpCallback](response.body)
           if (mock.options.log) {
             console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
-            console.info(response.body)
+            console.info(response)
           }
         } else {
           script.onerror({type: 'error'})
@@ -422,7 +422,7 @@
   var DELETE = createDefine('DELETE')
   var PATCH = createDefine('PATCH')
   var HEAD = createDefine('HEAD')
-  var version = '1.5.2'
+  var version = '1.5.3'
 
   /**
    * 混合函数
