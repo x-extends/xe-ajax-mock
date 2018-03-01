@@ -5,6 +5,6 @@ define([
   'user-mock',
   'jsonp-user-mock'
 ], function (XEAjax, XEAjaxMock) {
-  // 安装
+  // 安装 Mock
   XEAjax.use(XEAjaxMock)
 })

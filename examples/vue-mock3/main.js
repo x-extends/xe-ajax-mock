@@ -33,13 +33,14 @@ define([
   'vxe-utils',
   'router'
 ].concat(location.hostname.indexOf('localhost') === 0 ? ['mock'] : []), function (Vue, XEAjax, VXEAjax, XEUtils, VXEUtils, router) {
-  // 安装
-  Vue.use(VXEAjax, XEAjax, true) // 如果第三个参数设置为true，则启动模拟 Promise 模式，通过 this.$ajax 发起的请求 this 默认指向当前vue实例。
+  // 安装 XEAjax VXEAjax
+  Vue.use(VXEAjax, XEAjax, true)
   Vue.use(VXEUtils, XEUtils)
 
-  // 设置默认参数
+  // XEAjax 参数设置
   XEAjax.setup({
-    bodyType: 'FORM_DATA'// 默认已json方式提交，修改为form data方式提交,根据后台支持情况设置
+    bodyType: 'FORM_DATA',
+    credentials: 'include'
   })
 
   XEAjax.interceptors.request.use(function (request, next) {

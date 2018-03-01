@@ -29,9 +29,10 @@ define([
   'router',
   'mock'
 ].concat(location.hostname.indexOf('localhost') === 0 ? ['mock'] : []), function (Vue, XEAjax, router) {
-  // 设置默认参数
+  // XEAjax 参数设置
   XEAjax.setup({
-    bodyType: 'FORM_DATA'// 默认已json方式提交，修改为form data方式提交,根据后台支持情况设置
+    bodyType: 'FORM_DATA',
+    credentials: 'include'
   })
 
   XEAjax.interceptors.request.use(function (request, next) {
