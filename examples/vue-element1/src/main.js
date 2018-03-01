@@ -5,10 +5,10 @@ import App from './App'
 import router from './router'
 import store from './store'
 
+import XEAjax from 'xe-ajax'
 import VueI18n from 'vue-i18n'
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import XEAjax from 'xe-ajax'
 
 Vue.use(Element)
 Vue.use(VueI18n)
@@ -18,6 +18,12 @@ Vue.config.productionTip = false
 if (process.env.NODE_ENV === 'development') {
   require('./mock')
 }
+
+// XEAjax 参数设置
+XEAjax.setup({
+  bodyType: 'JSON_DATA',
+  credentials: 'include'
+})
 
 XEAjax.interceptors.request.use((request, next) => {
   // 请求之前拦截器
