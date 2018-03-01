@@ -173,18 +173,13 @@ POST('/api/user/save', (request, response) => {
   return {status: 200, body: {msg: 'success'}}
 })
 
-// ES5 require 异步获取资源文件方式
+// ES5 require 获取资源文件方式
 POST('/api/user/save', (request, response) => {
-  response.status = 200
   return response.require('mock/json/api/user/save/data.json')
 })
 
-// ES6 Module require 异步获取资源文件方式
-POST('/api/user/save', (request, response) => {
-  response.status = 200
-  response.body = require('mock/json/api/user/save/data.json')
-  return response
-})
+// ES6 Module require 获取资源文件方式
+POST('/api/user/save', require('mock/json/api/user/save/data.json'))
 
 // 函数方式,简单模拟后台校验
 DELETE('/api/user/del', (request, response) => {
