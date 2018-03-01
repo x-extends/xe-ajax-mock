@@ -75,14 +75,6 @@ XEAjaxMock.GET('/api/user/list', {id: 1})
 XEAjaxMock.POST('/api/user/save', {id: 1})
 ```
 
-### 完整项目示例
-XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务越来越多时，统一目录结构可维护性会更好
-
-ES6 + Vue + ElementUI + XEAjax + Mock 项目 请参考 [vue-element1](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-element1) 示例<br/>
-ES6 + Vue + XEAjax + Mock 项目 请参考 [vue-mock1](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock1) 示例<br/>
-RequireJS + Vue + XEAjax + Mock 项目 请参考 [vue-mock2](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock2) 示例<br/>
-Vue +RequireJS + Vue + VXEAjax + Mock 项目 请参考 [vue-mock3](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock3) 示例
-
 ### 混合函数
 #### 文件 ./customs.js
 ``` shell
@@ -300,6 +292,14 @@ jsonp('http://xuliangzhan.com/jsonp/user/message').then(data => {
   // data = [{msg: 'data 1'}, {msg: 'data 2'}]
 })
 ```
+
+### 完整项目示例
+XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务越来越多时，统一目录结构可维护性会更好
+
+ES6 + Vue + ElementUI + XEAjax + Mock 项目 请参考 [vue-element1](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-element1) 示例<br/>
+ES6 + Vue + XEAjax + Mock 项目 请参考 [vue-mock1](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock1) 示例<br/>
+RequireJS + Vue + XEAjax + Mock 项目 请参考 [vue-mock2](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock2) 示例<br/>
+Vue +RequireJS + Vue + VXEAjax + Mock 项目 请参考 [vue-mock3](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock3) 示例
 
 ## License
 Copyright (c) 2017-present, Xu Liangzhan
