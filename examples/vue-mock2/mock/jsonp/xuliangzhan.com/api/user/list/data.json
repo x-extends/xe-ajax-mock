@@ -1,1 +1,9 @@
-[]
+{
+  "!return|array(1-2)": {
+    "id|number": "{{ $index+1 }}",
+    "name": "test {{ $index }}",
+    "region|array(1)": ["深圳", "北京", "上海", "广州"],
+    "active|boolean": "{{ random(0,1) }}",
+    "age|number": "{{ random(18,60) }}"
+  }
+}

@@ -1,8 +1,5 @@
-[
-  {
-    "name": "data 1"
-  },
-  {
-    "name": "data 2"
+{
+  "!return|array(1-2)": {
+    "name": "msg {{ $index }}"
   }
-]
+}

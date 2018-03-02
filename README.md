@@ -14,11 +14,11 @@
 生产环境请使用 xe-ajax-mock.min.js，更小的压缩版本，可以带来更快的速度体验。
 #### cdnjs 获取最新版本, [点击浏览](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)已发布的所有 npm 包的源代码。
 ``` shell
-<script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock@1.5.3/dist/xe-ajax-mock.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock@1.5.4/dist/xe-ajax-mock.js"></script>
 ```
-#### unpkg 获取最新版本, [点击浏览](https://unpkg.com/xe-ajax-mock@1.5.3/)已发布的所有 npm 包的源代码
+#### unpkg 获取最新版本, [点击浏览](https://unpkg.com/xe-ajax-mock@1.5.4/)已发布的所有 npm 包的源代码
 ``` shell
-<script src="https://unpkg.com/xe-ajax-mock@1.5.3/dist/xe-ajax-mock.js"></script>
+<script src="https://unpkg.com/xe-ajax-mock@1.5.4/dist/xe-ajax-mock.js"></script>
 ```
 
 ### AMD 安装， 以 require.js 为例
@@ -37,7 +37,7 @@ define(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
   // 安装
   XEAjax.use(XEAjaxMock)
   // 定义 Mock 服务
-  XEAjaxMock.GET('/api/user/list', {status: 200, body: {msg: 'success'}})
+  XEAjaxMock.GET('/api/user/list', {msg: 'success'})
   // 定义 Mock 服务
   XEAjaxMock.GET('/api/user/page/{pageSize}/{currentPage}', function (request, response) {
     // 响应为本地 json 文件数据
@@ -63,16 +63,16 @@ npm install xe-ajax xe-ajax-mock --save
 ``` shell
 import { GET, POST } from 'xe-ajax-mock'
 
-GET('/api/user/list', {id: 1})
-POST('/api/user/save', {id: 1})
+GET('/api/user/list', {msg: 'success'})
+POST('/api/user/save', {msg: 'success'})
 ```
 
 ### 导入所有
 ``` shell
 import XEAjaxMock from 'xe-ajax-mock'
 
-XEAjaxMock.GET('/api/user/list', {id: 1})
-XEAjaxMock.POST('/api/user/save', {id: 1})
+XEAjaxMock.GET('/api/user/list', {msg: 'success'})
+XEAjaxMock.POST('/api/user/save', {msg: 'success'})
 ```
 
 ### 混合函数
@@ -122,6 +122,7 @@ XEAjaxMock.m1()
 | 参数 | 类型 | 描述 | 值 |
 |------|------|-----|----|
 | baseURL | String | 基础路径 | 默认上下文路径 |
+| template | Boolean | 启用模板编译 | 默认false |
 | timeout | String | 模拟请求时间 | 默认'20-400' |
 | headers | Object | 设置响应头 |  |
 | error | Boolean | 控制台输出 Mock Error 日志 | true |
@@ -133,6 +134,7 @@ import XEAjaxMock from 'xe-ajax-mock'
 
 XEAjaxMock.setup({
   baseURL: 'http://xuliangzhan.com',
+  template: true,
   timeout: '100-500',
   headers: {
     'Content-Type': 'application/javascript; charset=UTF-8'
@@ -142,9 +144,80 @@ XEAjaxMock.setup({
 })
 ```
 
+### 模板语法
+``` shell
+import { template } from 'xe-ajax-mock'
+
+// 输出数值
+template({
+  'num|number': '123'
+})
+// 结果: {num: 123}
+
+// 输出布尔值
+template({
+  'flag1|boolean': 'true',
+  'flag2|boolean': 'false'
+})
+// 结果: {flag1: true, flag2: false}
+
+// 输出数组
+template({
+  'region|array(1)': ['深圳', '北京', '上海', '广州']
+})
+// 结果: {region: ['深圳']}
+
+// 输出多个数组
+template({
+  'region|array(1-3)': ['深圳', '北京', '上海', '广州']
+})
+// {region: ['深圳', '北京']}
+
+// 随机输出一个值
+template({
+  'region|random(1)': ['深圳', '北京', '上海', '广州']
+})
+// 结果: {region: '深圳'}
+
+// 随机输出多个值
+template({
+  'region|random(1-3)': ['深圳', '北京', '上海', '广州']
+})
+// 结果: {region: ['上海', '北京']}
+
+// 输出范围内随机值
+template({
+  'age': '{{ random(18,60) }}'
+})
+// 结果: {age: '30'}
+
+// 输出对象
+template({
+  'id|number': '1',
+  'name': 'test 1',
+  'region|array(1)': ['深圳', '北京', '上海', '广州'],
+  'active|boolean': '{{ random(0,1) }}'
+  'age|number': '{{ random(18,60) }}'
+})
+// 结果: {id: 1,name: 'test 1', region: ['深圳'], active: false, age: 30}
+
+// 输出对象数组
+template({
+  '!return|array(1-2)': {
+    'id|number': '{{ $index+1 }}',
+    'name': 'test {{ $index }}',
+    'region|array(1)': ['深圳', '北京', '上海', '广州'],
+    'active|boolean': '{{ random(0,1) }}',
+    'age|number': '{{ random(18,60) }}'
+  }
+})
+// 结果: [{id: 1,name: 'test 0', region: ['上海'], active: true, age: 30}, {id: 2, name: 'test 1', region: ['北京'], active: false, age: 42}]
+
+```
+
 ### 示例1
 ``` shell
-import { Mock, GET, POST, PUT, PATCH, DELETE, JSONP } from 'xe-ajax-mock'
+import { template, Mock, GET, POST, PUT, PATCH, DELETE, JSONP } from 'xe-ajax-mock'
 
 // 对象方式
 GET('/api/user/list', {status: 200, body: {msg: 'success'}})
@@ -191,7 +264,11 @@ PATCH('/api/user/patch', (request, response) => {
   return new Promise( (resolve, reject) => {
     setTimeout(() = {
       response.status = 200
-      response.body = {msg: 'success'}
+      response.body = template({
+        '!return|array(1-3)': {
+          id: '{{ $index+1 }}'
+        }
+      })
       resolve(response)
     }, 100)
   })
@@ -200,7 +277,11 @@ PATCH('/api/user/patch', (request, response) => {
 // JSONP 定义
 JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
   // response.status = 500 设置调用为失败
-  response.body = [{msg: 'data 1'}, {msg: 'data 2'}]
+  response.body = template({
+    '!return|array(1-3)': {
+      name: '名字{{ $index }}'
+    }
+  })
   return response
 })
 

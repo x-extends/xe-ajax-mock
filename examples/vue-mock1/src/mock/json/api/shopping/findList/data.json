@@ -1,12 +1,7 @@
-[
-  {
-    "id": 1,
-    "name": "商品1",
-    "label": "商品1"
-  },
-  {
-    "id": 2,
-    "name": "商品2",
-    "label": "商品2"
+{
+  "!return|array(2-5)": {
+    "id|number": "{{ $index+1 }}",
+    "name": "商品{{ $index }}",
+    "label": "商品{{ $index }}"
   }
-]
+}

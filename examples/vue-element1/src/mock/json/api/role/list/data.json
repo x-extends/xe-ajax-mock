@@ -1,7 +1,6 @@
-[{
-  "id": 1,
-  "name": "role 1"
-}, {
-  "id": 2,
-  "name": "role 2"
-}]
+{
+  "!return|array(2-5)": {
+    "id|number": "{{ $index+1 }}",
+    "name": "角色{{ $index }}"
+  }
+}

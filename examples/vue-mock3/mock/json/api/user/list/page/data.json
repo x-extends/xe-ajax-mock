@@ -1,17 +1,10 @@
-[
-  {
-    "id": 1,
-    "name": "用户1",
-    "password": "12345678"
-  },
-  {
-    "id": 2,
-    "name": "用户2",
-    "password": "1234567890"
-  },
-  {
-    "id": 3,
-    "name": "用户3",
-    "password": "1234567890"
+{
+  "!return|array(2-5)": {
+    "id|number": "{{ $index+1 }}",
+    "name": "test {{ $index }}",
+    "region|array(1)": ["深圳", "北京", "上海", "广州"],
+    "active|boolean": "{{ random(0,1) }}",
+    "age|number": "{{ random(18,60) }}",
+    "password": "{{ random(100000,999999) }}"
   }
-]
+}

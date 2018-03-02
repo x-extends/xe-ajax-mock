@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.5.3
+ * xe-ajax-mock.js v1.5.4
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -12,11 +12,19 @@
     return obj ? obj.constructor === Array : false
   }
 
+  function isObject (val) {
+    return typeof val === 'object'
+  }
+
   function isFunction (obj) {
     return typeof obj === 'function'
   }
 
-  function random (min, max) {
+  function isString (val) {
+    return typeof val === 'string'
+  }
+
+  function getRandom (min, max) {
     return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
   }
 
@@ -39,6 +47,59 @@
     for (var index = 0, len = array.length || 0; index < len; index++) {
       callback.call(context || global, array[index], index, array)
     }
+  }
+
+  function objectEach (obj, iteratee, context) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        iteratee.call(context || this, obj[key], key, obj)
+      }
+    }
+  }
+
+  function objectKeys (obj) {
+    var result = []
+    if (obj) {
+      if (Object.keys) {
+        return Object.keys(obj)
+      }
+      objectEach(obj, function (val, key) {
+        result.push(key)
+      })
+    }
+    return result
+  }
+
+  function objectValues (obj) {
+    if (Object.values) {
+      return obj ? Object.values(obj) : []
+    }
+    var result = []
+    arrayEach(objectKeys(obj), function (key) {
+      result.push(obj[key])
+    })
+    return result
+  }
+
+  function arrayShuffle (array) {
+    var result = []
+    for (var list = objectValues(array), len = list.length - 1; len >= 0; len--) {
+      var index = len > 0 ? getRandom(0, len) : 0
+      result.push(list[index])
+      list.splice(index, 1)
+    }
+    return result
+  }
+
+  function arraySample (array, number) {
+    var result = arrayShuffle(array)
+    if (arguments.length === 1) {
+      return result[0]
+    }
+    if (number < result.length) {
+      result.length = number || 0
+    }
+    return result
   }
 
   function getLocatOrigin () {
@@ -64,11 +125,141 @@
     return -1
   }
 
+  function getScopeNumber (str) {
+    var matchs = String(str).match(/(\d+)-(\d+)/)
+    return matchs && matchs.length === 3 ? getRandom(parseInt(matchs[1]), parseInt(matchs[2])) : (isNaN(str) ? 0 : Number(str))
+  }
+
+  var keyRule = /(.+)\|(array|random)\(([0-9-]+)\)$/
+
+  function XETemplate (tmpl) {
+    var result = null
+    result = parseValueRule(tmpl, new TemplateOpts())
+    if (isObject(result)) {
+      var keys = objectKeys(result)
+      if (keys.length === 1 && keys[0] === '!return') {
+        result = result[keys[0]]
+      }
+    }
+    return result
+  }
+
+  function parseValueRule (value, opts) {
+    if (value) {
+      if (isArray(value)) {
+        return parseArray(value, opts)
+      }
+      if (isObject(value)) {
+        return parseObject(value, opts)
+      }
+      if (isString(value)) {
+        return buildTemplate(value, opts)
+      }
+    }
+    return value
+  }
+
+  function parseArray (array, opts) {
+    var result = []
+    arrayEach(array, function (value, index) {
+      var options = new TemplateOpts(opts, array, value, index)
+      result.push(parseValueRule(value, options))
+    })
+    return result
+  }
+
+  function parseObject (obj, opts) {
+    var result = {}
+    objectEach(obj, function (value, key) {
+      var keyMatch = key.match(keyRule)
+      var rest = null
+      if (keyMatch && keyMatch.length === 4) {
+        key = keyMatch[1]
+        var isRandom = keyMatch[2].toLowerCase() === 'random'
+        if (keyMatch[2].toLowerCase() === 'array' || isRandom) {
+          var len = getScopeNumber(keyMatch[3])
+          if (isArray(value)) {
+            if (value.length > len) {
+              rest = parseArray(isRandom ? arraySample(value, len) : value.slice(0, len))
+              if (isRandom && rest.length === 1) {
+                rest = rest[0]
+              }
+            } else {
+              rest = value
+            }
+          } else {
+            rest = []
+            for (var index = 0; index < len; index++) {
+              var op = new TemplateOpts(opts, rest, null, index)
+              rest.push(parseValueRule(value, op))
+            }
+          }
+        }
+      } else {
+        rest = parseValueRule(value, opts)
+        keyMatch = key.match(/(.+)\|(number|boolean)$/)
+        if (keyMatch && keyMatch.length === 3) {
+          key = keyMatch[1]
+          if (keyMatch[2].toLowerCase() === 'number') {
+            rest = parseFloat(rest)
+          } else if (keyMatch[2].toLowerCase() === 'boolean') {
+            rest = rest === '0' ? false : Boolean(rest)
+          }
+        }
+      }
+      result[key] = rest
+    })
+    return result
+  }
+
+  function TemplateOpts (parent, obj, value, index) {
+    this.$parent = parent
+    this.$obj = obj
+    this.$value = value
+    this.$index = index
+  }
+
+  objectAssign(TemplateOpts.prototype, {
+    random: getRandom
+  })
+
+  var tmplJoint = {
+    tStart: '__restArr=[]',
+    tEnd: "return __restArr.join('');",
+    contStart: "__restArr.push('",
+    contEnd: "');\n",
+    contTrimEnd: "'.trim());\n",
+    cStart: '__restArr.push(',
+    cEnd: ');\n',
+    simplifyRegExp: /__restArr\.push\('\s*'\);/g
+  }
+
+  function buildCode (code) {
+    return tmplJoint.contEnd + code + tmplJoint.contStart
+  }
+
+  function buildTemplate (strTmpl, data) {
+    var restTmpl = strTmpl
+    .replace(/[\r\n\t]/g, ' ')
+    .replace(/{{\s*(.*?)\s*}}/g, function (matching, code) {
+      return buildCode(tmplJoint.cStart + code + tmplJoint.cEnd)
+    })
+    try {
+      restTmpl = 'var ' + tmplJoint.tStart + ';with(opts){' + tmplJoint.contStart + restTmpl + tmplJoint.contEnd + '};' + tmplJoint.tEnd
+      /* eslint-disable no-new-func */
+      return new Function('opts', restTmpl.replace(tmplJoint.simplifyRegExp, ''))(data)
+    } catch (e) {
+      console.error(e)
+    }
+    return strTmpl
+  }
+
   var global = typeof window === 'undefined' ? this : window
   var requireMap = {}
   var defineMockServices = []
   var setupDefaults = {
     baseURL: getBaseURL(),
+    template: false,
     timeout: '20-400',
     headers: null,
     error: true,
@@ -114,7 +305,7 @@
     })
   }
 
-  function XEMockResponse (response, status) {
+  function XEMockResponse (mock, response, status) {
     if (response && response.body !== undefined && response.status !== undefined) {
       response.headers = objectAssign({}, setupDefaults.headers, response.headers)
       objectAssign(this, response)
@@ -136,12 +327,12 @@
     return new Promise(function (resolve, reject) {
       mock.asyncTimeout = setTimeout(function () {
         if (isFunction(mock.response)) {
-          return resolve(mock.response(request, new XEMockResponse(null, 200), mock))
+          return resolve(mock.response(request, new XEMockResponse(mock, null, 200), mock))
         }
         return Promise.resolve(mock.response).then(function (response) {
-          resolve(new XEMockResponse(response, 200))
+          resolve(new XEMockResponse(mock, response, 200))
         }).catch(function (response) {
-          reject(new XEMockResponse(response, 500))
+          reject(new XEMockResponse(mock, response, 500))
         })
       }, mock.time)
     })
@@ -163,7 +354,7 @@
   objectAssign(XEMockService.prototype, {
     send: function (mockXHR, request) {
       var mock = this
-      this.time = request.timeout || getTime(this.options.timeout)
+      this.time = request.timeout || getScopeNumber(this.options.timeout)
       return getXHRResponse(mock, request).then(function (response) {
         mock.reply(mockXHR, request, response)
       })
@@ -171,6 +362,9 @@
     reply: function (mockXHR, request, response) {
       if (mockXHR.readyState !== 4) {
         var url = request.getUrl()
+        if (this.options.template === true) {
+          response.body = template(response.body)
+        }
         mockXHR.status = response.status
         mockXHR.responseText = mockXHR.response = response.body ? JSON.stringify(response.body) : ''
         mockXHR.responseHeaders = response.headers
@@ -188,11 +382,6 @@
       }
     }
   })
-
-  function getTime (timeout) {
-    var matchs = timeout.match(/(\d+)-(\d+)/)
-    return matchs.length === 3 ? random(parseInt(matchs[1]), parseInt(matchs[2])) : 0
-  }
 
   function mateMockItem (request) {
     var url = (request.getUrl() || '').split(/\?|#/)[0]
@@ -333,10 +522,13 @@
   function sendJsonpMock (script, request) {
     var mock = mateMockItem(request)
     if (mock) {
-      mock.time = request.timeout || getTime(mock.options.timeout)
+      mock.time = request.timeout || getScopeNumber(mock.options.timeout)
       return getXHRResponse(mock, request).then(function (response) {
         var url = request.getUrl()
         if (request.getPromiseStatus(response)) {
+          if (mock.options.template === true) {
+            response.body = template(response.body)
+          }
           global[request.jsonpCallback](response.body)
           if (mock.options.log) {
             console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
@@ -415,6 +607,7 @@
     return XEAjaxMock(url, 'GET', response, objectAssign({jsonp: 'callback'}, options))
   }
 
+  var template = XETemplate
   var Mock = XEAjaxMock
   var GET = createDefine('GET')
   var POST = createDefine('POST')
@@ -422,7 +615,7 @@
   var DELETE = createDefine('DELETE')
   var PATCH = createDefine('PATCH')
   var HEAD = createDefine('HEAD')
-  var version = '1.5.3'
+  var version = '1.5.4'
 
   /**
    * 混合函数
@@ -434,7 +627,7 @@
   }
 
   mixin({
-    setup: setup, install: install, JSONP: JSONP, Mock: Mock, GET: GET, POST: POST, PUT: PUT, DELETE: DELETE, PATCH: PATCH, HEAD: HEAD, version: version
+    setup: setup, install: install, template: template, Mock: Mock, JSONP: JSONP, GET: GET, POST: POST, PUT: PUT, DELETE: DELETE, PATCH: PATCH, HEAD: HEAD, version: version
   })
   XEAjaxMock.mixin = mixin
 

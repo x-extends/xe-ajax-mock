@@ -1,10 +1,12 @@
-import { isArray, isFunction, random, arrayEach, objectAssign, getBaseURL, getLocatOrigin } from './util'
+import { isArray, isFunction, getScopeNumber, arrayEach, objectAssign, getBaseURL, getLocatOrigin } from './util'
+import XETemplate from './template'
 
 var global = typeof window === 'undefined' ? this : window
 var requireMap = {}
 var defineMockServices = []
 var setupDefaults = {
   baseURL: getBaseURL(),
+  template: false,
   timeout: '20-400',
   headers: null,
   error: true,
@@ -50,7 +52,7 @@ function requireJSON (path) {
   })
 }
 
-function XEMockResponse (response, status) {
+function XEMockResponse (mock, response, status) {
   if (response && response.body !== undefined && response.status !== undefined) {
     response.headers = objectAssign({}, setupDefaults.headers, response.headers)
     objectAssign(this, response)
@@ -72,12 +74,12 @@ function getXHRResponse (mock, request) {
   return new Promise(function (resolve, reject) {
     mock.asyncTimeout = setTimeout(function () {
       if (isFunction(mock.response)) {
-        return resolve(mock.response(request, new XEMockResponse(null, 200), mock))
+        return resolve(mock.response(request, new XEMockResponse(mock, null, 200), mock))
       }
       return Promise.resolve(mock.response).then(function (response) {
-        resolve(new XEMockResponse(response, 200))
+        resolve(new XEMockResponse(mock, response, 200))
       }).catch(function (response) {
-        reject(new XEMockResponse(response, 500))
+        reject(new XEMockResponse(mock, response, 500))
       })
     }, mock.time)
   })
@@ -99,7 +101,7 @@ function XEMockService (path, method, response, options) {
 objectAssign(XEMockService.prototype, {
   send: function (mockXHR, request) {
     var mock = this
-    this.time = request.timeout || getTime(this.options.timeout)
+    this.time = request.timeout || getScopeNumber(this.options.timeout)
     return getXHRResponse(mock, request).then(function (response) {
       mock.reply(mockXHR, request, response)
     })
@@ -107,6 +109,9 @@ objectAssign(XEMockService.prototype, {
   reply: function (mockXHR, request, response) {
     if (mockXHR.readyState !== 4) {
       var url = request.getUrl()
+      if (this.options.template === true) {
+        response.body = template(response.body)
+      }
       mockXHR.status = response.status
       mockXHR.responseText = mockXHR.response = response.body ? JSON.stringify(response.body) : ''
       mockXHR.responseHeaders = response.headers
@@ -124,11 +129,6 @@ objectAssign(XEMockService.prototype, {
     }
   }
 })
-
-function getTime (timeout) {
-  var matchs = timeout.match(/(\d+)-(\d+)/)
-  return matchs.length === 3 ? random(parseInt(matchs[1]), parseInt(matchs[2])) : 0
-}
 
 function mateMockItem (request) {
   var url = (request.getUrl() || '').split(/\?|#/)[0]
@@ -269,10 +269,13 @@ objectAssign(XEXMLHttpRequest.prototype, {
 function sendJsonpMock (script, request) {
   var mock = mateMockItem(request)
   if (mock) {
-    mock.time = request.timeout || getTime(mock.options.timeout)
+    mock.time = request.timeout || getScopeNumber(mock.options.timeout)
     return getXHRResponse(mock, request).then(function (response) {
       var url = request.getUrl()
       if (request.getPromiseStatus(response)) {
+        if (mock.options.template === true) {
+          response.body = template(response.body)
+        }
         global[request.jsonpCallback](response.body)
         if (mock.options.log) {
           console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
@@ -351,6 +354,7 @@ export function JSONP (url, response, options) {
   return XEAjaxMock(url, 'GET', response, objectAssign({jsonp: 'callback'}, options))
 }
 
+export var template = XETemplate
 export var Mock = XEAjaxMock
 export var GET = createDefine('GET')
 export var POST = createDefine('POST')
@@ -358,6 +362,6 @@ export var PUT = createDefine('PUT')
 export var DELETE = createDefine('DELETE')
 export var PATCH = createDefine('PATCH')
 export var HEAD = createDefine('HEAD')
-export var version = '1.5.3'
+export var version = '1.5.4'
 
 export default XEAjaxMock
