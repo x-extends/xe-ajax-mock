@@ -3,8 +3,8 @@ define([
 ], function (XEAjaxMock) {
   XEAjaxMock.GET('/api/user/list/page/{pageSize}/{currentPage}', function (request, response, context) {
     return response.require('mock/json/api/user/list/page/data.json').then(function (resp) {
-      // 转换响应数据
-      resp.body = {page: context.pathVariable, result: resp.body}
+      // 动态设置分页信息
+      resp.body.page = context.pathVariable
       return resp
     })
   })

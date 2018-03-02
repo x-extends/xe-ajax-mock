@@ -61,15 +61,11 @@ export default {
       fetchGet('/api/user/list/page/10/1').then(response => {
         if (response.ok) {
           response.json().then(data => {
-            this.userList = data
+            this.userList = data.result
           })
         } else {
           this.userList = []
         }
-      })
-      // 返回 data 对象
-      fetchGet('/api/user/list/page/10/1').then(response => response.json()).then(data => {
-        this.userList = data
       })
       // 跨域调用 jsonp 服务,返回数据
       jsonp('http://xuliangzhan.com/api/user/message').then(data => {
@@ -77,17 +73,6 @@ export default {
       }).catch(data => {
         // data
       })
-
-      // 融合两个接口数据
-      this.findList()
-    },
-    // 使用 ES7 异步
-    async findList () {
-      const list = await getJSON('/api/shopping/findList')
-      const pageList = await fetchGet('/api/user/list/page/10/1').then(response => response.json())
-
-      // 将两个服务数据融合在一起
-      this.testList = list.concat(pageList)
     },
     save () {
       // 保存
