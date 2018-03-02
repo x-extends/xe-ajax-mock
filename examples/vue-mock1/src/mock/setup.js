@@ -2,7 +2,7 @@ import XEAjaxMock from 'xe-ajax-mock'
 
 // Mock 参数设置
 XEAjaxMock.setup({
-  // 启动模板编译
+  // 启用模板自动编译
   template: true,
   // 服务请求时间范围
   timeout: '100-1000',

@@ -122,7 +122,7 @@ XEAjaxMock.m1()
 | 参数 | 类型 | 描述 | 值 |
 |------|------|-----|----|
 | baseURL | String | 基础路径 | 默认上下文路径 |
-| template | Boolean | 启用模板编译 | 默认false |
+| template | Boolean | 启用模板自动编译 | 默认false |
 | timeout | String | 模拟请求时间 | 默认'20-400' |
 | headers | Object | 设置响应头 |  |
 | error | Boolean | 控制台输出 Mock Error 日志 | true |
