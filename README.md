@@ -134,7 +134,6 @@ import XEAjaxMock from 'xe-ajax-mock'
 
 XEAjaxMock.setup({
   baseURL: 'http://xuliangzhan.com',
-  template: true,
   timeout: '100-500',
   headers: {
     'Content-Type': 'application/javascript; charset=UTF-8'
