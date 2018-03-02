@@ -211,7 +211,8 @@ template({
     'age|number': '{{ random(18,60) }}'
   }
 })
-// 结果: [{id: 1,name: 'test 0', region: ['上海'], active: true, age: 30}, {id: 2, name: 'test 1', region: ['北京'], active: false, age: 42}]
+// 结果: [{id: 1,name: 'test 0', region: ['上海'], active: true, age: 30},
+//        {id: 2, name: 'test 1', region: ['北京'], active: false, age: 42}]
 
 ```
 
