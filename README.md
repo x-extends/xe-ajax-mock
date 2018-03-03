@@ -5,23 +5,26 @@
 
 基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，使用 mock 使前端独立开发就非常有必要。
 
-### 兼容性
+## 兼容性
 任何支持 Promise 的环境都能运行，低版本浏览器使用 polyfill<br/>
 支持 IE8+、Edge、Chrome、Firefox、Opera、Safari等...
 
-### CDN 安装
+## CDN 安装
 使用 script 方式安装，XEAjaxMock 会定义为全局变量<br/>
 生产环境请使用 xe-ajax-mock.min.js，更小的压缩版本，可以带来更快的速度体验。
-#### cdnjs 获取最新版本, [点击浏览](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)已发布的所有 npm 包的源代码。
+### cdnjs 获取最新版本
+[点击浏览](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)已发布的所有 npm 包的源代码。
 ``` shell
 <script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock@1.5.5/dist/xe-ajax-mock.js"></script>
 ```
-#### unpkg 获取最新版本, [点击浏览](https://unpkg.com/xe-ajax-mock@1.5.5/)已发布的所有 npm 包的源代码
+### unpkg 获取最新版本
+[点击浏览](https://unpkg.com/xe-ajax-mock@1.5.5/)已发布的所有 npm 包的源代码
 ``` shell
 <script src="https://unpkg.com/xe-ajax-mock@1.5.5/dist/xe-ajax-mock.js"></script>
 ```
 
-### AMD 安装， 以 require.js 为例
+## AMD 安装
+### require.js 安装示例
 ``` shell
 // require 配置
 require.config({
@@ -32,34 +35,19 @@ require.config({
   }
 })
 
-// ./mock.js 配置文件
+// ./mock/index.js 配置文件
 define(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
   // 安装
   XEAjax.use(XEAjaxMock)
-  // 定义 Mock 服务
-  XEAjaxMock.GET('/api/user/list', {msg: 'success'})
-  // 定义 Mock 服务
-  XEAjaxMock.GET('/api/user/page/{pageSize}/{currentPage}', function (request, response) {
-    // 响应为本地 json 文件数据
-    return response.require('mock/json/api/user/list/data.json')
-  })
-})
-
-// ./app.js 调用
-define(['xe-ajax'], function (XEAjax) {
-  // 调用
-  XEAjax.getJSON('/api/user/list', {id: 1}).then(function (data) {
-    // data = {msg: 'success'}
-  })
 })
 ```
 
-### ES6 Module 安装方式
+## ES6 Module 安装方式
 ``` shell
 npm install xe-ajax xe-ajax-mock --save
 ```
 
-### 部分导入
+### import 部分导入
 ``` shell
 import { GET, POST } from 'xe-ajax-mock'
 
@@ -67,7 +55,7 @@ GET('/api/user/list', {msg: 'success'})
 POST('/api/user/save', {msg: 'success'})
 ```
 
-### 导入所有
+### import 导入所有
 ``` shell
 import XEAjaxMock from 'xe-ajax-mock'
 
@@ -75,30 +63,12 @@ XEAjaxMock.GET('/api/user/list', {msg: 'success'})
 XEAjaxMock.POST('/api/user/save', {msg: 'success'})
 ```
 
-### 混合函数
-#### 文件 ./customs.js
-``` shell
-export function m1 () {
-  console.log('自定义的函数')
-} 
-```
-#### 示例
-``` shell
-import Vue from 'vue'
-import XEAjaxMock from 'xe-ajax-mock'
-
-import customs from './customs'
-
-XEAjaxMock.mixin(customs)
-
-// 调用自定义扩展函数
-XEAjaxMock.m1()
-```
-
-## XEAjaxMock API
-### 'xe-ajax-mock' 提供的便捷方法：
+## API
+### 提供的便捷方法：
+* setup( options )
 * Mock( defines, options )
 * Mock( path, method, response, options )
+* 
 * GET( path, response, options )
 * POST( path, response, options )
 * PUT( path, response, options )
@@ -106,34 +76,31 @@ XEAjaxMock.m1()
 * PATCH( path, response, options )
 * HEAD( path, response, options )
 * JSONP( path, response, options )
-* setup( options )
 
-### 接受两个参数：
-* defines（数组）定义多个
-* options （可选，对象）参数
-### 接受四个参数：
-* path（字符串）请求地址 占位符{key}支持动态路径: 例如: /api/list/{key1}/{key2} 匹配 /api/list/10/1
+### 入参
+* path（字符串）请求地址，占位符{key}支持动态路径: 例如: /api/list/{key1}/{key2} 匹配 /api/list/10/1
 * method（字符串）请求方法 | 默认GET
-* jsonp（字符串）调用jsonp服务回调函数名，例如: 'callback'
 * response（对象/方法(request, response, context)）数据或返回数据方法 {status: 200, body: {}, headers: {}}
 * options （可选，对象）参数
 
-### 参数说明
+### options 参数说明
 | 参数 | 类型 | 描述 | 值 |
 |------|------|-----|----|
 | baseURL | String | 基础路径 | 默认上下文路径 |
 | template | Boolean | 启用模板自动编译 | 默认false |
 | timeout | String | 模拟请求时间 | 默认'20-400' |
+| jsonp | String | 调用jsonp服务,属性名默认callback | 默认callback |
 | headers | Object | 设置响应头 |  |
 | error | Boolean | 控制台输出 Mock Error 日志 | true |
 | log | Boolean | 控制台输出 Mock Request 日志 | true |
 
-### 全局参数
+## 全局参数设置
 ``` shell
 import XEAjaxMock from 'xe-ajax-mock'
 
 XEAjaxMock.setup({
   baseURL: 'http://xuliangzhan.com',
+  template: true,
   timeout: '100-500',
   headers: {
     'Content-Type': 'application/javascript; charset=UTF-8'
@@ -143,52 +110,66 @@ XEAjaxMock.setup({
 })
 ```
 
-### 模板语法
+## 模板语法
+### 数值
 ``` shell
 import { template } from 'xe-ajax-mock'
 
-// 输出数值
 template({
   'num|number': '123'
 })
 // 结果: {num: 123}
+```
+### 布尔值
+``` shell
+import { template } from 'xe-ajax-mock'
 
-// 输出布尔值
 template({
   'flag1|boolean': 'true',
   'flag2|boolean': 'false'
 })
 // 结果: {flag1: true, flag2: false}
+```
+### 数组
+``` shell
+import { template } from 'xe-ajax-mock'
 
-// 输出数组
 template({
   'region|array(1)': ['深圳', '北京', '上海', '广州']
 })
 // 结果: {region: ['深圳']}
 
-// 输出多个数组
 template({
   'region|array(1-3)': ['深圳', '北京', '上海', '广州']
 })
 // {region: ['深圳', '北京']}
+```
+### 随机取值
+``` shell
+import { template } from 'xe-ajax-mock'
 
-// 随机输出一个值
 template({
   'region|random(1)': ['深圳', '北京', '上海', '广州']
 })
 // 结果: {region: '深圳'}
 
-// 随机输出多个值
 template({
   'region|random(1-3)': ['深圳', '北京', '上海', '广州']
 })
 // 结果: {region: ['上海', '北京']}
+```
+### random(min, max) 随机数
+``` shell
+import { template } from 'xe-ajax-mock'
 
-// 输出范围内随机值
 template({
   'age': '{{ random(18,60) }}'
 })
 // 结果: {age: '30'}
+```
+### 对象
+``` shell
+import { template } from 'xe-ajax-mock'
 
 // 输出对象
 template({
@@ -199,6 +180,10 @@ template({
   'age|number': '{{ random(18,60) }}'
 })
 // 结果: {id: 1,name: 'test 1', region: ['深圳'], active: false, age: 30}
+```
+### 数组
+``` shell
+import { template } from 'xe-ajax-mock'
 
 // 输出对象数组
 template({
@@ -211,19 +196,50 @@ template({
   }
 })
 // 结果: [{id: 1,name: 'test 0', region: ['上海'], active: true, age: 30},
-//        {id: 2, name: 'test 1', region: ['北京'], active: false, age: 42}]
-
+//       {id: 2, name: 'test 1', region: ['北京'], active: false, age: 42}]
 ```
 
-### 示例1
+## 示例
+### Mock
 ``` shell
-import { template, Mock, GET, POST, PUT, PATCH, DELETE, JSONP } from 'xe-ajax-mock'
+Mock([{
+  path: '/api/user',
+  children: [{
+    method: 'GET',
+    path: 'list',
+    response: {status: 200, body: [{name: 'test1'}]},
+  }, {
+    method: 'POST',
+    path: 'submit',
+    response: {msg: 'success'},
+  },
+  {
+    method: 'DELETE',
+    path : 'del',
+    response (request, response) {
+      response.status = 500
+      response.body = {msg: 'error'}
+      return response
+    }
+  ]
+}])
+```
+### GET
+``` shell
+import { GET } from 'xe-ajax-mock'
 
-// 对象方式
-GET('/api/user/list', {status: 200, body: {msg: 'success'}})
+GET('/api/user/list', {msg: 'success'})
 
-// 动态路径
-PUT('/api/user/list/{pageSize}/{currentPage}', (request, response, context) => {
+GET('/api/user/list', (request, response) => {
+  response.body = template({
+    '!return|array(1-3)': {
+      name: 'list {{ $index }}'
+    }
+  })
+  return response
+})
+
+GET('/api/user/list/{pageSize}/{currentPage}', (request, response, context) => {
   // 获取路径参数 context.pathVariable
   // context.pathVariable.pageSize 10
   // context.pathVariable.currentPage 1
@@ -232,22 +248,19 @@ PUT('/api/user/list/{pageSize}/{currentPage}', (request, response, context) => {
   response.body = {pageVO: context.pathVariable, result: []}
   return response
 })
+```
+### POST
+``` shell
+import { template, POST } from 'xe-ajax-mock'
 
-// 函数方式
+POST('/api/user/save', {msg: 'success'})
+
 POST('/api/user/save', (request, response) => {
-  return {status: 200, body: {msg: 'success'}}
+  response.body = {msg: 'success'}
+  return response
 })
 
-// ES5 require 获取资源文件方式
 POST('/api/user/save', (request, response) => {
-  return response.require('mock/json/api/user/save/data.json')
-})
-
-// ES6 Module require 获取资源文件方式
-POST('/api/user/save', require('mock/json/api/user/save/data.json'))
-
-// 函数方式,简单模拟后台校验
-DELETE('/api/user/del', (request, response) => {
   // 模拟后台逻辑 对参数进行校验
   if (request.params.id) {
     response.status = 200
@@ -258,25 +271,47 @@ DELETE('/api/user/del', (request, response) => {
   }
   return response
 })
+```
+### PUT
+``` shell
+import { PUT } from 'xe-ajax-mock'
 
-// Promise 异步方式
-PATCH('/api/user/patch', (request, response) => {
-  return new Promise( (resolve, reject) => {
-    setTimeout(() = {
-      response.status = 200
-      response.body = template({
-        '!return|array(1-3)': {
-          id: '{{ $index+1 }}'
-        }
-      })
-      resolve(response)
-    }, 100)
-  })
+PUT('/api/user/update', {msg: 'success'})
+
+PUT('/api/user/update', (request, response) => {
+  response.status = 500
+  response.body = {msg: 'error'}
+  return response
 })
+```
+### DELETE
+``` shell
+import { DELETE } from 'xe-ajax-mock'
 
-// JSONP 定义
+DELETE('/api/user/del', {msg: 'success'})
+
+DELETE('/api/user/del', (request, response) => {
+  response.body = {msg: 'success'}
+  return response
+})
+```
+### PATCH
+``` shell
+import { PATCH } from 'xe-ajax-mock'
+
+PATCH('/api/user/update', {msg: 'success'})
+```
+### HEAD
+``` shell
+import { HEAD } from 'xe-ajax-mock'
+
+HEAD('/api/user/head', null)
+```
+### JSONP
+``` shell
+import { template, JSONP } from 'xe-ajax-mock'
+
 JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
-  // response.status = 500 设置调用为失败
   response.body = template({
     '!return|array(1-3)': {
       name: '名字{{ $index }}'
@@ -284,97 +319,51 @@ JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
   })
   return response
 })
+```
+### AMD 使用方式
+``` shell
+define([
+  'xe-ajax-mock'
+], function (XEAjaxMock) {
 
-// 配置方式定义
-Mock([{
-  path: '/api/user',
-  children: [{
-    method: 'POST',
-    path: 'submit',
-    response: {status: 200, body: {msg: 'success'}},
-  },
-  {
-    method: 'DELETE',
-    path : 'del',
-    response (request, response) {
-      response.status = 500
-      response.body = {msg: 'error'}
-      return response
-    }
-  ]
-}])
+  XEAjaxMock.GET('/api/user/list', {msg: 'success'})
+
+  XEAjaxMock.GET('/api/user/list', (request, response) => {
+    return response.require('mock/json/api/user/list/data.json')
+  })
+
+  XEAjaxMock.POST('/api/user/save', (request, response) => {
+    response.body = {msg: 'success'}
+    return response
+  })
+
+  XEAjaxMock.POST('/api/user/save', (request, response) => {
+    return response.require('mock/json/api/user/save/data.json')
+  })
+})
 ```
 
-### 示例2
+## 混合函数
+### 文件 ./customs.js
 ``` shell
+export function m1 () {
+  console.log('自定义的函数')
+} 
+```
+### 示例 ./main.js
+``` shell
+import Vue from 'vue'
 import XEAjaxMock from 'xe-ajax-mock'
 
-// 定义
-XEAjaxMock.Mock('/api/user/list', 'GET', (request, response) => {
-  response.body = {msg: 'success'}
-  return response
-})
+import customs from './customs'
 
-// 快捷定义
-XEAjaxMock.GET('/api/user/list', {status: 200, body: {msg: 'success'}})
-XEAjaxMock.POST('/api/user/save', {status: 200, body: {msg: 'success'}})
-XEAjaxMock.PUT('/api/user/update', {status: 200, body: {msg: 'success'}})
-XEAjaxMock.DELETE('/api/user/delete', {status: 200, body: {msg: 'success'}})
-XEAjaxMock.PATCH('/api/user/patch', {status: 200, body: {msg: 'success'}})
-XEAjaxMock.JSONP('http://xuliangzhan.com/jsonp/user/message', {status: 200, body: {msg: 'success'}})
+XEAjaxMock.mixin(customs)
 
-// 配置方式定义
-XEAjaxMock.Mock([{
-  path: '/api/user',
-  children: [{
-    method: 'POST',
-    path: 'submit',
-    response: {status: 200, body: {msg: 'success'}},
-  },
-  {
-    method: 'DELETE',
-    path : 'del',
-    response (request, response) {
-      response.status = 500
-      response.body = {msg: 'error'}
-      return response
-    }
-  ]
-}])
+// 调用自定义扩展函数
+XEAjaxMock.m1()
 ```
 
-### 正常调用,自动拦截响应
-``` shell
-import { getJSON, postJSON, putJSON, deleteJSON, patchJSON, jsonp } from 'xe-ajax'
-
-getJSON('/api/user/list/10/1').then(data => {
-  // data = {msg: 'success'}
-})
-
-postJSON('/api/user/save').catch(data => {
-  // data = {msg: 'error'}
-})
-
-putJSON('/api/user/update').then(data => {
-  // data = {msg: 'success'}
-})
-
-deleteJSON('/api/user/del').then(data => {
-  // data
-}).catch(data => {
-  // data = {msg: 'error'}
-})
-
-patchJSON('/api/user/patch').then(data => {
-  // data = {msg: 'success'}
-})
-
-jsonp('http://xuliangzhan.com/jsonp/user/message').then(data => {
-  // data = [{msg: 'data 1'}, {msg: 'data 2'}]
-})
-```
-
-### 完整项目示例
+## 完整项目示例
 XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务越来越多时，统一目录结构可维护性会更好
 
 ES6 + Vue + ElementUI + XEAjax + Mock 项目 请参考 [vue-element1](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-element1) 示例<br/>
