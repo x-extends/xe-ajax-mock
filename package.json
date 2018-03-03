@@ -1,6 +1,6 @@
 {
   "name": "xe-ajax-mock",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "Mock 前端虚拟服务 - XEAjax插件",
   "main": "index.js",
   "scripts": {
@@ -12,10 +12,10 @@
   },
   "keywords": [
     "ajax-mock",
-    "vue-mock",
+    "fetch-mock",
     "xe-ajax-mock",
     "vxe-ajax-mock",
-    "xemock"
+    "xhr-mock"
   ],
   "author": {
     "name": "Xu Liangzhan",
