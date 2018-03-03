@@ -6,11 +6,11 @@
 基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，使用 mock 使前端独立开发就非常有必要。
 
 ## 兼容性
-任何支持 Promise 的环境都能运行，低版本浏览器使用 polyfill<br/>
+任何支持 Promise 的环境都能运行，低版本浏览器使用 polyfill  
 支持 IE8+、Edge、Chrome、Firefox、Opera、Safari等...
 
 ## CDN 安装
-使用 script 方式安装，XEAjaxMock 会定义为全局变量<br/>
+使用 script 方式安装，XEAjaxMock 会定义为全局变量  
 生产环境请使用 xe-ajax-mock.min.js，更小的压缩版本，可以带来更快的速度体验。
 ### cdnjs 获取最新版本
 [点击浏览](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)已发布的所有 npm 包的源代码。
@@ -366,9 +366,9 @@ XEAjaxMock.m1()
 ## 完整项目示例
 XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务越来越多时，统一目录结构可维护性会更好
 
-ES6 + Vue + ElementUI + XEAjax + Mock 项目 请参考 [vue-element1](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-element1) 示例<br/>
-ES6 + Vue + XEAjax + Mock 项目 请参考 [vue-mock1](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock1) 示例<br/>
-RequireJS + Vue + XEAjax + Mock 项目 请参考 [vue-mock2](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock2) 示例<br/>
+ES6 + Vue + ElementUI + XEAjax + Mock 项目 请参考 [vue-element1](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-element1) 示例  
+ES6 + Vue + XEAjax + Mock 项目 请参考 [vue-mock1](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock1) 示例  
+RequireJS + Vue + XEAjax + Mock 项目 请参考 [vue-mock2](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock2) 示例  
 Vue +RequireJS + Vue + VXEAjax + Mock 项目 请参考 [vue-mock3](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock3) 示例
 
 ## License
