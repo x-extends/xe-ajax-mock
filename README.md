@@ -13,12 +13,12 @@
 使用 script 方式安装，XEAjaxMock 会定义为全局变量  
 生产环境请使用 xe-ajax-mock.min.js，更小的压缩版本，可以带来更快的速度体验。
 ### cdnjs 获取最新版本
-[点击浏览](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)已发布的所有 npm 包的源代码。
+[点击浏览](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)已发布的所有 npm 包源码
 ``` shell
 <script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock@1.5.6/dist/xe-ajax-mock.js"></script>
 ```
 ### unpkg 获取最新版本
-[点击浏览](https://unpkg.com/xe-ajax-mock@1.5.6/)已发布的所有 npm 包的源代码
+[点击浏览](https://unpkg.com/xe-ajax-mock@1.5.6/)已发布的所有 npm 包源码
 ``` shell
 <script src="https://unpkg.com/xe-ajax-mock@1.5.6/dist/xe-ajax-mock.js"></script>
 ```
