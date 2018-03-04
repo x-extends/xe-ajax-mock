@@ -59,18 +59,22 @@ export default {
     findList () {
       this.loading = true
       getJSON('api/user/list').then(data => {
+        // 请求失败
         this.loading = false
         this.list = data
       }).catch(data => {
+        // 请求成功
         this.loading = false
       })
     },
     saveEvent () {
       this.loading = true
       postJSON('api/user/save', this.formData).then(data => {
+        // 请求成功
         this.loading = false
         this.$message({type: 'success', message: data.msg})
       }).catch(data => {
+        // 请求失败
         this.loading = false
         this.$message({type: 'error', message: data.msg})
       })

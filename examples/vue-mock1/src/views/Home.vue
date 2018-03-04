@@ -48,40 +48,43 @@ export default {
   },
   methods: {
     init () {
-      // 如果要混合 vue 实例，可以使用 vxe-ajax 安装
-      // this.$ajax.getJSON(url)
-
       // 返回响应结果
       getJSON('/api/shopping/findList').then(data => {
+        // 请求成功
         this.shoppingList = data
       }).catch(data => {
+        // 请求失败
         this.shoppingList = []
       })
       // 返回 response 对象
       fetchGet('/api/user/list/page/10/1').then(response => {
         if (response.ok) {
+          // 请求成功
           response.json().then(data => {
             this.userList = data.result
           })
         } else {
+          // 请求失败
           this.userList = []
         }
       })
       // 跨域调用 jsonp 服务,返回数据
       jsonp('http://xuliangzhan.com/api/user/message').then(data => {
-        // data = [{name: 'data 1'}, {name: 'data 2'}]
+        // 请求成功
       }).catch(data => {
-        // data
+        // 请求失败
       })
     },
     save () {
       // 保存
       this.loading = true
       postJSON('/api/user/save', this.userForm).then(data => {
+        // 请求成功
         this.loading = false
         this.errorMsg = null
         this.successMsg = data
       }).catch(data => {
+        // 请求失败
         this.loading = false
         this.successMsg = null
         this.errorMsg = data
