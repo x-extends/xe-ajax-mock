@@ -24,7 +24,7 @@
 ```
 
 ## AMD 安装
-### require.js 安装示例 
+### require.js 安装示例
 ``` shell
 // require 配置
 require.config({
