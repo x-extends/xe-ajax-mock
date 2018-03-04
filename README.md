@@ -138,6 +138,11 @@ template({
 import { template } from 'xe-ajax-mock'
 
 template({
+  'region|array(1-5)': '值'
+})
+// 结果: {region: ['值', '值', '值']}
+
+template({
   'region|array(1)': ['深圳', '北京', '上海', '广州']
 })
 // 结果: {region: ['深圳']}
@@ -151,6 +156,11 @@ template({
 [key]|random([min]-[max])
 ``` shell
 import { template } from 'xe-ajax-mock'
+
+template({
+  'region|random(1-5)': '值'
+})
+// 结果: {region: ['值', '值', '值']}
 
 template({
   'region|random(1)': ['深圳', '北京', '上海', '广州']
