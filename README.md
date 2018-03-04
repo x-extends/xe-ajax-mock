@@ -15,12 +15,12 @@
 ### cdnjs 获取最新版本
 [点击浏览](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)已发布的所有 npm 包源码
 ``` shell
-<script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock@1.5.6/dist/xe-ajax-mock.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock@1.5.7/dist/xe-ajax-mock.js"></script>
 ```
 ### unpkg 获取最新版本
-[点击浏览](https://unpkg.com/xe-ajax-mock@1.5.6/)已发布的所有 npm 包源码
+[点击浏览](https://unpkg.com/xe-ajax-mock@1.5.7/)已发布的所有 npm 包源码
 ``` shell
-<script src="https://unpkg.com/xe-ajax-mock@1.5.6/dist/xe-ajax-mock.js"></script>
+<script src="https://unpkg.com/xe-ajax-mock@1.5.7/dist/xe-ajax-mock.js"></script>
 ```
 
 ## AMD 安装
@@ -110,8 +110,9 @@ XEAjaxMock.setup({
 })
 ```
 
-## 模板语法
+## 模板语法 - 属性
 ### 数值
+[key]|number
 ``` shell
 import { template } from 'xe-ajax-mock'
 
@@ -121,6 +122,7 @@ template({
 // 结果: {num: 123}
 ```
 ### 布尔值
+[key]|boolean
 ``` shell
 import { template } from 'xe-ajax-mock'
 
@@ -130,7 +132,8 @@ template({
 })
 // 结果: {flag1: true, flag2: false}
 ```
-### 数组
+### 生成一个或多个数组
+[key]|array([min]-[max])
 ``` shell
 import { template } from 'xe-ajax-mock'
 
@@ -144,7 +147,8 @@ template({
 })
 // {region: ['深圳', '北京']}
 ```
-### 随机取值
+### 随机生成一个或多个值
+[key]|random([min]-[max])
 ``` shell
 import { template } from 'xe-ajax-mock'
 
@@ -158,15 +162,6 @@ template({
 })
 // 结果: {region: ['上海', '北京']}
 ```
-### random(min, max) 随机数
-``` shell
-import { template } from 'xe-ajax-mock'
-
-template({
-  'age': '{{ random(18,60) }}'
-})
-// 结果: {age: '30'}
-```
 ### 对象
 ``` shell
 import { template } from 'xe-ajax-mock'
@@ -176,27 +171,105 @@ template({
   'id|number': '1',
   'name': 'test 1',
   'region|array(1)': ['深圳', '北京', '上海', '广州'],
-  'active|boolean': '{{ random(0,1) }}'
-  'age|number': '{{ random(18,60) }}'
+  'active|boolean': '{{ random.num(0,1) }}'
+  'age|number': '{{ random.num(18,60) }}'
 })
 // 结果: {id: 1,name: 'test 1', region: ['深圳'], active: false, age: 30}
 ```
-### 数组
+### 输出对象数组
+!return|array([min]-[max])
 ``` shell
 import { template } from 'xe-ajax-mock'
 
-// 输出对象数组
+// 输出对象数组，索引{{ $index }}
 template({
   '!return|array(1-2)': {
     'id|number': '{{ $index+1 }}',
     'name': 'test {{ $index }}',
     'region|array(1)': ['深圳', '北京', '上海', '广州'],
-    'active|boolean': '{{ random(0,1) }}',
-    'age|number': '{{ random(18,60) }}'
+    'active|boolean': '{{ random.num(0,1) }}',
+    'age|number': '{{ random.num(18,60) }}'
   }
 })
 // 结果: [{id: 1,name: 'test 0', region: ['上海'], active: true, age: 30},
 //       {id: 2, name: 'test 1', region: ['北京'], active: false, age: 42}]
+```
+## 模板语法 - 值
+### 随机数值
+random.num(min, max)
+``` shell
+import { template } from 'xe-ajax-mock'
+
+template({
+  'age': '{{ random.num(18,60) }}'
+})
+// 结果: {age: '30'}
+
+template({
+  'ip': '{{ random.num(1,254) }}.{{ random.num(1,254) }}.{{ random.num(1,254) }}.{{ random.num(1,254) }}'
+})
+// 结果: {ip: '147.136.43.175'}
+
+template({
+  'color': 'rgb({{ random.num(100,120) }}, {{ random.num(140,180) }}, {{ random.num(140,160) }})'
+})
+// 结果: {color: 'rgb(242, 121, 132)'}
+```
+### 随机复制值
+random.repeat(array|string, min, max)
+``` shell
+import { template } from 'xe-ajax-mock'
+
+template({
+  'describe': '{{ random.repeat("随机产生一段文本",10,200) }}'
+})
+// 结果: {describe: '段生随本段段随机本一段段机本本一本段段随机'}
+
+template({
+  'email': '{{ random.repeat("abcdefg",5,20) }}@{{ random.repeat(["qq","163"],1) }}.{{ random.repeat(["com","net"],1) }}'
+})
+// 结果: {email: 'abcfdgecee@163.com'}
+```
+### 随机时间戳
+random.time(startDate, endDate)
+``` shell
+import { template } from 'xe-ajax-mock'
+
+template({
+  'datetime': '{{ random.time("2018-03-04","2018-03-20") }}'
+})
+// 结果: {datetime: '1520611200000'}
+```
+### 随机日期
+random.date(startDate, endDate)
+``` shell
+import { template } from 'xe-ajax-mock'
+
+template({
+  'dateStr': '{{ random.date("2018-03-04","2018-03-20") }}'
+})
+// 结果: {dateStr: '2018-03-10'}
+
+template({
+  'dateStr': '{{ random.date("2018-03-04","2018-03-20","yyyy-MM-dd HH:mm:ss.S") }}'
+})
+// 结果: {dateStr: '2018-03-10 10:30:20.500'}
+```
+### 混合函数
+template.mixin({...})
+``` shell
+import { template } from 'xe-ajax-mock'
+
+template.mixin({
+  format () {
+    return '扩展函数'
+  }
+})
+
+template({
+  'val': '{{ format() }}'
+})
+// 结果: {val: '扩展函数'}
 ```
 
 ## 示例

@@ -1,4 +1,4 @@
-import { isObject, isArray, isString, objectEach, arrayEach, getRandom, getScopeNumber, arraySample, objectAssign, objectKeys } from './util'
+import { isObject, isArray, isString, objectEach, arrayEach, getRandom, getScopeNumber, arraySample, objectAssign, objectKeys, stringToDate, dateToString } from './util'
 
 var keyRule = /(.+)\|(array|random)\(([0-9-]+)\)$/
 
@@ -89,9 +89,40 @@ function TemplateOpts (parent, obj, value, index) {
   this.$index = index
 }
 
-objectAssign(TemplateOpts.prototype, {
-  random: getRandom
-})
+function mixinTemplateOpts (methods) {
+  return objectAssign(TemplateOpts.prototype, methods)
+}
+
+var proMethods = {
+  random: {
+    num: getRandom,
+    time: function (startDate, endDate) {
+      return getRandom(stringToDate(startDate).getTime(), stringToDate(endDate).getTime())
+    },
+    date: function (startDate, endDate, format) {
+      return dateToString(proMethods.random.time(startDate, endDate), format)
+    },
+    repeat: function (array, min, max) {
+      min = min || 1
+      max = max || min
+      if (isString(array)) {
+        array = array.split('')
+      }
+      if (array.length < max) {
+        var result = array
+        while (result.length < max) {
+          result = result.concat(array)
+        }
+        result.length = max
+        array = result
+      }
+      return arraySample(array, getRandom(min, max)).join('')
+    }
+  }
+}
+
+XETemplate.mixin = mixinTemplateOpts
+mixinTemplateOpts(proMethods)
 
 var tmplJoint = {
   tStart: '__restArr=[]',

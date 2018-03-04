@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.5.6
+ * xe-ajax-mock.js v1.5.7
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -10,6 +10,10 @@
 
   var isArray = Array.isArray || function (obj) {
     return obj ? obj.constructor === Array : false
+  }
+
+  function isDate (val) {
+    return val ? val.constructor === Date : false
   }
 
   function isObject (val) {
@@ -26,6 +30,70 @@
 
   function getRandom (min, max) {
     return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
+  }
+
+  function stringToDate (str, format) {
+    if (str) {
+      if (isDate(str)) {
+        return str
+      }
+      if (!isNaN(str)) {
+        return new Date(str)
+      }
+      if (isString(str)) {
+        format = format || 'yyyy-MM-dd HH:mm:ss.SSS'
+        var dates = []
+        arrayEach([{rules: [['yyyy', 4], ['yyy', 3], ['yy', 2]]},
+        {rules: [['MM', 2], ['M', 1]], offset: -1},
+        {rules: [['dd', 2], ['d', 1]]},
+        {rules: [['HH', 2], ['H', 1]]},
+        {rules: [['mm', 2], ['m', 1]]},
+        {rules: [['ss', 2], ['s', 1]]},
+        {rules: [['SSS', 3], ['SS', 2], ['S', 1]]}], function (item) {
+          for (var arr, sIndex, index = 0, rules = item.rules, len = rules.length; index < len; index++) {
+            arr = rules[index]
+            sIndex = format.indexOf(arr[0])
+            if (sIndex > -1) {
+              dates.push(parseFloat(str.substring(sIndex, sIndex + arr[1]) || 0) + (item.offset || 0))
+              break
+            } else if (index === len - 1) {
+              dates.push(0)
+            }
+          }
+        })
+        return new Date(dates[0], dates[1], dates[2], dates[3], dates[4], dates[5], dates[6])
+      }
+    }
+    return 'Invalid Date'
+  }
+
+  function dateToString (date, format) {
+    date = stringToDate(date)
+    if (isDate(date)) {
+      var result = format || 'yyyy-MM-dd HH:mm:ss'
+      var weeks = ['日', '一', '二', '三', '四', '五', '六']
+      var resDate = {
+        'q+': Math.floor((date.getMonth() + 3) / 3),
+        'M+': date.getMonth() + 1,
+        'E+': date.getDay(),
+        'd+': date.getDate(),
+        'H+': date.getHours(),
+        'm+': date.getMinutes(),
+        's+': date.getSeconds(),
+        'S': date.getMilliseconds()
+      }
+      if (/(y+)/.test(result)) {
+        result = result.replace(RegExp.$1, ('' + date.getFullYear()).substr(4 - RegExp.$1.length))
+      }
+      arrayEach(objectKeys(resDate), function (key) {
+        if (new RegExp('(' + key + ')').test(result)) {
+          var val = '' + resDate[key]
+          result = result.replace(RegExp.$1, (key === 'q+' || key === 'E+') ? weeks[val] : (RegExp.$1.length === 1 ? val : ('00' + val).substr(val.length)))
+        }
+      })
+      return result
+    }
+    return date
   }
 
   var objectAssign = Object.assign || function (target) {
@@ -219,9 +287,40 @@
     this.$index = index
   }
 
-  objectAssign(TemplateOpts.prototype, {
-    random: getRandom
-  })
+  function mixinTemplateOpts (methods) {
+    return objectAssign(TemplateOpts.prototype, methods)
+  }
+
+  var proMethods = {
+    random: {
+      num: getRandom,
+      time: function (startDate, endDate) {
+        return getRandom(stringToDate(startDate).getTime(), stringToDate(endDate).getTime())
+      },
+      date: function (startDate, endDate, format) {
+        return dateToString(proMethods.random.time(startDate, endDate), format)
+      },
+      repeat: function (array, min, max) {
+        min = min || 1
+        max = max || min
+        if (isString(array)) {
+          array = array.split('')
+        }
+        if (array.length < max) {
+          var result = array
+          while (result.length < max) {
+            result = result.concat(array)
+          }
+          result.length = max
+          array = result
+        }
+        return arraySample(array, getRandom(min, max)).join('')
+      }
+    }
+  }
+
+  XETemplate.mixin = mixinTemplateOpts
+  mixinTemplateOpts(proMethods)
 
   var tmplJoint = {
     tStart: '__restArr=[]',
@@ -615,7 +714,7 @@
   var DELETE = createDefine('DELETE')
   var PATCH = createDefine('PATCH')
   var HEAD = createDefine('HEAD')
-  var version = '1.5.6'
+  var version = '1.5.7'
 
   /**
    * 混合函数
