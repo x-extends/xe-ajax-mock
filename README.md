@@ -24,7 +24,7 @@
 ```
 
 ## AMD 安装
-### require.js 安装示例
+### require.js 安装示例 
 ``` shell
 // require 配置
 require.config({
@@ -225,7 +225,7 @@ template({
 })
 // 结果: {color: 'rgb(242, 121, 132)'}
 ```
-### 随机复制值
+### 根据内容随机生成值
 random.repeat(array|string, min, max)
 ``` shell
 import { template } from 'xe-ajax-mock'
