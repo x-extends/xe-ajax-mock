@@ -256,7 +256,7 @@ template({
 // 结果: {dateStr: '2018-03-10 10:30:20.500'}
 ```
 ### 混合函数
-template.mixin([methods])
+template.mixin({})
 ``` shell
 import { template } from 'xe-ajax-mock'
 
