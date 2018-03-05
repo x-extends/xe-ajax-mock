@@ -6,7 +6,7 @@
 基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，使用 mock 使前端独立开发就非常有必要。
 
 ## 兼容性
-基于 Promise 实现，低版本浏览器使用 promise.js 或 polyfill  
+基于 Promise 实现，低版本浏览器使用 polyfill es6-promise.js  
 支持 IE8+、Edge、Chrome、Firefox、Opera、Safari等...
 
 ## CDN 安装

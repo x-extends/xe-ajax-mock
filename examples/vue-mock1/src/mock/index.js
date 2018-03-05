@@ -6,6 +6,7 @@ import './setup'
 import './json/api/shopping'
 import './json/api/user'
 import './jsonp/xuliangzhan.com'
+import './error'
 
 // 安装 Mock
 XEAjax.use(XEAjaxMock)

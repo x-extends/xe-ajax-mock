@@ -11,6 +11,7 @@ require.config({
 
     'mock': 'mock/index',
     'mock-setup': 'mock/setup',
+    'mock-config': 'mock/error',
     'shopping-mock': 'mock/json/api/shopping/index',
     'user-mock': 'mock/json/api/user/index',
     'jsonp-user-mock': 'mock/jsonp/xuliangzhan.com/index',
@@ -21,6 +22,9 @@ require.config({
   shim: {
     mock: {
       deps: ['mock-setup']
+    },
+    'mock-config': {
+      deps: ['shopping-mock', 'user-mock', 'jsonp-user-mock']
     }
   }
 })

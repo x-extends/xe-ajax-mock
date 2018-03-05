@@ -5,6 +5,7 @@ import XEAjaxMock from 'xe-ajax-mock'
 import './setup'
 import './json/api/user'
 import './json/api/role'
+import './error'
 
 // 安装 Mock
 XEAjax.use(XEAjaxMock)
