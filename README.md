@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/xe-ajax-mock.svg?style=flat-square)](https://www.npmjs.org/package/xe-ajax-mock)
 [![npm downloads](https://img.shields.io/npm/dm/xe-ajax-mock.svg?style=flat-square)](http://npm-stat.com/charts.html?package=xe-ajax-mock)
 
-基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，使用 mock 使前端独立开发就非常有必要。
+基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，ajax+mock 使前端独立开发就非常有必要。
 
 ## 兼容性
 基于 Promise 实现，低版本浏览器使用 polyfill es6-promise.js  
