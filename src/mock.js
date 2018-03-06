@@ -94,7 +94,7 @@ function XEMockService (path, method, response, options) {
     this.options = options
     this.asyncTimeout = null
   } else {
-    throw new TypeError('path and method cannot be empty')
+    console.warn('path and method cannot be empty')
   }
 }
 
