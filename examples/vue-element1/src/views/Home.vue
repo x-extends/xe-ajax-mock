@@ -1,5 +1,11 @@
 <template>
   <div v-loading="loading">
+
+    <el-row class="header">
+      <img src="../assets/logo.png">
+      <h1>{{ $t('app.name') }}</h1>
+    </el-row>
+
     <el-form :inline="true" :model="formData">
       <el-form-item label="Name">
         <el-input v-model="formData.name" placeholder="Name"></el-input>
@@ -36,8 +42,6 @@
 </template>
 
 <script>
-import { getJSON, postJSON } from 'xe-ajax'
-
 export default {
   data () {
     return {
@@ -58,7 +62,7 @@ export default {
     },
     findList () {
       this.loading = true
-      getJSON('api/user/list').then(data => {
+      this.$ajax.getJSON('api/user/list').then(data => {
         // 请求失败
         this.loading = false
         this.list = data
@@ -69,7 +73,7 @@ export default {
     },
     saveEvent () {
       this.loading = true
-      postJSON('api/user/save', this.formData).then(data => {
+      this.$ajax.postJSON('api/user/save', this.formData).then(data => {
         // 请求成功
         this.loading = false
         this.$message({type: 'success', message: data.msg})
@@ -87,7 +91,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.table-demo {
+.header {
+  text-align: center;
+}
+.table-demo, .el-form {
   width: 50%;
   margin: 0 auto;
 }

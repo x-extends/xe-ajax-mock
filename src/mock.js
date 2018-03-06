@@ -362,6 +362,6 @@ export var PUT = createDefine('PUT')
 export var DELETE = createDefine('DELETE')
 export var PATCH = createDefine('PATCH')
 export var HEAD = createDefine('HEAD')
-export var version = '1.5.7'
+export var version = '1.5.8'
 
 export default XEAjaxMock

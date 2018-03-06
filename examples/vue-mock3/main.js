@@ -2,6 +2,7 @@ require.config({
   paths: {
     'vue': 'https://cdn.jsdelivr.net/npm/vue@2.5.2/dist/vue',
     'vue-router': 'https://cdn.jsdelivr.net/npm/vue-router@3.0.1/dist/vue-router',
+    'vue-i18n': 'https://cdn.jsdelivr.net/npm/vue-i18n@7.4.0/dist/vue-i18n',
     'xe-utils': 'https://cdn.jsdelivr.net/npm/xe-utils/dist/xe-utils',
     'vxe-utils': 'https://cdn.jsdelivr.net/npm/vxe-utils/dist/vxe-utils',
     'xe-ajax': 'https://cdn.jsdelivr.net/npm/xe-ajax/dist/xe-ajax',
@@ -11,10 +12,9 @@ require.config({
 
     'mock': 'mock/index',
     'mock-setup': 'mock/setup',
-    'mock-config': 'mock/error',
-    'shopping-mock': 'mock/json/api/shopping/index',
-    'user-mock': 'mock/json/api/user/index',
-    'jsonp-user-mock': 'mock/jsonp/xuliangzhan.com/index',
+    'mock-error': 'mock/error',
+    'mock-json': 'mock/json/api/index',
+    'mock-jsonp': 'mock/jsonp/xuliangzhan.com/api/index',
 
     'router': 'router/index',
     'home': 'views/home'
@@ -23,21 +23,23 @@ require.config({
     mock: {
       deps: ['mock-setup']
     },
-    'mock-config': {
-      deps: ['shopping-mock', 'user-mock', 'jsonp-user-mock']
+    'mock-error': {
+      deps: ['mock-json', 'mock-jsonp']
     }
   }
 })
 
 define([
   'vue',
+  'vue-i18n',
   'xe-ajax',
   'vxe-ajax',
   'xe-utils',
   'vxe-utils',
   'router'
-].concat(location.hostname.indexOf('localhost') === 0 ? ['mock'] : []), function (Vue, XEAjax, VXEAjax, XEUtils, VXEUtils, router) {
-  // 安装 XEAjax VXEAjax
+].concat(location.hostname.indexOf('localhost') === 0 ? ['mock'] : []), function (Vue, VueI18n, XEAjax, VXEAjax, XEUtils, VXEUtils, router) {
+
+  Vue.use(VueI18n)
   Vue.use(VXEAjax, XEAjax, true)
   Vue.use(VXEUtils, XEUtils)
 
@@ -57,8 +59,20 @@ define([
     next()
   })
 
-  return new Vue({
-    el: '#app',
-    router: router
+  var lang = 'zh'
+  XEAjax.getJSON('api/i18n/list', {lang: lang}).then(data => {
+    // 初始化国际化
+    const i18n = new VueI18n({
+      locale: lang,
+      messages: {
+        [lang]: data
+      }
+    })
+
+    return new Vue({
+      el: '#app',
+      i18n,
+      router: router
+    })
   })
 })

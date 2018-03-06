@@ -6,12 +6,14 @@ import router from './router'
 import store from './store'
 
 import XEAjax from 'xe-ajax'
+import VXEAjax from 'vxe-ajax'
 import VueI18n from 'vue-i18n'
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.use(Element)
 Vue.use(VueI18n)
+Vue.use(VXEAjax, XEAjax)
 Vue.config.productionTip = false
 
 // 启动前端虚拟服务,自动判断 DEV 环境使用 Mock，生产环境打包编译时会自动忽略该代码块
@@ -37,9 +39,10 @@ XEAjax.interceptors.response.use((response, next) => {
 
 // 初始化国际化
 const i18n = new VueI18n({
-  locale: 'en', // 语言标识
+  locale: 'zh',
   messages: {
-    en: {}
+    en: require('./static/lang/en.json'),
+    zh: require('./static/lang/zh.json')
   }
 })
 

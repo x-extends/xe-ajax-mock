@@ -15,12 +15,12 @@
 ### cdnjs 获取最新版本
 [点击浏览](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)已发布的所有 npm 包源码
 ``` shell
-<script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock@1.5.7/dist/xe-ajax-mock.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock@1.5.8/dist/xe-ajax-mock.js"></script>
 ```
 ### unpkg 获取最新版本
-[点击浏览](https://unpkg.com/xe-ajax-mock@1.5.7/)已发布的所有 npm 包源码
+[点击浏览](https://unpkg.com/xe-ajax-mock@1.5.8/)已发布的所有 npm 包源码
 ``` shell
-<script src="https://unpkg.com/xe-ajax-mock@1.5.7/dist/xe-ajax-mock.js"></script>
+<script src="https://unpkg.com/xe-ajax-mock@1.5.8/dist/xe-ajax-mock.js"></script>
 ```
 
 ## AMD 安装
@@ -449,10 +449,11 @@ XEAjaxMock.m1()
 ## 完整项目示例
 XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务越来越多时，统一目录结构可维护性会更好
 
-ES6 + Vue + ElementUI + XEAjax + Mock 项目 请参考 [vue-element1](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-element1) 示例  
-ES6 + Vue + XEAjax + Mock 项目 请参考 [vue-mock1](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock1) 示例  
-RequireJS + Vue + XEAjax + Mock 项目 请参考 [vue-mock2](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock2) 示例  
-Vue +RequireJS + Vue + VXEAjax + Mock 项目 请参考 [vue-mock3](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock3) 示例
+ES6、Vue、VueRouter、VueI18n、ElementUI、VXEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-element1)  
+ES6、Vue、VueRouter、VueI18n、ElementUI、XEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-element1)  
+ES6、Vue、VueRouter、VueI18n、XEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock1)  
+RequireJS、Vue、VueRouter、VueI18n、XEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock2)  
+RequireJS、Vue、VueRouter、VueI18n、VXEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock3)
 
 ## License
 Copyright (c) 2017-present, Xu Liangzhan

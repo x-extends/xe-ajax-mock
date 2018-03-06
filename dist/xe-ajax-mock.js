@@ -1,5 +1,5 @@
 /*!
- * xe-ajax-mock.js v1.5.7
+ * xe-ajax-mock.js v1.5.8
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  */
@@ -714,7 +714,7 @@
   var DELETE = createDefine('DELETE')
   var PATCH = createDefine('PATCH')
   var HEAD = createDefine('HEAD')
-  var version = '1.5.7'
+  var version = '1.5.8'
 
   /**
    * 混合函数
