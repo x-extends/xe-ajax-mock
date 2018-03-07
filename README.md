@@ -451,7 +451,7 @@ XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务配置越来越
 
 ES6、Vue、VueRouter、VueI18n、ElementUI、VXEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-element1)  
 ES6、Vue、VueRouter、VueI18n、ElementUI、XEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-element1)  
-ES6、Vue、VueRouter、VueI18n、XEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock1)  
+ES6、Vue、VueRouter、XEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock1)  
 RequireJS、Vue、VueRouter、VueI18n、XEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock2)  
 RequireJS、Vue、VueRouter、VueI18n、VXEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock3)
 
