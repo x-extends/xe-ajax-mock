@@ -1,5 +1,6 @@
-import { objectAssign } from './src/util'
-import XEAjaxMock, * as mock from './src/mock'
+import { objectAssign } from './src/core/util'
+import { Mock as XEAjaxMock, install, setup } from './src/core/mock'
+import { exportMethods } from './src/core/methods'
 
 /**
  * 混合函数
@@ -10,8 +11,15 @@ function mixin (methods) {
   return objectAssign(XEAjaxMock, methods)
 }
 
-mixin(mock)
-XEAjaxMock.mixin = mixin
+objectAssign(XEAjaxMock, {
+  mixin: mixin,
+  setup: setup,
+  install: install,
+  version: '1.6.0',
+  $name: 'XEAjaxMock'
+})
 
-export * from './src/mock'
+mixin(exportMethods)
+
+export * from './src/core/mock'
 export default XEAjaxMock

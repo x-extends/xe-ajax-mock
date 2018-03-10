@@ -1,8 +1,10 @@
-import { isObject, isArray, isString, objectEach, arrayEach, getRandom, getScopeNumber, arraySample, objectAssign, objectKeys, stringToDate, dateToString } from './util'
+import { isObject, isArray, isString, objectEach, arrayEach, getScopeNumber, arraySample, objectAssign, objectKeys } from '../core/util'
+import { buildTemplate } from './bulid'
+import { tmplMethods } from './fn'
 
 var keyRule = /(.+)\|(array|random)\(([0-9-]+)\)$/
 
-function XETemplate (tmpl) {
+export function XETemplate (tmpl) {
   var result = null
   result = parseValueRule(tmpl, new TemplateOpts())
   if (isObject(result)) {
@@ -93,66 +95,7 @@ function mixinTemplateOpts (methods) {
   return objectAssign(TemplateOpts.prototype, methods)
 }
 
-var proMethods = {
-  random: {
-    num: getRandom,
-    time: function (startDate, endDate) {
-      return getRandom(stringToDate(startDate).getTime(), stringToDate(endDate).getTime())
-    },
-    date: function (startDate, endDate, format) {
-      return dateToString(proMethods.random.time(startDate, endDate), format)
-    },
-    repeat: function (array, min, max) {
-      min = min || 1
-      max = max || min
-      if (isString(array)) {
-        array = array.split('')
-      }
-      if (array.length < max) {
-        var result = array
-        while (result.length < max) {
-          result = result.concat(array)
-        }
-        result.length = max
-        array = result
-      }
-      return arraySample(array, getRandom(min, max)).join('')
-    }
-  }
-}
-
 XETemplate.mixin = mixinTemplateOpts
-mixinTemplateOpts(proMethods)
-
-var tmplJoint = {
-  tStart: '__restArr=[]',
-  tEnd: "return __restArr.join('');",
-  contStart: "__restArr.push('",
-  contEnd: "');\n",
-  contTrimEnd: "'.trim());\n",
-  cStart: '__restArr.push(',
-  cEnd: ');\n',
-  simplifyRegExp: /__restArr\.push\('\s*'\);/g
-}
-
-function buildCode (code) {
-  return tmplJoint.contEnd + code + tmplJoint.contStart
-}
-
-function buildTemplate (strTmpl, data) {
-  var restTmpl = strTmpl
-  .replace(/[\r\n\t]/g, ' ')
-  .replace(/{{\s*(.*?)\s*}}/g, function (matching, code) {
-    return buildCode(tmplJoint.cStart + code + tmplJoint.cEnd)
-  })
-  try {
-    restTmpl = 'var ' + tmplJoint.tStart + ';with(opts){' + tmplJoint.contStart + restTmpl + tmplJoint.contEnd + '};' + tmplJoint.tEnd
-    /* eslint-disable no-new-func */
-    return new Function('opts', restTmpl.replace(tmplJoint.simplifyRegExp, ''))(data)
-  } catch (e) {
-    console.error(e)
-  }
-  return strTmpl
-}
+mixinTemplateOpts(tmplMethods)
 
 export default XETemplate

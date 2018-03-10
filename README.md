@@ -15,12 +15,12 @@
 ### cdnjs 获取最新版本
 [点击浏览](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)已发布的所有 npm 包源码
 ``` shell
-<script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock@1.5.8/dist/xe-ajax-mock.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock@1.6.0/dist/xe-ajax-mock.js"></script>
 ```
 ### unpkg 获取最新版本
-[点击浏览](https://unpkg.com/xe-ajax-mock@1.5.8/)已发布的所有 npm 包源码
+[点击浏览](https://unpkg.com/xe-ajax-mock@1.6.0/)已发布的所有 npm 包源码
 ``` shell
-<script src="https://unpkg.com/xe-ajax-mock@1.5.8/dist/xe-ajax-mock.js"></script>
+<script src="https://unpkg.com/xe-ajax-mock@1.6.0/dist/xe-ajax-mock.js"></script>
 ```
 
 ## AMD 安装
@@ -388,7 +388,7 @@ PATCH('/api/user/update', {msg: 'success'})
 ``` shell
 import { HEAD } from 'xe-ajax-mock'
 
-HEAD('/api/user/head', null)
+HEAD('/api/user/head')
 ```
 ### JSONP
 ``` shell
