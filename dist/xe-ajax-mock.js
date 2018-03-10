@@ -310,12 +310,12 @@
           var len = getScopeNumber(keyMatch[3])
           if (isArray(value)) {
             if (value.length > len) {
-              rest = parseArray(isRandom ? arraySample(value, len) : value.slice(0, len))
+              rest = parseArray(isRandom ? arraySample(value, len) : value.slice(0, len), opts)
               if (isRandom && rest.length === 1) {
                 rest = rest[0]
               }
             } else {
-              rest = value
+              rest = parseArray(value, opts)
             }
           } else {
             rest = []
