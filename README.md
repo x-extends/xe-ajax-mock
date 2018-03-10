@@ -297,20 +297,22 @@ template.mixin({})
 import { template } from 'xe-ajax-mock'
 
 template.mixin({
-  format () {
-    return '扩展函数'
+  format (str) {
+    return '格式化:' + str
   }
 })
 
 template({
-  'val': '{{ format() }}'
+  'val': '{{ format("2018-01-01") }}'
 })
-// 结果: {val: '扩展函数'}
+// 结果: {val: '格式化:2018-01-01'}
 ```
 
 ## 示例
 ### Mock
 ``` shell
+import { Mock } from 'xe-ajax-mock'
+
 Mock([{
   path: '/api/user',
   children: [{
@@ -455,21 +457,23 @@ define([
 ## 混合函数
 ### 文件 ./customs.js
 ``` shell
-export function m1 () {
-  console.log('自定义的函数')
+import { POST } from 'xe-ajax-mock'
+
+export function POST2 (path, options) {
+  return POST(path, {message: '成功'}, options)
 } 
 ```
 ### 示例 ./main.js
 ``` shell
 import Vue from 'vue'
-import XEAjaxMock from 'xe-ajax-mock'
+import { Mock } from 'xe-ajax-mock'
 
 import customs from './customs'
 
-XEAjaxMock.mixin(customs)
+Mock.mixin(customs)
 
 // 调用自定义扩展函数
-XEAjaxMock.m1()
+Mock.POST2('/api/user/save')
 ```
 
 ## 完整项目示例
