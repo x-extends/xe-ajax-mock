@@ -589,7 +589,7 @@
     timeout: '20-400',
     headers: null,
     error: true,
-    log: false
+    log: 'development' !== 'production'
   }
 
   function XEMockService (path, method, response, options) {
@@ -601,7 +601,9 @@
       this.options = options
       this.asyncTimeout = null
     } else {
-      console.warn('path and method cannot be empty')
+      if (this.options.error) {
+        console.error('path and method cannot be empty')
+      }
     }
   }
 
