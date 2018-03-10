@@ -73,7 +73,7 @@ function defineMocks (list, options, baseURL, first) {
         } else {
           item.path = baseURL.replace(/\/$/, '') + '/' + item.path.replace(/^\//, '')
         }
-        if (item.response) {
+        if (item.response !== undefined) {
           item.method = String(item.method || 'GET')
           defineMockServices.push(new XEMockService(item.path, item.method, item.response, options))
         }

@@ -176,7 +176,6 @@ template({
 ``` shell
 import { template } from 'xe-ajax-mock'
 
-// 输出对象
 template({
   'id|number': '1',
   'name': 'test 1',
@@ -186,12 +185,39 @@ template({
 })
 // 结果: {id: 1,name: 'test 1', region: ['深圳'], active: false, age: 30}
 ```
-### 输出对象数组
-!return|array([min]-[max])
+### 数组
+数组内部使用索引 {{ $index }}
 ``` shell
 import { template } from 'xe-ajax-mock'
 
-// 输出对象数组，索引{{ $index }}
+template(['{{ random.repeat("随机产生一段文本",10,20) }}', '{{ random.date("2018-03-04","2018-03-20") }}'])
+// 结果: ['"产机文机文生生一产产随本生随随段段一本"', '2018-03-13 14:52:02']
+
+template([{
+  'id|number': '{{ $index+1 }}',
+  'name': 'test {{ $index }}',
+  'region|array(1)': ['深圳', '北京', '上海', '广州'],
+  'active|boolean': '{{ random.num(0,1) }}',
+  'age|number': '{{ random.num(18,60) }}'
+}])
+// 结果: [{id: 1,name: 'test 0', region: ['上海'], active: true, age: 30}]
+```
+### 属性值输出
+!return 当对象中只有一个属性 !return 时直接输出对应值
+``` shell
+import { template } from 'xe-ajax-mock'
+
+template({
+  '!return': {
+    'id|number': '1',
+    'name': 'test {{ $index }}',
+    'region|array(1)': ['深圳', '北京', '上海', '广州'],
+    'active|boolean': '{{ random.num(0,1) }}',
+    'age|number': '{{ random.num(18,60) }}'
+  }
+})
+// 结果: {id: 1,name: 'test 0', region: ['上海'], active: true, age: 30}
+
 template({
   '!return|array(1-2)': {
     'id|number': '{{ $index+1 }}',
@@ -307,6 +333,12 @@ Mock([{
   ]
 }])
 ```
+### HEAD
+``` shell
+import { HEAD } from 'xe-ajax-mock'
+
+HEAD('/api/user/head', null)
+```
 ### GET
 ``` shell
 import { GET } from 'xe-ajax-mock'
@@ -383,12 +415,6 @@ DELETE('/api/user/del', (request, response) => {
 import { PATCH } from 'xe-ajax-mock'
 
 PATCH('/api/user/update', {msg: 'success'})
-```
-### HEAD
-``` shell
-import { HEAD } from 'xe-ajax-mock'
-
-HEAD('/api/user/head')
 ```
 ### JSONP
 ``` shell
