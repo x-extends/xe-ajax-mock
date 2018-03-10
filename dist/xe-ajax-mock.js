@@ -1,13 +1,13 @@
 /**
- * xe-ajax-mock.js v1.6.1
+ * xe-ajax-mock.js v1.6.2
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
  */
 (function (global, factory) {
   typeof s === 'object' && typeof module !== 'undefined' ? module.s = factory()
-	: typeof define === 'function' && define.amd ? define(factory)
-	: (global.XEAjaxMock = factory())
+    : typeof define === 'function' && define.amd ? define(factory)
+      : (global.XEAjaxMock = factory())
 }(this, function () {
   'use strict'
 
@@ -46,13 +46,13 @@
       if (isString(str)) {
         format = format || 'yyyy-MM-dd HH:mm:ss.SSS'
         var dates = []
-        arrayEach([{rules: [['yyyy', 4], ['yyy', 3], ['yy', 2]]},
-      {rules: [['MM', 2], ['M', 1]], offset: -1},
-      {rules: [['dd', 2], ['d', 1]]},
-      {rules: [['HH', 2], ['H', 1]]},
-      {rules: [['mm', 2], ['m', 1]]},
-      {rules: [['ss', 2], ['s', 1]]},
-      {rules: [['SSS', 3], ['SS', 2], ['S', 1]]}], function (item) {
+        arrayEach([{ rules: [['yyyy', 4], ['yyy', 3], ['yy', 2]] },
+        { rules: [['MM', 2], ['M', 1]], offset: -1 },
+        { rules: [['dd', 2], ['d', 1]] },
+        { rules: [['HH', 2], ['H', 1]] },
+        { rules: [['mm', 2], ['m', 1]] },
+        { rules: [['ss', 2], ['s', 1]] },
+        { rules: [['SSS', 3], ['SS', 2], ['S', 1]] }], function (item) {
           for (var arr, sIndex, index = 0, rules = item.rules, len = rules.length; index < len; index++) {
             arr = rules[index]
             sIndex = format.indexOf(arr[0])
@@ -246,13 +246,13 @@
 
   function buildTemplate (strTmpl, data) {
     var restTmpl = strTmpl
-  .replace(/[\r\n\t]/g, ' ')
-  .replace(/{{\s*(.*?)\s*}}/g, function (matching, code) {
-    return buildCode(tmplJoint.cStart + code + tmplJoint.cEnd)
-  })
+      .replace(/[\r\n\t]/g, ' ')
+      .replace(/{{\s*(.*?)\s*}}/g, function (matching, code) {
+        return buildCode(tmplJoint.cStart + code + tmplJoint.cEnd)
+      })
     try {
       restTmpl = 'var ' + tmplJoint.tStart + ';with(opts){' + tmplJoint.contStart + restTmpl + tmplJoint.contEnd + '};' + tmplJoint.tEnd
-    /* eslint-disable no-new-func */
+      /* eslint-disable no-new-func */
       return new Function('opts', restTmpl.replace(tmplJoint.simplifyRegExp, ''))(data)
     } catch (e) {
       console.error(e)
@@ -429,7 +429,7 @@
         if (mockXHR._mock) {
           if (mockXHR.readyState !== 0) {
             clearTimeout(mockXHR._mock.asyncTimeout)
-            mockXHR._mock.reply(mockXHR, mockXHR._request, response || {status: 0, response: ''})
+            mockXHR._mock.reply(mockXHR, mockXHR._request, response || { status: 0, response: '' })
             mockXHR.readyState = 0
           }
         } else if (mockXHR._xhr) {
@@ -461,13 +461,13 @@
 
   var $global = typeof window === 'undefined' ? this : window
 
-/**
- * jsonp
- */
+  /**
+   * jsonp
+   */
   function xejsonp (script, request, resolve, reject) {
     var mock = mateMockItem(request)
     $global[request.jsonpCallback] = function (body) {
-      resolve({status: 200, body: body})
+      resolve({ status: 200, body: body })
     }
     if (mock) {
       mock.time = getScopeNumber(mock.options.timeout)
@@ -483,7 +483,7 @@
             console.info(response)
           }
         } else {
-          script.onerror({type: 'error'})
+          script.onerror({ type: 'error' })
           if (mock.options.error) {
             console.error('JSONP ' + url + ' ' + response.status)
           }
@@ -494,10 +494,10 @@
       script.type = 'text/javascript'
       script.src = url + (url.indexOf('?') === -1 ? '?' : '&') + request.jsonp + '=' + request.jsonpCallback
       script.onerror = function (evnt) {
-        resolve({status: 500, body: ''})
+        resolve({ status: 500, body: '' })
       }
       script.onabort = function (evnt) {
-        resolve({status: 0, body: ''})
+        resolve({ status: 0, body: '' })
       }
       if (request.timeout) {
         setTimeout(function () {
@@ -564,9 +564,9 @@
     require: requireJSON
   })
 
-/**
- * 响应结果
- */
+  /**
+   * 响应结果
+   */
   function getXHRResponse (mock, request) {
     return new Promise(function (resolve, reject) {
       mock.asyncTimeout = setTimeout(function () {
@@ -685,32 +685,32 @@
     })
   }
 
-/**
-  * XEAjaxMock 虚拟服务
-  *
-  * @param Array/String path 路径数组/请求路径
-  * @param String method 请求方法
-  * @param Object/Function response 数据或返回数据方法
-  * @param Object options 参数
-  */
+  /**
+    * XEAjaxMock 虚拟服务
+    *
+    * @param Array/String path 路径数组/请求路径
+    * @param String method 请求方法
+    * @param Object/Function response 数据或返回数据方法
+    * @param Object options 参数
+    */
   function XEAjaxMock (path, method, response, options) {
     var opts = objectAssign({}, setupDefaults, options)
-    defineMocks(isArray(path) ? (options = method, path) : [{path: path, method: method, response: response}], opts, opts.baseURL, true)
+    defineMocks(isArray(path) ? (options = method, path) : [{ path: path, method: method, response: response }], opts, opts.baseURL, true)
     return XEAjaxMock
   }
 
-/**
- * 设置全局参数
- *
- * @param Object options 参数
- */
+  /**
+   * 设置全局参数
+   *
+   * @param Object options 参数
+   */
   function setup (options) {
     objectAssign(setupDefaults, options)
   }
 
-/**
- * 初始化安装
- */
+  /**
+   * 初始化安装
+   */
   function install (XEAjax) {
     XEAjax.setup({
       $fetch: xefetch,
@@ -726,7 +726,7 @@
   }
 
   function JSONP (url, response, options) {
-    return XEAjaxMock(url, 'GET', response, objectAssign({jsonp: 'callback'}, options))
+    return XEAjaxMock(url, 'GET', response, objectAssign({ jsonp: 'callback' }, options))
   }
 
   var template = XETemplate
@@ -750,11 +750,11 @@
     PATCH: PATCH
   }
 
-/**
- * 混合函数
- *
- * @param {Object} methods 扩展
- */
+  /**
+   * 混合函数
+   *
+   * @param {Object} methods 扩展
+   */
   function mixin (methods) {
     return objectAssign(XEAjaxMock, methods)
   }
@@ -763,7 +763,7 @@
     mixin: mixin,
     setup: setup,
     install: install,
-    version: '1.6.1',
+    version: '1.6.2',
     $name: 'XEAjaxMock'
   })
 
