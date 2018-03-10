@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.6.0
+ * xe-ajax-mock.js v1.6.1
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -362,6 +362,9 @@
     if (mockItem) {
       mockItem.time = getScopeNumber(mockItem.options.timeout)
       return getXHRResponse(mockItem, request).then(function (response) {
+        if (mockItem.options.template === true) {
+          response.body = XETemplate(response.body)
+        }
         if (mockItem.options.log) {
           console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + options.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mockItem.time + 'ms')
           console.info(response)
@@ -760,7 +763,7 @@
     mixin: mixin,
     setup: setup,
     install: install,
-    version: '1.6.0',
+    version: '1.6.1',
     $name: 'XEAjaxMock'
   })
 

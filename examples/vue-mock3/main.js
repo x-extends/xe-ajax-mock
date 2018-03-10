@@ -60,18 +60,18 @@ define([
   })
 
   var lang = 'zh'
-  XEAjax.getJSON('api/i18n/list', {lang: lang}).then(data => {
+  XEAjax.getJSON('api/i18n/list', {lang: lang}).then(function (data) {
     // 初始化国际化
-    const i18n = new VueI18n({
+    var messages = {}
+    messages[lang] = data
+    var i18n = new VueI18n({
       locale: lang,
-      messages: {
-        [lang]: data
-      }
+      messages: messages
     })
 
     return new Vue({
       el: '#app',
-      i18n,
+      i18n: i18n,
       router: router
     })
   })

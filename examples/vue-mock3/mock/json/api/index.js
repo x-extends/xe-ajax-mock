@@ -1,7 +1,7 @@
 define([
   'xe-ajax-mock'
 ], function (XEAjaxMock) {
-  XEAjaxMock.GET('api/i18n/list', (request, response) => {
+  XEAjaxMock.GET('api/i18n/list', function (request, response) {
     return response.require(request.params.lang === 'zh' ? 'mock/json/api/i18n/list/zh.json' : 'mock/json/api/i18n/list/en.json')
   })
 
