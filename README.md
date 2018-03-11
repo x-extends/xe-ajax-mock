@@ -69,12 +69,12 @@ XEAjaxMock.POST('/api/user/save', {msg: 'success'})
 * Mock( defines, options )
 * Mock( path, method, response, options )
 * 
+* HEAD( path, response, options )
 * GET( path, response, options )
 * POST( path, response, options )
 * PUT( path, response, options )
 * DELETE( path, response, options )
 * PATCH( path, response, options )
-* HEAD( path, response, options )
 * JSONP( path, response, options )
 
 ### 入参
@@ -87,7 +87,7 @@ XEAjaxMock.POST('/api/user/save', {msg: 'success'})
 | 参数 | 类型 | 描述 | 值 |
 |------|------|-----|----|
 | baseURL | String | 基础路径 | 默认上下文路径 |
-| template | Boolean | 启用模板自动编译 | 默认false |
+| template | Boolean | 启用数据模板自动编译 | 默认false |
 | timeout | String | 模拟请求时间 | 默认'20-400' |
 | jsonp | String | 调用jsonp服务,属性名默认callback | 默认callback |
 | headers | Object | 设置响应头 |  |
@@ -110,7 +110,7 @@ XEAjaxMock.setup({
 })
 ```
 
-## 模板语法 - 属性
+## 数据模板语法 - 属性
 ### 数值
 [key]|number
 ``` shell
@@ -230,7 +230,7 @@ template({
 // 结果: [{id: 1,name: 'test 0', region: ['上海'], active: true, age: 30},
 //       {id: 2, name: 'test 1', region: ['北京'], active: false, age: 42}]
 ```
-## 模板语法 - 值
+## 数据模板语法 - 值
 ### 随机数值
 random.num(min, max)
 ``` shell
