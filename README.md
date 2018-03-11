@@ -1,9 +1,9 @@
-# XEAjaxMock 前端虚拟服务 - XEAjax插件
+# XEAjaxMock 前端虚拟服务插件、支持逻辑校验模拟、数据模板等
 
 [![npm version](https://img.shields.io/npm/v/xe-ajax-mock.svg?style=flat-square)](https://www.npmjs.org/package/xe-ajax-mock)
 [![npm downloads](https://img.shields.io/npm/dm/xe-ajax-mock.svg?style=flat-square)](http://npm-stat.com/charts.html?package=xe-ajax-mock)
 
-基于 XEAjax 扩展的前端虚拟服务插件，对于前后端分离开发模式，ajax+mock 使前端独立开发就非常有必要。
+基于 XEAjax 扩展的前端虚拟服务插件，支持xhr、fetch、jsonp 请求模拟、逻辑校验模拟、数据模板；对于前后端分离的开发模式，ajax+mock 使前端不再依赖后端接口开发效率更高。
 
 ## 兼容性
 基于 Promise 实现，低版本浏览器使用 polyfill es6-promise.js  
@@ -88,11 +88,12 @@ XEAjaxMock.POST('/api/user/save', {msg: 'success'})
 |------|------|-----|----|
 | baseURL | String | 基础路径 | 默认上下文路径 |
 | template | Boolean | 启用数据模板自动编译 | 默认false |
+| pathVariable | Boolean | 启用路径参数类型自动解析 | 默认true启用,false关闭,auto支持类型自动转换 |
 | timeout | String | 模拟请求时间 | 默认'20-400' |
-| jsonp | String | 调用jsonp服务,属性名默认callback | 默认callback |
+| jsonp | String | 调用jsonp服务的属性名 | 默认callback |
 | headers | Object | 设置响应头 |  |
-| error | Boolean | 控制台输出 Mock Error 日志 | true |
-| log | Boolean | 控制台输出 Mock Request 日志 | true |
+| error | Boolean | 控制台输出错误日志 | true |
+| log | Boolean | 控制台输出请求详细日志 | true |
 
 ## 全局参数设置
 ``` shell
@@ -100,7 +101,7 @@ import XEAjaxMock from 'xe-ajax-mock'
 
 XEAjaxMock.setup({
   baseURL: 'http://xuliangzhan.com',
-  template: true,
+  template: 'auto',
   timeout: '100-500',
   headers: {
     'Content-Type': 'application/javascript; charset=UTF-8'
@@ -132,7 +133,7 @@ template({
 })
 // 结果: {flag1: true, flag2: false}
 ```
-### 生成一个或多个数组
+### 生成一个或多个值
 [key]|array([min]-[max])
 ``` shell
 import { template } from 'xe-ajax-mock'
@@ -216,7 +217,7 @@ template({
     'age|number': '{{ random.num(18,60) }}'
   }
 })
-// 结果: {id: 1,name: 'test 0', region: ['上海'], active: true, age: 30}
+// 结果: {id: 1, name: 'test 0', region: ['上海'], active: true, age: 30}
 
 template({
   '!return|array(1-2)': {
@@ -227,7 +228,7 @@ template({
     'age|number': '{{ random.num(18,60) }}'
   }
 })
-// 结果: [{id: 1,name: 'test 0', region: ['上海'], active: true, age: 30},
+// 结果: [{id: 1, name: 'test 0', region: ['上海'], active: true, age: 30},
 //       {id: 2, name: 'test 1', region: ['北京'], active: false, age: 42}]
 ```
 ## 数据模板语法 - 值
@@ -357,11 +358,11 @@ GET('/api/user/list', (request, response) => {
 })
 
 GET('/api/user/list/{pageSize}/{currentPage}', (request, response, context) => {
-  // 获取路径参数 context.pathVariable
+  // 如果 options.pathVariable 设为 'auto', 则路径参数值会自动转换类型，否则是字符串
   // context.pathVariable.pageSize 10
   // context.pathVariable.currentPage 1
   response.status = 200
-  response.headers = {'content-type': 'application/json;charset=UTF-8'}
+  response.headers = {'Content-Type': 'application/json;charset=UTF-8'}
   response.body = {pageVO: context.pathVariable, result: []}
   return response
 })
@@ -437,18 +438,19 @@ define([
   'xe-ajax-mock'
 ], function (XEAjaxMock) {
 
-  XEAjaxMock.GET('/api/user/list', {msg: 'success'})
-
-  XEAjaxMock.GET('/api/user/list', (request, response) => {
+  XEAjaxMock.GET('/api/user/list1', {msg: 'success'})
+  XEAjaxMock.GET('/api/user/list2', (request, response) => {
     return response.require('mock/json/api/user/list/data.json')
   })
 
-  XEAjaxMock.POST('/api/user/save', (request, response) => {
+  // 支持链式写法
+  XEAjaxMock
+  .GET('/api/user/list3', {msg: 'success'})
+  .POST('/api/user/save1', (request, response) => {
     response.body = {msg: 'success'}
     return response
   })
-
-  XEAjaxMock.POST('/api/user/save', (request, response) => {
+  .POST('/api/user/save2', (request, response) => {
     return response.require('mock/json/api/user/save/data.json')
   })
 })

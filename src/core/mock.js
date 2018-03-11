@@ -9,6 +9,7 @@ var defineMockServices = []
 export var setupDefaults = {
   baseURL: getBaseURL(),
   template: false,
+  pathVariable: true,
   timeout: '20-400',
   headers: null,
   error: true,
@@ -85,24 +86,37 @@ function defineMocks (list, options, baseURL, first) {
 
 export function mateMockItem (request) {
   var url = (request.getUrl() || '').split(/\?|#/)[0]
-  return defineMockServices.find(function (item) {
-    if ((item.jsonp ? (item.jsonp === request.jsonp) : true) && request.method.toLowerCase() === item.method.toLowerCase()) {
+  return defineMockServices.find(function (mockItem) {
+    if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
       var done = false
       var pathVariable = []
-      var matchs = url.match(new RegExp(item.path.replace(/{[^{}]+}/g, function (name) {
+      var matchs = url.match(new RegExp(mockItem.path.replace(/{[^{}]+}/g, function (name) {
         pathVariable.push(name.substring(1, name.length - 1))
         return '([^/]+)'
       }) + '/?$'))
-      item.pathVariable = {}
+      mockItem.pathVariable = {}
       done = matchs && matchs.length === pathVariable.length + 1
-      if (done && pathVariable.length) {
+      if (mockItem.options.pathVariable && done && pathVariable.length) {
         arrayEach(pathVariable, function (key, index) {
-          item.pathVariable[key] = matchs[index + 1]
+          mockItem.pathVariable[key] = parsePathVariable(matchs[index + 1], mockItem)
         })
       }
       return done
     }
   })
+}
+
+function parsePathVariable (val, mockItem) {
+  if (val && mockItem.options.pathVariable === 'auto') {
+    if (!isNaN(val)) {
+      return parseFloat(val)
+    } else if (val === 'true') {
+      return true
+    } else if (val === 'false') {
+      return false
+    }
+  }
+  return val
 }
 
 /**

@@ -42,14 +42,14 @@ export function requireJSON (path) {
   })
 }
 
-function XEMockResponse (mock, response, status) {
+function XEMockResponse (mockItem, response, status) {
   if (response && response.body !== undefined && response.status !== undefined) {
-    response.headers = objectAssign({}, setupDefaults.headers, response.headers)
+    response.headers = objectAssign({}, mockItem.options.headers, response.headers)
     objectAssign(this, response)
   } else {
     this.status = status
     this.body = response
-    this.headers = objectAssign({}, setupDefaults.headers)
+    this.headers = objectAssign({}, mockItem.options.headers)
   }
 }
 
@@ -60,19 +60,19 @@ objectAssign(XEMockResponse.prototype, {
 /**
  * 响应结果
  */
-export function getXHRResponse (mock, request) {
+export function getXHRResponse (mockItem, request) {
   return new Promise(function (resolve, reject) {
-    mock.asyncTimeout = setTimeout(function () {
+    mockItem.asyncTimeout = setTimeout(function () {
       if (!request.$complete) {
-        if (isFunction(mock.response)) {
-          return resolve(mock.response(request, new XEMockResponse(mock, null, 200), mock))
+        if (isFunction(mockItem.response)) {
+          return resolve(mockItem.response(request, new XEMockResponse(mockItem, null, 200), mockItem))
         }
-        return Promise.resolve(mock.response).then(function (response) {
-          resolve(new XEMockResponse(mock, response, 200))
+        return Promise.resolve(mockItem.response).then(function (response) {
+          resolve(new XEMockResponse(mockItem, response, 200))
         }).catch(function (response) {
-          reject(new XEMockResponse(mock, response, 500))
+          reject(new XEMockResponse(mockItem, response, 500))
         })
       }
-    }, mock.time)
+    }, mockItem.time)
   })
 }

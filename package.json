@@ -1,7 +1,7 @@
 {
   "name": "xe-ajax-mock",
   "version": "1.6.2",
-  "description": "Mock 前端虚拟服务 - XEAjax插件",
+  "description": "XEAjaxMock 前端虚拟服务插件、支持逻辑校验模拟、数据模板等 - XEAjax 插件",
   "main": "index.js",
   "scripts": {
     "test": "make test"
