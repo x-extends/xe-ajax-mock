@@ -203,10 +203,10 @@ template([{
 // 结果: [{id: 1,name: 'test 0', region: ['上海'], active: true, age: 30}]
 ```
 ### 内置对象
-$size 获取数组大小
-$index 获取数组索引
-$params 获取查询参数
-$body 获取提交参数
+$size 获取数组大小  
+$index 获取数组索引  
+$params 获取查询参数  
+$body 获取提交参数  
 $pathVariable 获取路径参数
 ``` shell
 import { template } from 'xe-ajax-mock'
