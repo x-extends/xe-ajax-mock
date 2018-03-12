@@ -187,7 +187,6 @@ template({
 // 结果: {id: 1,name: 'test 1', region: ['深圳'], active: false, age: 30}
 ```
 ### 数组
-数组内部使用索引 {{ $index }}
 ``` shell
 import { template } from 'xe-ajax-mock'
 
@@ -202,6 +201,32 @@ template([{
   'age|number': '{{ random.num(18,60) }}'
 }])
 // 结果: [{id: 1,name: 'test 0', region: ['上海'], active: true, age: 30}]
+```
+### 内置对象
+$size 获取数组大小
+$index 获取数组索引
+$params 获取查询参数
+$body 获取提交参数
+$pathVariable 获取路径参数
+``` shell
+import { template } from 'xe-ajax-mock'
+
+// Mock 配置：GET('http://xuliangzhan.com/api/user/list/{pageSize/{currentPage}')
+// 请求调用：getJSON('api/user/list/10/1', {name: 'test'})
+template({
+  'page': {
+    'currentPage|number': '{{ $pathVariable.currentPage }}',
+    'pageSize|number': '{{ $pathVariable.pageSize }}'
+  },
+  'result|array(1-5)': {
+    'id|number': '{{ $index }}',
+    'size|number': '{{ $size }}',
+    'name': '{{ $params.name }}',
+    'password': '{{ $body.password }}'
+  }
+})
+
+// 结果: {page: {pageSize: 10, currentPage: 1}, result: [{id: 0, size: 2, name: 'test', password: ''}, {id: 1, size: 2, name: 'test', password: ''}]}
 ```
 ### 属性值输出
 !return 当对象中只有一个属性 !return 时直接输出对应值
@@ -319,7 +344,12 @@ Mock([{
   children: [{
     method: 'GET',
     path: 'list',
-    response: {status: 200, body: [{name: 'test1'}]},
+    response: {
+      '!return|array(1-3)': {
+        'id|number': '{{ $index+1 }}',
+        'name': '{{ random.repeat("随机生成名字",4,20) }}'
+      }
+    },
   }, {
     method: 'POST',
     path: 'submit',
@@ -349,21 +379,26 @@ import { GET } from 'xe-ajax-mock'
 GET('/api/user/list', {msg: 'success'})
 
 GET('/api/user/list', (request, response) => {
-  response.body = template({
+  response.body = {
     '!return|array(1-3)': {
-      name: 'list {{ $index }}'
+      'id|number': '{{ $index+1 }}',
+      'name': '{{ random.repeat("随机生成名字",4,20) }}'
     }
-  })
+  }
   return response
 })
 
 GET('/api/user/list/{pageSize}/{currentPage}', (request, response, context) => {
-  // 如果 options.pathVariable 设为 'auto', 则路径参数值会自动转换类型，否则是字符串
-  // context.pathVariable.pageSize 10
-  // context.pathVariable.currentPage 1
-  response.status = 200
-  response.headers = {'Content-Type': 'application/json;charset=UTF-8'}
-  response.body = {pageVO: context.pathVariable, result: []}
+  response.body = {
+    'page': {
+      'currentPage|number': '{{ $pathVariable.currentPage }}',
+      'pageSize|number': '{{ $pathVariable.pageSize }}'
+    },
+    'result|array(2-5)': {
+      'id|number': '{{ $index+1 }}',
+      'name': '{{ random.repeat("随机生成名字",4,20) }}'
+    }
+  }
   return response
 })
 ```
@@ -381,7 +416,6 @@ POST('/api/user/save', (request, response) => {
 POST('/api/user/save', (request, response) => {
   // 模拟后台逻辑 对参数进行校验
   if (request.params.id) {
-    response.status = 200
     response.body = {msg: 'success'}
   } else {
     response.status = 500
@@ -421,14 +455,15 @@ PATCH('/api/user/update', {msg: 'success'})
 ```
 ### JSONP
 ``` shell
-import { template, JSONP } from 'xe-ajax-mock'
+import { JSONP } from 'xe-ajax-mock'
 
 JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
-  response.body = template({
+  response.body = {
     '!return|array(1-3)': {
-      name: '名字{{ $index }}'
+      'id|number': '{{ $index+1 }}',
+      'name': '{{ random.repeat("随机生成名字",4,20) }}'
     }
-  })
+  }
   return response
 })
 ```
@@ -439,18 +474,24 @@ define([
 ], function (XEAjaxMock) {
 
   XEAjaxMock.GET('/api/user/list1', {msg: 'success'})
-  XEAjaxMock.GET('/api/user/list2', (request, response) => {
-    return response.require('mock/json/api/user/list/data.json')
+  XEAjaxMock.GET('/api/user/list2', function (request, response) {
+    response.body = {
+      '!return|array(1-3)': {
+        'id|number': '{{ $index+1 }}',
+        'name': '{{ random.repeat("随机生成名字",4,20) }}'
+      }
+    }
+    return response
   })
 
   // 支持链式写法
   XEAjaxMock
   .GET('/api/user/list3', {msg: 'success'})
-  .POST('/api/user/save1', (request, response) => {
+  .POST('/api/user/save1', function (request, response) {
     response.body = {msg: 'success'}
     return response
   })
-  .POST('/api/user/save2', (request, response) => {
+  .POST('/api/user/save2', function (request, response) {
     return response.require('mock/json/api/user/save/data.json')
   })
 })

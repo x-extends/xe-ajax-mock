@@ -1,3 +1,4 @@
 {
-  "msg": "success"
+  "status|number": "{{ random.num(200-500) }}",
+  "body": "随机成功或失败"
 }

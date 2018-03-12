@@ -42,9 +42,6 @@ objectAssign(XEMockService.prototype, {
   reply: function (mockXHR, request, response) {
     if (mockXHR.readyState !== 4) {
       var url = request.getUrl()
-      if (this.options.template === true) {
-        response.body = template(response.body)
-      }
       mockXHR.status = response.status
       mockXHR.responseText = mockXHR.response = response.body ? JSON.stringify(response.body) : ''
       mockXHR.responseHeaders = response.headers
@@ -93,7 +90,7 @@ export function mateMockItem (request) {
       var matchs = url.match(new RegExp(mockItem.path.replace(/{[^{}]+}/g, function (name) {
         pathVariable.push(name.substring(1, name.length - 1))
         return '([^/]+)'
-      }) + '/?$'))
+      }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
       mockItem.pathVariable = {}
       done = matchs && matchs.length === pathVariable.length + 1
       if (mockItem.options.pathVariable && done && pathVariable.length) {

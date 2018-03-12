@@ -1,5 +1,9 @@
 {
-  "result|array(2-10)": {
+  "page": {
+    "currentPage|number": "{{ $pathVariable.currentPage }}",
+    "pageSize|number": "{{ $pathVariable.pageSize }}"
+  },
+  "result|array(2-5)": {
     "id|number": "{{ $index+1 }}",
     "name": "test {{ $index }}",
     "region|random(1)": ["深圳", "北京", "上海", "广州"],

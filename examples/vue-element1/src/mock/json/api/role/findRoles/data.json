@@ -1,6 +1,8 @@
 {
-  "!return|array(2-10)": {
+  "status|number": "{{ random.num(200-500) }}",
+  "body|array(2-10)": {
     "id|number": "{{ $index+1 }}",
     "name": "角色{{ $index }}"
-  }
+  },
+  "headers": {}
 }

@@ -1,5 +1,6 @@
 import { isFunction, getLocatOrigin, objectAssign } from '../core/util'
 import { setupDefaults } from '../core/mock'
+import { XETemplate } from '../template'
 
 var requireMap = {}
 
@@ -42,7 +43,10 @@ export function requireJSON (path) {
   })
 }
 
-function XEMockResponse (mockItem, response, status) {
+function XEMockResponse (mockItem, request, response, status) {
+  if (response && mockItem.options.template === true) {
+    response = XETemplate(response, {$pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {}})
+  }
   if (response && response.body !== undefined && response.status !== undefined) {
     response.headers = objectAssign({}, mockItem.options.headers, response.headers)
     objectAssign(this, response)
@@ -65,12 +69,12 @@ export function getXHRResponse (mockItem, request) {
     mockItem.asyncTimeout = setTimeout(function () {
       if (!request.$complete) {
         if (isFunction(mockItem.response)) {
-          return resolve(mockItem.response(request, new XEMockResponse(mockItem, null, 200), mockItem))
+          return resolve(mockItem.response(request, new XEMockResponse(mockItem, request, null, 200), mockItem))
         }
         return Promise.resolve(mockItem.response).then(function (response) {
-          resolve(new XEMockResponse(mockItem, response, 200))
+          resolve(new XEMockResponse(mockItem, request, response, 200))
         }).catch(function (response) {
-          reject(new XEMockResponse(mockItem, response, 500))
+          reject(new XEMockResponse(mockItem, request, response, 500))
         })
       }
     }, mockItem.time)

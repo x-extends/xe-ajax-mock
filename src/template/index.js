@@ -4,9 +4,9 @@ import { tmplMethods } from './fn'
 
 var keyRule = /(.+)\|(array|random)\(([0-9-]+)\)$/
 
-export function XETemplate (tmpl) {
+export function XETemplate (tmpl, fns) {
   var result = null
-  result = parseValueRule(tmpl, new TemplateOpts())
+  result = parseValueRule(tmpl, new TemplateMethods({}, fns))
   if (isObject(result)) {
     var keys = objectKeys(result)
     if (keys.length === 1 && keys[0] === '!return') {
@@ -16,31 +16,31 @@ export function XETemplate (tmpl) {
   return result
 }
 
-function parseValueRule (value, opts) {
+function parseValueRule (value, tmplMethods) {
   if (value) {
     if (isArray(value)) {
-      return parseArray(value, opts)
+      return parseArray(value, tmplMethods)
     }
     if (isObject(value)) {
-      return parseObject(value, opts)
+      return parseObject(value, tmplMethods)
     }
     if (isString(value)) {
-      return buildTemplate(value, opts)
+      return buildTemplate(value, tmplMethods)
     }
   }
   return value
 }
 
-function parseArray (array, opts) {
+function parseArray (array, tmplMethods) {
   var result = []
   arrayEach(array, function (value, index) {
-    var options = new TemplateOpts(opts, array, value, index)
+    var options = new TemplateMethods({$parent: tmplMethods, $obj: array, $value: value, $size: array.length, $index: index}, tmplMethods.$fns)
     result.push(parseValueRule(value, options))
   })
   return result
 }
 
-function parseObject (obj, opts) {
+function parseObject (obj, tmplMethods) {
   var result = {}
   objectEach(obj, function (value, key) {
     var keyMatch = key.match(keyRule)
@@ -52,23 +52,23 @@ function parseObject (obj, opts) {
         var len = getScopeNumber(keyMatch[3])
         if (isArray(value)) {
           if (value.length > len) {
-            rest = parseArray(isRandom ? arraySample(value, len) : value.slice(0, len), opts)
+            rest = parseArray(isRandom ? arraySample(value, len) : value.slice(0, len), tmplMethods)
             if (isRandom && rest.length === 1) {
               rest = rest[0]
             }
           } else {
-            rest = parseArray(value, opts)
+            rest = parseArray(value, tmplMethods)
           }
         } else {
           rest = []
           for (var index = 0; index < len; index++) {
-            var op = new TemplateOpts(opts, rest, null, index)
+            var op = new TemplateMethods({$parent: tmplMethods, $obj: rest, $value: null, $size: len, $index: index}, tmplMethods.$fns)
             rest.push(parseValueRule(value, op))
           }
         }
       }
     } else {
-      rest = parseValueRule(value, opts)
+      rest = parseValueRule(value, tmplMethods)
       keyMatch = key.match(/(.+)\|(number|boolean)$/)
       if (keyMatch && keyMatch.length === 3) {
         key = keyMatch[1]
@@ -84,18 +84,16 @@ function parseObject (obj, opts) {
   return result
 }
 
-function TemplateOpts (parent, obj, value, index) {
-  this.$parent = parent
-  this.$obj = obj
-  this.$value = value
-  this.$index = index
+function TemplateMethods (methods, fns) {
+  this.$fns = fns
+  objectAssign(this, fns, methods)
 }
 
-function mixinTemplateOpts (methods) {
-  return objectAssign(TemplateOpts.prototype, methods)
+function mixinTemplateMethods (methods) {
+  return objectAssign(TemplateMethods.prototype, methods)
 }
 
-XETemplate.mixin = mixinTemplateOpts
-mixinTemplateOpts(tmplMethods)
+XETemplate.mixin = mixinTemplateMethods
+mixinTemplateMethods(tmplMethods)
 
 export default XETemplate

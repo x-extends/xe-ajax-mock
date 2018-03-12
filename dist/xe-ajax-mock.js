@@ -1,13 +1,13 @@
 /**
- * xe-ajax-mock.js v1.6.2
+ * xe-ajax-mock.js v1.6.3
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
  */
 (function (global, factory) {
   typeof s === 'object' && typeof module !== 'undefined' ? module.s = factory()
-	: typeof define === 'function' && define.amd ? define(factory)
-	: (global.XEAjaxMock = factory())
+    : typeof define === 'function' && define.amd ? define(factory)
+      : (global.XEAjaxMock = factory())
 }(this, function () {
   'use strict'
 
@@ -35,6 +35,16 @@
     return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
   }
 
+  var dateFormatRules = [
+    { rules: [['yyyy', 4], ['yyy', 3], ['yy', 2]] },
+    { rules: [['MM', 2], ['M', 1]], offset: -1 },
+    { rules: [['dd', 2], ['d', 1]] },
+    { rules: [['HH', 2], ['H', 1]] },
+    { rules: [['mm', 2], ['m', 1]] },
+    { rules: [['ss', 2], ['s', 1]] },
+    { rules: [['SSS', 3], ['SS', 2], ['S', 1]] }
+  ]
+
   function stringToDate (str, format) {
     if (str) {
       if (isDate(str)) {
@@ -46,13 +56,7 @@
       if (isString(str)) {
         format = format || 'yyyy-MM-dd HH:mm:ss.SSS'
         var dates = []
-        arrayEach([{rules: [['yyyy', 4], ['yyy', 3], ['yy', 2]]},
-      {rules: [['MM', 2], ['M', 1]], offset: -1},
-      {rules: [['dd', 2], ['d', 1]]},
-      {rules: [['HH', 2], ['H', 1]]},
-      {rules: [['mm', 2], ['m', 1]]},
-      {rules: [['ss', 2], ['s', 1]]},
-      {rules: [['SSS', 3], ['SS', 2], ['S', 1]]}], function (item) {
+        arrayEach(dateFormatRules, function (item) {
           for (var arr, sIndex, index = 0, rules = item.rules, len = rules.length; index < len; index++) {
             arr = rules[index]
             sIndex = format.indexOf(arr[0])
@@ -204,11 +208,23 @@
   var tmplMethods = {
     random: {
       num: getRandom,
-      time: function (startDate, endDate) {
-        return getRandom(stringToDate(startDate).getTime(), stringToDate(endDate).getTime())
+      time: function (startDate, endDate, format) {
+        if (startDate) {
+          if (!endDate) {
+            return stringToDate(startDate, format).getTime()
+          }
+          return getRandom(stringToDate(startDate, format).getTime(), stringToDate(endDate, format).getTime())
+        }
+        return startDate
       },
       date: function (startDate, endDate, format) {
-        return dateToString(tmplMethods.random.time(startDate, endDate), format)
+        if (startDate) {
+          if (!endDate) {
+            return dateToString(startDate, format)
+          }
+          return dateToString(tmplMethods.random.time(startDate, endDate), format)
+        }
+        return startDate
       },
       repeat: function (array, min, max) {
         min = min || 1
@@ -246,13 +262,13 @@
 
   function buildTemplate (strTmpl, data) {
     var restTmpl = strTmpl
-  .replace(/[\r\n\t]/g, ' ')
-  .replace(/{{\s*(.*?)\s*}}/g, function (matching, code) {
-    return buildCode(tmplJoint.cStart + code + tmplJoint.cEnd)
-  })
+      .replace(/[\r\n\t]/g, ' ')
+      .replace(/{{\s*(.*?)\s*}}/g, function (matching, code) {
+        return buildCode(tmplJoint.cStart + code + tmplJoint.cEnd)
+      })
     try {
       restTmpl = 'var ' + tmplJoint.tStart + ';with(opts){' + tmplJoint.contStart + restTmpl + tmplJoint.contEnd + '};' + tmplJoint.tEnd
-    /* eslint-disable no-new-func */
+      /* eslint-disable no-new-func */
       return new Function('opts', restTmpl.replace(tmplJoint.simplifyRegExp, ''))(data)
     } catch (e) {
       console.error(e)
@@ -262,9 +278,9 @@
 
   var keyRule = /(.+)\|(array|random)\(([0-9-]+)\)$/
 
-  function XETemplate (tmpl) {
+  function XETemplate (tmpl, fns) {
     var result = null
-    result = parseValueRule(tmpl, new TemplateOpts())
+    result = parseValueRule(tmpl, new TemplateMethods({}, fns))
     if (isObject(result)) {
       var keys = objectKeys(result)
       if (keys.length === 1 && keys[0] === '!return') {
@@ -274,31 +290,31 @@
     return result
   }
 
-  function parseValueRule (value, opts) {
+  function parseValueRule (value, tmplMethods) {
     if (value) {
       if (isArray(value)) {
-        return parseArray(value, opts)
+        return parseArray(value, tmplMethods)
       }
       if (isObject(value)) {
-        return parseObject(value, opts)
+        return parseObject(value, tmplMethods)
       }
       if (isString(value)) {
-        return buildTemplate(value, opts)
+        return buildTemplate(value, tmplMethods)
       }
     }
     return value
   }
 
-  function parseArray (array, opts) {
+  function parseArray (array, tmplMethods) {
     var result = []
     arrayEach(array, function (value, index) {
-      var options = new TemplateOpts(opts, array, value, index)
+      var options = new TemplateMethods({ $parent: tmplMethods, $obj: array, $value: value, $size: array.length, $index: index }, tmplMethods.$fns)
       result.push(parseValueRule(value, options))
     })
     return result
   }
 
-  function parseObject (obj, opts) {
+  function parseObject (obj, tmplMethods) {
     var result = {}
     objectEach(obj, function (value, key) {
       var keyMatch = key.match(keyRule)
@@ -310,23 +326,23 @@
           var len = getScopeNumber(keyMatch[3])
           if (isArray(value)) {
             if (value.length > len) {
-              rest = parseArray(isRandom ? arraySample(value, len) : value.slice(0, len), opts)
+              rest = parseArray(isRandom ? arraySample(value, len) : value.slice(0, len), tmplMethods)
               if (isRandom && rest.length === 1) {
                 rest = rest[0]
               }
             } else {
-              rest = parseArray(value, opts)
+              rest = parseArray(value, tmplMethods)
             }
           } else {
             rest = []
             for (var index = 0; index < len; index++) {
-              var op = new TemplateOpts(opts, rest, null, index)
+              var op = new TemplateMethods({ $parent: tmplMethods, $obj: rest, $value: null, $size: len, $index: index }, tmplMethods.$fns)
               rest.push(parseValueRule(value, op))
             }
           }
         }
       } else {
-        rest = parseValueRule(value, opts)
+        rest = parseValueRule(value, tmplMethods)
         keyMatch = key.match(/(.+)\|(number|boolean)$/)
         if (keyMatch && keyMatch.length === 3) {
           key = keyMatch[1]
@@ -342,19 +358,17 @@
     return result
   }
 
-  function TemplateOpts (parent, obj, value, index) {
-    this.$parent = parent
-    this.$obj = obj
-    this.$value = value
-    this.$index = index
+  function TemplateMethods (methods, fns) {
+    this.$fns = fns
+    objectAssign(this, fns, methods)
   }
 
-  function mixinTemplateOpts (methods) {
-    return objectAssign(TemplateOpts.prototype, methods)
+  function mixinTemplateMethods (methods) {
+    return objectAssign(TemplateMethods.prototype, methods)
   }
 
-  XETemplate.mixin = mixinTemplateOpts
-  mixinTemplateOpts(tmplMethods)
+  XETemplate.mixin = mixinTemplateMethods
+  mixinTemplateMethods(tmplMethods)
 
   function xefetch (url, options) {
     var request = options._request
@@ -362,9 +376,6 @@
     if (mockItem) {
       mockItem.time = getScopeNumber(mockItem.options.timeout)
       return getXHRResponse(mockItem, request).then(function (response) {
-        if (mockItem.options.template === true) {
-          response.body = XETemplate(response.body)
-        }
         if (mockItem.options.log) {
           console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + options.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mockItem.time + 'ms')
           console.info(response)
@@ -429,7 +440,7 @@
         if (mockXHR._mock) {
           if (mockXHR.readyState !== 0) {
             clearTimeout(mockXHR._mock.asyncTimeout)
-            mockXHR._mock.reply(mockXHR, mockXHR._request, response || {status: 0, response: ''})
+            mockXHR._mock.reply(mockXHR, mockXHR._request, response || { status: 0, response: '' })
             mockXHR.readyState = 0
           }
         } else if (mockXHR._xhr) {
@@ -461,30 +472,27 @@
 
   var $global = typeof window === 'undefined' ? this : window
 
-/**
- * jsonp
- */
+  /**
+   * jsonp
+   */
   function xejsonp (script, request, resolve, reject) {
-    var mock = mateMockItem(request)
+    var mockItem = mateMockItem(request)
     $global[request.jsonpCallback] = function (body) {
-      resolve({status: 200, body: body})
+      resolve({ status: 200, body: body })
     }
-    if (mock) {
-      mock.time = getScopeNumber(mock.options.timeout)
-      return getXHRResponse(mock, request).then(function (response) {
+    if (mockItem) {
+      mockItem.time = getScopeNumber(mockItem.options.timeout)
+      return getXHRResponse(mockItem, request).then(function (response) {
         var url = request.getUrl()
         if (request.validateStatus(response)) {
-          if (mock.options.template === true) {
-            response.body = XETemplate(response.body)
-          }
           $global[request.jsonpCallback](response.body)
-          if (mock.options.log) {
-            console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mock.time + 'ms')
+          if (mockItem.options.log) {
+            console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mockItem.time + 'ms')
             console.info(response)
           }
         } else {
-          script.onerror({type: 'error'})
-          if (mock.options.error) {
+          script.onerror({ type: 'error' })
+          if (mockItem.options.error) {
             console.error('JSONP ' + url + ' ' + response.status)
           }
         }
@@ -494,10 +502,10 @@
       script.type = 'text/javascript'
       script.src = url + (url.indexOf('?') === -1 ? '?' : '&') + request.jsonp + '=' + request.jsonpCallback
       script.onerror = function (evnt) {
-        resolve({status: 500, body: ''})
+        resolve({ status: 500, body: '' })
       }
       script.onabort = function (evnt) {
-        resolve({status: 0, body: ''})
+        resolve({ status: 0, body: '' })
       }
       if (request.timeout) {
         setTimeout(function () {
@@ -549,7 +557,10 @@
     })
   }
 
-  function XEMockResponse (mockItem, response, status) {
+  function XEMockResponse (mockItem, request, response, status) {
+    if (response && mockItem.options.template === true) {
+      response = XETemplate(response, { $pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {} })
+    }
     if (response && response.body !== undefined && response.status !== undefined) {
       response.headers = objectAssign({}, mockItem.options.headers, response.headers)
       objectAssign(this, response)
@@ -564,20 +575,20 @@
     require: requireJSON
   })
 
-/**
- * 响应结果
- */
+  /**
+   * 响应结果
+   */
   function getXHRResponse (mockItem, request) {
     return new Promise(function (resolve, reject) {
       mockItem.asyncTimeout = setTimeout(function () {
         if (!request.$complete) {
           if (isFunction(mockItem.response)) {
-            return resolve(mockItem.response(request, new XEMockResponse(mockItem, null, 200), mockItem))
+            return resolve(mockItem.response(request, new XEMockResponse(mockItem, request, null, 200), mockItem))
           }
           return Promise.resolve(mockItem.response).then(function (response) {
-            resolve(new XEMockResponse(mockItem, response, 200))
+            resolve(new XEMockResponse(mockItem, request, response, 200))
           }).catch(function (response) {
-            reject(new XEMockResponse(mockItem, response, 500))
+            reject(new XEMockResponse(mockItem, request, response, 500))
           })
         }
       }, mockItem.time)
@@ -622,9 +633,6 @@
     reply: function (mockXHR, request, response) {
       if (mockXHR.readyState !== 4) {
         var url = request.getUrl()
-        if (this.options.template === true) {
-          response.body = template(response.body)
-        }
         mockXHR.status = response.status
         mockXHR.responseText = mockXHR.response = response.body ? JSON.stringify(response.body) : ''
         mockXHR.responseHeaders = response.headers
@@ -673,7 +681,7 @@
         var matchs = url.match(new RegExp(mockItem.path.replace(/{[^{}]+}/g, function (name) {
           pathVariable.push(name.substring(1, name.length - 1))
           return '([^/]+)'
-        }) + '/?$'))
+        }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
         mockItem.pathVariable = {}
         done = matchs && matchs.length === pathVariable.length + 1
         if (mockItem.options.pathVariable && done && pathVariable.length) {
@@ -699,32 +707,32 @@
     return val
   }
 
-/**
-  * XEAjaxMock 虚拟服务
-  *
-  * @param Array/String path 路径数组/请求路径
-  * @param String method 请求方法
-  * @param Object/Function response 数据或返回数据方法
-  * @param Object options 参数
-  */
+  /**
+    * XEAjaxMock 虚拟服务
+    *
+    * @param Array/String path 路径数组/请求路径
+    * @param String method 请求方法
+    * @param Object/Function response 数据或返回数据方法
+    * @param Object options 参数
+    */
   function XEAjaxMock (path, method, response, options) {
     var opts = objectAssign({}, setupDefaults, options)
-    defineMocks(isArray(path) ? (options = method, path) : [{path: path, method: method, response: response}], opts, opts.baseURL, true)
+    defineMocks(isArray(path) ? (options = method, path) : [{ path: path, method: method, response: response }], opts, opts.baseURL, true)
     return XEAjaxMock
   }
 
-/**
- * 设置全局参数
- *
- * @param Object options 参数
- */
+  /**
+   * 设置全局参数
+   *
+   * @param Object options 参数
+   */
   function setup (options) {
     objectAssign(setupDefaults, options)
   }
 
-/**
- * 初始化安装
- */
+  /**
+   * 初始化安装
+   */
   function install (XEAjax) {
     XEAjax.setup({
       $fetch: xefetch,
@@ -740,7 +748,7 @@
   }
 
   function JSONP (url, response, options) {
-    return XEAjaxMock(url, 'GET', response, objectAssign({jsonp: 'callback'}, options))
+    return XEAjaxMock(url, 'GET', response, objectAssign({ jsonp: 'callback' }, options))
   }
 
   var template = XETemplate
@@ -753,7 +761,7 @@
   var HEAD = createDefine('HEAD')
 
   var Methods = {
-    template: template,
+    template: XETemplate,
     Mock: Mock,
     JSONP: JSONP,
     HEAD: HEAD,
@@ -764,11 +772,11 @@
     PATCH: PATCH
   }
 
-/**
- * 混合函数
- *
- * @param {Object} methods 扩展
- */
+  /**
+   * 混合函数
+   *
+   * @param {Object} methods 扩展
+   */
   function mixin (methods) {
     return objectAssign(XEAjaxMock, methods)
   }
@@ -777,7 +785,7 @@
     mixin: mixin,
     setup: setup,
     install: install,
-    version: '1.6.2',
+    version: '1.6.3',
     $name: 'XEAjaxMock'
   })
 

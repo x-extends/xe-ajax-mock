@@ -1,7 +1,8 @@
-import { template, Mock, JSONP, HEAD, GET, POST, PUT, DELETE, PATCH } from './mock'
+import { XETemplate } from '../template'
+import { Mock, JSONP, HEAD, GET, POST, PUT, DELETE, PATCH } from './mock'
 
 export var exportMethods = {
-  template: template,
+  template: XETemplate,
   Mock: Mock,
   JSONP: JSONP,
   HEAD: HEAD,

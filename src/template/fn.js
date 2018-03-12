@@ -3,11 +3,23 @@ import { isString, getRandom, arraySample, stringToDate, dateToString } from '..
 export var tmplMethods = {
   random: {
     num: getRandom,
-    time: function (startDate, endDate) {
-      return getRandom(stringToDate(startDate).getTime(), stringToDate(endDate).getTime())
+    time: function (startDate, endDate, format) {
+      if (startDate) {
+        if (!endDate) {
+          return stringToDate(startDate, format).getTime()
+        }
+        return getRandom(stringToDate(startDate, format).getTime(), stringToDate(endDate, format).getTime())
+      }
+      return startDate
     },
     date: function (startDate, endDate, format) {
-      return dateToString(tmplMethods.random.time(startDate, endDate), format)
+      if (startDate) {
+        if (!endDate) {
+          return dateToString(startDate, format)
+        }
+        return dateToString(tmplMethods.random.time(startDate, endDate), format)
+      }
+      return startDate
     },
     repeat: function (array, min, max) {
       min = min || 1

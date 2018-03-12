@@ -1,6 +1,5 @@
 import { isFunction, getScopeNumber, objectAssign } from '../core/util'
 import { mateMockItem } from '../core/mock'
-import { XETemplate } from '../template'
 import { getXHRResponse } from '../core/response'
 
 export function xefetch (url, options) {
@@ -9,9 +8,6 @@ export function xefetch (url, options) {
   if (mockItem) {
     mockItem.time = getScopeNumber(mockItem.options.timeout)
     return getXHRResponse(mockItem, request).then(function (response) {
-      if (mockItem.options.template === true) {
-        response.body = XETemplate(response.body)
-      }
       if (mockItem.options.log) {
         console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + options.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mockItem.time + 'ms')
         console.info(response)

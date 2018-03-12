@@ -22,6 +22,16 @@ export function getRandom (min, max) {
   return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
 }
 
+var dateFormatRules = [
+  {rules: [['yyyy', 4], ['yyy', 3], ['yy', 2]]},
+  {rules: [['MM', 2], ['M', 1]], offset: -1},
+  {rules: [['dd', 2], ['d', 1]]},
+  {rules: [['HH', 2], ['H', 1]]},
+  {rules: [['mm', 2], ['m', 1]]},
+  {rules: [['ss', 2], ['s', 1]]},
+  {rules: [['SSS', 3], ['SS', 2], ['S', 1]]}
+]
+
 export function stringToDate (str, format) {
   if (str) {
     if (isDate(str)) {
@@ -33,13 +43,7 @@ export function stringToDate (str, format) {
     if (isString(str)) {
       format = format || 'yyyy-MM-dd HH:mm:ss.SSS'
       var dates = []
-      arrayEach([{rules: [['yyyy', 4], ['yyy', 3], ['yy', 2]]},
-      {rules: [['MM', 2], ['M', 1]], offset: -1},
-      {rules: [['dd', 2], ['d', 1]]},
-      {rules: [['HH', 2], ['H', 1]]},
-      {rules: [['mm', 2], ['m', 1]]},
-      {rules: [['ss', 2], ['s', 1]]},
-      {rules: [['SSS', 3], ['SS', 2], ['S', 1]]}], function (item) {
+      arrayEach(dateFormatRules, function (item) {
         for (var arr, sIndex, index = 0, rules = item.rules, len = rules.length; index < len; index++) {
           arr = rules[index]
           sIndex = format.indexOf(arr[0])
