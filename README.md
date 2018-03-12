@@ -1,4 +1,4 @@
-# XEAjaxMock 前端虚拟服务插件、支持逻辑校验模拟、数据模板等
+# 前端虚拟服务插件、支持 xhr、fetch、jsonp 模拟、数据模板等
 
 [![npm version](https://img.shields.io/npm/v/xe-ajax-mock.svg?style=flat-square)](https://www.npmjs.org/package/xe-ajax-mock)
 [![npm downloads](https://img.shields.io/npm/dm/xe-ajax-mock.svg?style=flat-square)](http://npm-stat.com/charts.html?package=xe-ajax-mock)
