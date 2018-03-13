@@ -211,13 +211,7 @@ $pathVariable 获取路径参数
 ``` shell
 import { template } from 'xe-ajax-mock'
 
-// Mock 配置：GET('http://xuliangzhan.com/api/user/list/{pageSize/{currentPage}')
-// 请求调用：getJSON('api/user/list/10/1', {name: 'test'})
 template({
-  'page': {
-    'currentPage|number': '{{ $pathVariable.currentPage }}',
-    'pageSize|number': '{{ $pathVariable.pageSize }}'
-  },
   'result|array(1-5)': {
     'id|number': '{{ $index }}',
     'size|number': '{{ $size }}',
@@ -316,6 +310,35 @@ template({
   'dateStr': '{{ random.date("2018-03-04","2018-03-20","yyyy-MM-dd HH:mm:ss.S") }}'
 })
 // 结果: {dateStr: '2018-03-10 10:30:20.500'}
+```
+### 完整示例
+``` shell
+import { template } from 'xe-ajax-mock'
+
+// Mock 配置：GET('http://xuliangzhan.com/api/user/list/{pageSize/{currentPage}')
+// 请求调用：getJSON('api/user/list/10/1', {name: 'test'})
+template({
+  "page": {
+    "currentPage|number": "{{ $pathVariable.currentPage }}",
+    "pageSize|number": "{{ $pathVariable.pageSize }}",
+    "totalResult|number": "{{ random.num(100,200) }}"
+  },
+  "result|array({{ $pathVariable.pageSize }})": {
+    "id|number": "{{ $index+1 }}",
+    "name": "test {{ $index }}",
+    "region|random(1)": ["深圳", "北京", "上海", "广州"],
+    "roles|array(1-3)": ["admin", "developer", "tester", "designer"],
+    "isLogin|boolean": "{{ random.num(0,1) }}",
+    "email": "{{ random.repeat('abcdefg',5,20) }}@{{ random.repeat(['qq','163'],1) }}.{{ random.repeat(['com','net'],1) }}",
+    "color": "rgb({{ random.num(100,120) }}, {{ random.num(140,180) }}, {{ random.num(140,160) }})",
+    "ip": "{{ random.num(1,254) }}.{{ random.num(1,254) }}.{{ random.num(1,254) }}.{{ random.num(1,254) }}",
+    "age|number": "{{ random.num(18,60) }}",
+    "password": "{{ random.num(100000,999999) }}",
+    "describe": "{{ random.repeat('描述信息',10,200) }}",
+    "createDate": "{{ random.date('2018-01-01','2018-06-20') }}",
+    "updateTime": "{{ random.time('2018-01-01','2018-06-20') }}"
+  }
+})
 ```
 ### 混合函数
 template.mixin({})
