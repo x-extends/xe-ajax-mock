@@ -1,6 +1,6 @@
 {
   "name": "xe-ajax-mock",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "前端虚拟服务插件,支持 xhr、fetch、jsonp、数据模板等 - XEAjax 插件",
   "main": "index.js",
   "scripts": {

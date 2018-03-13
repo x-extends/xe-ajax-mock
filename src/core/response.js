@@ -4,13 +4,10 @@ import { setupDefaults, template } from './mock'
 var requireMap = {}
 
 function parseRequire (response, path) {
-  response.body = null
   try {
-    response.body = JSON.parse(requireMap[path])
-  } catch (e) {
-    response.body = requireMap[path]
-  }
-  return response
+    return JSON.parse(requireMap[path])
+  } catch (e) {}
+  return requireMap[path]
 }
 
 export function requireJSON (path) {
@@ -68,7 +65,9 @@ export function getXHRResponse (mockItem, request) {
     mockItem.asyncTimeout = setTimeout(function () {
       if (!request.$complete) {
         if (isFunction(mockItem.response)) {
-          return resolve(mockItem.response(request, new XEMockResponse(mockItem, request, null, 200), mockItem))
+          return Promise.resolve(mockItem.response(request, new XEMockResponse(mockItem, request, null, 200), mockItem)).then(function (response) {
+            resolve(new XEMockResponse(mockItem, request, response, 200))
+          })
         }
         return Promise.resolve(mockItem.response).then(function (response) {
           resolve(new XEMockResponse(mockItem, request, response, 200))

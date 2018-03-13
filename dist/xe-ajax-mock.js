@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.6.4
+ * xe-ajax-mock.js v1.6.5
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -276,7 +276,7 @@
     return strTmpl
   }
 
-  var keyRule = /(.+)\|(array|random)\(([0-9-]+)\)$/
+  var keyRule = /(.+)\|(array|random)\((.+)\)$/
 
   function XETemplate (tmpl, fns) {
     var result = null
@@ -323,7 +323,7 @@
         key = keyMatch[1]
         var isRandom = keyMatch[2].toLowerCase() === 'random'
         if (keyMatch[2].toLowerCase() === 'array' || isRandom) {
-          var len = getScopeNumber(keyMatch[3])
+          var len = getScopeNumber(buildTemplate(keyMatch[3], tmplMethods))
           if (isArray(value)) {
             if (value.length > len) {
               rest = parseArray(isRandom ? arraySample(value, len) : value.slice(0, len), tmplMethods)
@@ -519,13 +519,10 @@
   var requireMap = {}
 
   function parseRequire (response, path) {
-    response.body = null
     try {
-      response.body = JSON.parse(requireMap[path])
-    } catch (e) {
-      response.body = requireMap[path]
-    }
-    return response
+      return JSON.parse(requireMap[path])
+    } catch (e) { }
+    return requireMap[path]
   }
 
   function requireJSON (path) {
@@ -583,7 +580,9 @@
       mockItem.asyncTimeout = setTimeout(function () {
         if (!request.$complete) {
           if (isFunction(mockItem.response)) {
-            return resolve(mockItem.response(request, new XEMockResponse(mockItem, request, null, 200), mockItem))
+            return Promise.resolve(mockItem.response(request, new XEMockResponse(mockItem, request, null, 200), mockItem)).then(function (response) {
+              resolve(new XEMockResponse(mockItem, request, response, 200))
+            })
           }
           return Promise.resolve(mockItem.response).then(function (response) {
             resolve(new XEMockResponse(mockItem, request, response, 200))
@@ -778,14 +777,14 @@
    * @param {Object} methods 扩展
    */
   function mixin (methods) {
-    return objectAssign(XEAjaxMock, methods)
+    return objectAssign(Mock, methods)
   }
 
-  objectAssign(XEAjaxMock, {
+  objectAssign(Mock, {
     mixin: mixin,
     setup: setup,
     install: install,
-    version: '1.6.4',
+    version: '1.6.5',
     $name: 'XEAjaxMock'
   })
 
