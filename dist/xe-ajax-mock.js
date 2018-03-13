@@ -1,11 +1,11 @@
 /**
- * xe-ajax-mock.js v1.6.3
+ * xe-ajax-mock.js v1.6.4
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
  */
 (function (global, factory) {
-  typeof s === 'object' && typeof module !== 'undefined' ? module.s = factory()
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory()
     : typeof define === 'function' && define.amd ? define(factory)
       : (global.XEAjaxMock = factory())
 }(this, function () {
@@ -559,7 +559,7 @@
 
   function XEMockResponse (mockItem, request, response, status) {
     if (response && mockItem.options.template === true) {
-      response = XETemplate(response, { $pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {} })
+      response = template(response, { $pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {} })
     }
     if (response && response.body !== undefined && response.status !== undefined) {
       response.headers = objectAssign({}, mockItem.options.headers, response.headers)
@@ -760,7 +760,7 @@
   var PATCH = createDefine('PATCH')
   var HEAD = createDefine('HEAD')
 
-  var Methods = {
+  var exportMethods = {
     template: XETemplate,
     Mock: Mock,
     JSONP: JSONP,
@@ -785,11 +785,11 @@
     mixin: mixin,
     setup: setup,
     install: install,
-    version: '1.6.3',
+    version: '1.6.4',
     $name: 'XEAjaxMock'
   })
 
-  mixin(Methods)
+  mixin(exportMethods)
 
   return XEAjaxMock
 }))

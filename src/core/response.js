@@ -1,6 +1,5 @@
 import { isFunction, getLocatOrigin, objectAssign } from '../core/util'
-import { setupDefaults } from '../core/mock'
-import { XETemplate } from '../template'
+import { setupDefaults, template } from './mock'
 
 var requireMap = {}
 
@@ -45,7 +44,7 @@ export function requireJSON (path) {
 
 function XEMockResponse (mockItem, request, response, status) {
   if (response && mockItem.options.template === true) {
-    response = XETemplate(response, {$pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {}})
+    response = template(response, {$pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {}})
   }
   if (response && response.body !== undefined && response.status !== undefined) {
     response.headers = objectAssign({}, mockItem.options.headers, response.headers)
