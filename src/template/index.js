@@ -2,7 +2,7 @@ import { isObject, isArray, isString, objectEach, arrayEach, getScopeNumber, arr
 import { buildTemplate } from './bulid'
 import { tmplMethods } from './fn'
 
-var keyRule = /(.+)\|(array|random)\(([0-9-]+)\)$/
+var keyRule = /(.+)\|(array|random)\((.+)\)$/
 
 export function XETemplate (tmpl, fns) {
   var result = null
@@ -49,7 +49,7 @@ function parseObject (obj, tmplMethods) {
       key = keyMatch[1]
       var isRandom = keyMatch[2].toLowerCase() === 'random'
       if (keyMatch[2].toLowerCase() === 'array' || isRandom) {
-        var len = getScopeNumber(keyMatch[3])
+        var len = getScopeNumber(buildTemplate(keyMatch[3], tmplMethods))
         if (isArray(value)) {
           if (value.length > len) {
             rest = parseArray(isRandom ? arraySample(value, len) : value.slice(0, len), tmplMethods)

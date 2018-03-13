@@ -1,5 +1,0 @@
-{
-  "!return|array(2-10)": {
-    "name": "msg {{ $index }}"
-  }
-}

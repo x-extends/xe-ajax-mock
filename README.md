@@ -111,7 +111,7 @@ XEAjaxMock.setup({
 })
 ```
 
-## 数据模板语法 - 属性
+## 数据模板 - 基本语法
 ### 数值
 [key]|number
 ``` shell
@@ -181,10 +181,10 @@ template({
   'id|number': '1',
   'name': 'test 1',
   'region|array(1)': ['深圳', '北京', '上海', '广州'],
-  'active|boolean': '{{ random.num(0,1) }}'
-  'age|number': '{{ random.num(18,60) }}'
+  'active|boolean': '1'
+  'age|number': '30'
 })
-// 结果: {id: 1,name: 'test 1', region: ['深圳'], active: false, age: 30}
+// 结果: {id: 1,name: 'test 1', region: ['深圳'], active: true, age: 30}
 ```
 ### 数组
 ``` shell
@@ -194,15 +194,15 @@ template(['{{ random.repeat("随机产生一段文本",10,20) }}', '{{ random.da
 // 结果: ['"产机文机文生生一产产随本生随随段段一本"', '2018-03-13 14:52:02']
 
 template([{
-  'id|number': '{{ $index+1 }}',
-  'name': 'test {{ $index }}',
+  'id|number': '1',
+  'name': 'test1',
   'region|array(1)': ['深圳', '北京', '上海', '广州'],
-  'active|boolean': '{{ random.num(0,1) }}',
-  'age|number': '{{ random.num(18,60) }}'
+  'active|boolean': '0',
+  'age|number': '30'
 }])
-// 结果: [{id: 1,name: 'test 0', region: ['上海'], active: true, age: 30}]
+// 结果: [{id: 1,name: 'test 0', region: ['上海'], active: false, age: 30}]
 ```
-### 内置对象
+### 内置属性
 $size 获取数组大小  
 $index 获取数组索引  
 $params 获取查询参数  
@@ -228,7 +228,7 @@ template({
 
 // 结果: {page: {pageSize: 10, currentPage: 1}, result: [{id: 0, size: 2, name: 'test', password: ''}, {id: 1, size: 2, name: 'test', password: ''}]}
 ```
-### 属性值输出
+### 直接输出对应值
 !return 当对象中只有一个属性 !return 时直接输出对应值
 ``` shell
 import { template } from 'xe-ajax-mock'
@@ -256,7 +256,7 @@ template({
 // 结果: [{id: 1, name: 'test 0', region: ['上海'], active: true, age: 30},
 //       {id: 2, name: 'test 1', region: ['北京'], active: false, age: 42}]
 ```
-## 数据模板语法 - 值
+## 数据模板 - 高级语法
 ### 随机数值
 random.num(min, max)
 ``` shell
@@ -522,11 +522,12 @@ Mock.POST2('/api/user/save')
 ## 完整项目示例
 XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务配置越来越多时，统一目录结构可维护性会更好
 
-ES6、Vue、VueRouter、VueI18n、ElementUI、VXEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-element1)  
-ES6、Vue、VueRouter、VueI18n、ElementUI、XEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-element1)  
-ES6、Vue、VueRouter、XEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock1)  
-RequireJS、Vue、VueRouter、VueI18n、XEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock2)  
-RequireJS、Vue、VueRouter、VueI18n、VXEAjax、Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock3)
+ES6 + Vue + VXEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock1)  
+ES6 + Vue + XEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock2)  
+ES6 + React + XEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/react-mock1)  
+RequireJS + Vue + XEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock3)  
+RequireJS + Vue + VXEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/vue-mock4)
+RequireJS + React + XEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/xe-ajax-mock/tree/master/examples/react-mock2)
 
 ## License
 Copyright (c) 2017-present, Xu Liangzhan
