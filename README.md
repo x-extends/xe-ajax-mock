@@ -545,12 +545,12 @@ Mock.POST2('/api/user/save')
 ## 完整项目示例
 XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务配置越来越多时，统一目录结构可维护性会更好
 
-ES6 + Vue + VXEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/examples/vue-mock1)  
-ES6 + Vue + XEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/examples/vue-mock2)  
-ES6 + React + XEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/examples/react-mock1)  
-RequireJS + Vue + XEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/examples/vue-mock3)  
-RequireJS + Vue + VXEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/examples/vue-mock4)  
-RequireJS + React + XEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/examples/react-mock2)  
+ES6 + Vue + VXEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/examples/tree/master/vue-mock1)  
+ES6 + Vue + XEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/examples/tree/master/vue-mock2)  
+ES6 + React + XEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/examples/tree/master/react-mock1)  
+RequireJS + Vue + XEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/examples/tree/master/vue-mock3)  
+RequireJS + Vue + VXEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/examples/tree/master/vue-mock4)  
+RequireJS + React + XEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/examples/tree/master/react-mock2)  
 
 ## License
 Copyright (c) 2017-present, Xu Liangzhan
