@@ -1,6 +1,6 @@
 import { isObject, isArray, isString, objectEach, arrayEach, getScopeNumber, arraySample, objectAssign, objectKeys } from '../core/util'
 import { buildTemplate } from './bulid'
-import { tmplMethods } from './fn'
+import { tmplMethods } from './methods'
 
 var keyRule = /(.+)\|(array|random)\((.+)\)$/
 
@@ -95,5 +95,3 @@ function mixinTemplateMethods (methods) {
 
 XETemplate.mixin = mixinTemplateMethods
 mixinTemplateMethods(tmplMethods)
-
-export default XETemplate

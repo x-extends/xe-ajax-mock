@@ -1,17 +1,13 @@
-import { isFunction, getScopeNumber, objectAssign } from '../core/util'
+import { isString, isFunction, getScopeNumber, objectAssign } from '../core/util'
 import { mateMockItem } from '../core/mock'
-import { getXHRResponse } from '../core/response'
 
 export function xefetch (url, options) {
   var request = options._request
   var mockItem = mateMockItem(request)
   if (mockItem) {
     mockItem.time = getScopeNumber(mockItem.options.timeout)
-    return getXHRResponse(mockItem, request).then(function (response) {
-      if (mockItem.options.log) {
-        console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + options.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + mockItem.time + 'ms')
-        console.info(response)
-      }
+    return mockItem.getMockResponse(request).then(function (response) {
+      mockItem.outMockLog(request, response)
       return response
     })
   } else {
@@ -28,13 +24,12 @@ objectAssign(XEXMLHttpRequest.prototype, {
   timeout: 0,
   status: 0,
   readyState: 0,
-  responseHeaders: null,
   ontimeout: null,
   onreadystatechange: null,
   withCredentials: false,
   response: '',
   responseText: '',
-  open: function (method, url, async) {
+  open: function (method, url) {
     this._mock = mateMockItem(this._request)
     if (this._mock) {
       this.readyState = 1
@@ -43,37 +38,54 @@ objectAssign(XEXMLHttpRequest.prototype, {
       }
     } else {
       this._xhr = new XMLHttpRequest()
-      this._xhr.open(method, url, async)
+      this._xhr.open(method, url, true)
     }
   },
   send: function (body) {
-    if (this._mock) {
-      this._mock.send(this, this._request)
+    var mockXHR = this
+    var mockItem = this._mock
+    var request = this._request
+    if (mockItem) {
+      mockItem.time = getScopeNumber(mockItem.options.timeout)
+      return mockItem.getMockResponse(request).then(function (response) {
+        mockXHR.readyState = 4
+        mockXHR._updateResponse(request, response)
+        mockXHR._triggerEvent('readystatechange')
+        mockXHR._triggerEvent('load')
+        mockItem.outMockLog(request, response)
+      })
     } else {
       var xhr = this._xhr
-      var mockXHR = this
       xhr.withCredentials = this.withCredentials
+      xhr.responseType = this.responseType || ''
+      xhr.onload = function () {
+        mockXHR._triggerEvent('load')
+      }
+      xhr.onerror = function () {
+        mockXHR._triggerEvent('error')
+      }
       xhr.onreadystatechange = function () {
-        mockXHR.status = xhr.status
         mockXHR.readyState = xhr.readyState
-        mockXHR.response = xhr.response
-        mockXHR.responseText = xhr.responseText
-        xhr.getAllResponseHeaders().trim()
-        if (isFunction(mockXHR.onreadystatechange)) {
-          mockXHR.onreadystatechange()
-        }
+        mockXHR._updateResponse(request, {status: xhr.status, body: xhr.response})
+        mockXHR._triggerEvent('readystatechange')
       }
       xhr.send(body)
     }
   },
-  abort: function (response) {
+  abort: function () {
     var mockXHR = this
+    var mockItem = this._mock
+    var request = this._request
     setTimeout(function () {
-      if (mockXHR._mock) {
+      if (mockItem) {
         if (mockXHR.readyState !== 0) {
-          clearTimeout(mockXHR._mock.asyncTimeout)
-          mockXHR._mock.reply(mockXHR, mockXHR._request, response || {status: 0, response: ''})
+          clearTimeout(mockItem.asyncTimeout)
+          var response = {status: 0, body: ''}
+          mockXHR._updateResponse(mockXHR._request, response)
+          mockXHR.readyState = 4
+          mockXHR._triggerEvent('timeout')
           mockXHR.readyState = 0
+          mockItem.outMockLog(request, response)
         }
       } else if (mockXHR._xhr) {
         mockXHR._xhr.abort()
@@ -90,7 +102,7 @@ objectAssign(XEXMLHttpRequest.prototype, {
       return this._xhr.getAllResponseHeaders()
     }
     var result = ''
-    var responseHeader = this.responseHeaders
+    var responseHeader = this._headers
     if (responseHeader) {
       for (var key in responseHeader) {
         if (responseHeader.hasOwnProperty(key)) {
@@ -99,5 +111,24 @@ objectAssign(XEXMLHttpRequest.prototype, {
       }
     }
     return result
+  },
+  _triggerEvent: function (name) {
+    if (isFunction(this['on' + name])) {
+      this['on' + name]({type: name})
+    }
+  },
+  _updateResponse: function (request, response) {
+    var body = response.body
+    this.status = response.status
+    this._headers = response.headers
+    if (this._mock) {
+      body = response.body && !isString(response.body) ? JSON.stringify(response.body) : ''
+    }
+    if (this.responseType === 'blob') {
+      this.response = body instanceof Blob ? body : new Blob([body])
+      this.responseText = ''
+    } else {
+      this.responseText = this.response = body
+    }
   }
 })

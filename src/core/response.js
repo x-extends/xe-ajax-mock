@@ -1,5 +1,6 @@
-import { isFunction, getLocatOrigin, objectAssign } from '../core/util'
-import { setupDefaults, template } from './mock'
+import { getLocatOrigin, objectAssign } from '../core/util'
+import { template } from './index'
+import { setupDefaults } from './mock'
 
 var requireMap = {}
 
@@ -39,7 +40,7 @@ export function requireJSON (path) {
   })
 }
 
-function XEMockResponse (mockItem, request, response, status) {
+export function XEMockResponse (mockItem, request, response, status) {
   if (response && mockItem.options.template === true) {
     response = template(response, {$pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {}})
   }
@@ -56,25 +57,3 @@ function XEMockResponse (mockItem, request, response, status) {
 objectAssign(XEMockResponse.prototype, {
   require: requireJSON
 })
-
-/**
- * 响应结果
- */
-export function getXHRResponse (mockItem, request) {
-  return new Promise(function (resolve, reject) {
-    mockItem.asyncTimeout = setTimeout(function () {
-      if (!request.$complete) {
-        if (isFunction(mockItem.response)) {
-          return Promise.resolve(mockItem.response(request, new XEMockResponse(mockItem, request, null, 200), mockItem)).then(function (response) {
-            resolve(new XEMockResponse(mockItem, request, response, 200))
-          })
-        }
-        return Promise.resolve(mockItem.response).then(function (response) {
-          resolve(new XEMockResponse(mockItem, request, response, 200))
-        }).catch(function (response) {
-          reject(new XEMockResponse(mockItem, request, response, 500))
-        })
-      }
-    }, mockItem.time)
-  })
-}

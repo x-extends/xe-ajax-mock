@@ -1,5 +1,5 @@
 import { XETemplate } from '../template'
-import { Mock, JSONP, HEAD, GET, POST, PUT, DELETE, PATCH } from './mock'
+import { Mock, JSONP, HEAD, GET, POST, PUT, DELETE, PATCH } from './index'
 
 export var exportMethods = {
   template: XETemplate,
