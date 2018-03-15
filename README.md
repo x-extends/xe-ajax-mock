@@ -80,7 +80,7 @@ XEAjaxMock.POST('/api/user/save', {msg: 'success'})
 ### 入参
 * path（字符串）请求地址，占位符{key}支持动态路径: 例如: /api/list/{key1}/{key2} 匹配 /api/list/10/1
 * method（字符串）请求方法 | 默认GET
-* response（对象/方法(request, response, context)）数据或返回数据方法 {status: 200, body: {}, headers: {}}
+* response（对象/方法(request, response, context)）数据或返回数据方法，格式：{status: 200, statusText: 'OK', body: {}, headers: {}}
 * options （可选，对象）参数
 
 ### options 参数说明
@@ -402,6 +402,8 @@ import { GET } from 'xe-ajax-mock'
 GET('/api/user/list', {msg: 'success'})
 
 GET('/api/user/list', (request, response) => {
+  response.status = 200
+  response.statusText = 'OK'
   response.body = {
     '!return|array(1-3)': {
       'id|number': '{{ $index+1 }}',
