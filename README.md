@@ -1,9 +1,9 @@
-# 前端虚拟服务插件,支持 xhr、fetch、jsonp、数据模板等
+# Mock 虚拟服务,支持 xhr、fetch、jsonp、数据模板等
 
 [![npm version](https://img.shields.io/npm/v/xe-ajax-mock.svg?style=flat-square)](https://www.npmjs.org/package/xe-ajax-mock)
 [![npm downloads](https://img.shields.io/npm/dm/xe-ajax-mock.svg?style=flat-square)](http://npm-stat.com/charts.html?package=xe-ajax-mock)
 
-基于 XEAjax 扩展的前端虚拟服务插件，支持xhr、fetch、jsonp 请求模拟、逻辑校验模拟、数据模板；对于前后端分离的开发模式，ajax+mock 使前端不再依赖后端接口开发效率更高。
+基于 XEAjax 扩展的 Mock 虚拟服务插件，支持xhr、fetch、jsonp 请求模拟、逻辑校验模拟、数据模板；对于前后端分离的开发模式，ajax+mock 使前端不再依赖后端接口开发效率更高。
 
 ## 兼容性
 使用原生 Promise 实现，低版本浏览器使用 polyfill es6-promise.js  
