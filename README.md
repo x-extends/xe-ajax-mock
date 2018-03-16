@@ -6,7 +6,7 @@
 基于 XEAjax 扩展的前端虚拟服务插件，支持xhr、fetch、jsonp 请求模拟、逻辑校验模拟、数据模板；对于前后端分离的开发模式，ajax+mock 使前端不再依赖后端接口开发效率更高。
 
 ## 兼容性
-基于 Promise 实现，低版本浏览器使用 polyfill es6-promise.js  
+使用原生 Promise 实现，低版本浏览器使用 polyfill es6-promise.js  
 支持 IE8+、Edge、Chrome、Firefox、Opera、Safari等...
 
 ## CDN 安装

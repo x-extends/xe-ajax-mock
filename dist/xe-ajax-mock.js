@@ -5,9 +5,9 @@
  * @preserve
  */
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory()
-    : typeof define === 'function' && define.amd ? define(factory)
-      : (global.XEAjaxMock = factory())
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+      (global.XEAjaxMock = factory());
 }(this, function () {
   'use strict'
 
@@ -15,23 +15,23 @@
     return obj ? obj.constructor === Array : false
   }
 
-  function isDate (val) {
+  function isDate(val) {
     return val ? val.constructor === Date : false
   }
 
-  function isObject (val) {
+  function isObject(val) {
     return typeof val === 'object'
   }
 
-  function isFunction (obj) {
+  function isFunction(obj) {
     return typeof obj === 'function'
   }
 
-  function isString (val) {
+  function isString(val) {
     return typeof val === 'string'
   }
 
-  function getRandom (min, max) {
+  function getRandom(min, max) {
     return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
   }
 
@@ -45,7 +45,7 @@
     { rules: [['SSS', 3], ['SS', 2], ['S', 1]] }
   ]
 
-  function stringToDate (str, format) {
+  function stringToDate(str, format) {
     if (str) {
       if (isDate(str)) {
         return str
@@ -74,7 +74,7 @@
     return 'Invalid Date'
   }
 
-  function dateToString (date, format) {
+  function dateToString(date, format) {
     date = stringToDate(date)
     if (isDate(date)) {
       var result = format || 'yyyy-MM-dd HH:mm:ss'
@@ -115,7 +115,7 @@
     return target
   }
 
-  function arrayEach (array, callback, context) {
+  function arrayEach(array, callback, context) {
     if (array.forEach) {
       return array.forEach(callback, context)
     }
@@ -124,7 +124,7 @@
     }
   }
 
-  function objectEach (obj, iteratee, context) {
+  function objectEach(obj, iteratee, context) {
     for (var key in obj) {
       if (obj.hasOwnProperty(key)) {
         iteratee.call(context || this, obj[key], key, obj)
@@ -132,7 +132,7 @@
     }
   }
 
-  function objectKeys (obj) {
+  function objectKeys(obj) {
     var result = []
     if (obj) {
       if (Object.keys) {
@@ -145,7 +145,7 @@
     return result
   }
 
-  function objectValues (obj) {
+  function objectValues(obj) {
     if (Object.values) {
       return obj ? Object.values(obj) : []
     }
@@ -156,7 +156,7 @@
     return result
   }
 
-  function arrayShuffle (array) {
+  function arrayShuffle(array) {
     var result = []
     for (var list = objectValues(array), len = list.length - 1; len >= 0; len--) {
       var index = len > 0 ? getRandom(0, len) : 0
@@ -166,7 +166,7 @@
     return result
   }
 
-  function arraySample (array, number) {
+  function arraySample(array, number) {
     var result = arrayShuffle(array)
     if (arguments.length === 1) {
       return result[0]
@@ -177,17 +177,17 @@
     return result
   }
 
-  function getLocatOrigin () {
+  function getLocatOrigin() {
     return location.origin || (location.protocol + '//' + location.host)
   }
 
-  function getBaseURL () {
+  function getBaseURL() {
     var pathname = location.pathname
     var lastIndex = lastIndexOf(pathname, '/') + 1
     return getLocatOrigin() + (lastIndex === pathname.length ? pathname : pathname.substring(0, lastIndex))
   }
 
-  function lastIndexOf (str, val) {
+  function lastIndexOf(str, val) {
     if (isFunction(str.lastIndexOf)) {
       return str.lastIndexOf(val)
     } else {
@@ -200,10 +200,12 @@
     return -1
   }
 
-  function getScopeNumber (str) {
+  function getScopeNumber(str) {
     var matchs = String(str).match(/(\d+)-(\d+)/)
     return matchs && matchs.length === 3 ? getRandom(parseInt(matchs[1]), parseInt(matchs[2])) : (isNaN(str) ? 0 : Number(str))
   }
+
+
 
   var tmplMethods = {
     random: {
@@ -256,11 +258,11 @@
     simplifyRegExp: /__restArr\.push\('\s*'\);/g
   }
 
-  function buildCode (code) {
+  function buildCode(code) {
     return tmplJoint.contEnd + code + tmplJoint.contStart
   }
 
-  function buildTemplate (strTmpl, data) {
+  function buildTemplate(strTmpl, data) {
     var restTmpl = strTmpl
       .replace(/[\r\n\t]/g, ' ')
       .replace(/{{\s*(.*?)\s*}}/g, function (matching, code) {
@@ -276,9 +278,13 @@
     return strTmpl
   }
 
+
+
+
+
   var keyRule = /(.+)\|(array|random)\((.+)\)$/
 
-  function XETemplate (tmpl, fns) {
+  function XETemplate(tmpl, fns) {
     var result = null
     result = parseValueRule(tmpl, new TemplateMethods({}, fns))
     if (isObject(result)) {
@@ -290,7 +296,7 @@
     return result
   }
 
-  function parseValueRule (value, tmplMethods) {
+  function parseValueRule(value, tmplMethods) {
     if (value) {
       if (isArray(value)) {
         return parseArray(value, tmplMethods)
@@ -305,7 +311,7 @@
     return value
   }
 
-  function parseArray (array, tmplMethods) {
+  function parseArray(array, tmplMethods) {
     var result = []
     arrayEach(array, function (value, index) {
       var options = new TemplateMethods({ $parent: tmplMethods, $obj: array, $value: value, $size: array.length, $index: index }, tmplMethods.$fns)
@@ -314,7 +320,7 @@
     return result
   }
 
-  function parseObject (obj, tmplMethods) {
+  function parseObject(obj, tmplMethods) {
     var result = {}
     objectEach(obj, function (value, key) {
       var keyMatch = key.match(keyRule)
@@ -358,19 +364,22 @@
     return result
   }
 
-  function TemplateMethods (methods, fns) {
+  function TemplateMethods(methods, fns) {
     this.$fns = fns
     objectAssign(this, fns, methods)
   }
 
-  function mixinTemplateMethods (methods) {
+  function mixinTemplateMethods(methods) {
     return objectAssign(TemplateMethods.prototype, methods)
   }
 
   XETemplate.mixin = mixinTemplateMethods
   mixinTemplateMethods(tmplMethods)
 
-  function xefetch (url, options) {
+
+
+
+  function xefetch(url, options) {
     var request = options._request
     var mockItem = mateMockItem(request)
     if (mockItem) {
@@ -384,7 +393,7 @@
     }
   }
 
-  function XEXMLHttpRequest () {
+  function XEXMLHttpRequest() {
     this._mock = null
     this._xhr = null
   }
@@ -502,12 +511,15 @@
     }
   })
 
+
+
+
   var $global = typeof window === 'undefined' ? this : window
 
   /**
    * jsonp
    */
-  function xejsonp (script, request) {
+  function xejsonp(script, request) {
     return new Promise(function (resolve) {
       var mockItem = mateMockItem(request)
       $global[request.jsonpCallback] = function (body) {
@@ -543,16 +555,20 @@
     })
   }
 
+
+
+
+
   var requireMap = {}
 
-  function parseRequire (response, path) {
+  function parseRequire(response, path) {
     try {
       return JSON.parse(requireMap[path])
     } catch (e) { }
     return requireMap[path]
   }
 
-  function requireJSON (path) {
+  function requireJSON(path) {
     var response = this
     return new Promise(function (resolve, reject) {
       if (path.indexOf('/') === 0) {
@@ -581,7 +597,7 @@
     })
   }
 
-  function XEMockResponse (mockItem, request, response, status) {
+  function XEMockResponse(mockItem, request, response, status) {
     if (response && mockItem.options.template === true) {
       response = template(response, { $pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {} })
     }
@@ -598,6 +614,11 @@
   objectAssign(XEMockResponse.prototype, {
     require: requireJSON
   })
+
+
+
+
+
 
   var defineMockServices = []
 
@@ -616,14 +637,14 @@
    *
    * @param Object options 参数
    */
-  function setup (options) {
+  function setup(options) {
     objectAssign(setupDefaults, options)
   }
 
   /**
    * 初始化安装
    */
-  function install (XEAjax) {
+  function install(XEAjax) {
     XEAjax.setup({
       $fetch: xefetch,
       $XMLHttpRequest: XEXMLHttpRequest,
@@ -639,13 +660,13 @@
     * @param Object/Function response 数据或返回数据方法
     * @param Object options 参数
     */
-  function XEAjaxMock (path, method, response, options) {
+  function XEAjaxMock(path, method, response, options) {
     var opts = objectAssign({}, setupDefaults, options)
     defineMocks(isArray(path) ? (options = method, path) : [{ path: path, method: method, response: response }], opts, opts.baseURL, true)
     return XEAjaxMock
   }
 
-  function defineMocks (list, options, baseURL, first) {
+  function defineMocks(list, options, baseURL, first) {
     if (isArray(list)) {
       arrayEach(list, function (item) {
         if (item.path) {
@@ -666,7 +687,7 @@
     }
   }
 
-  function mateMockItem (request) {
+  function mateMockItem(request) {
     var url = (request.getUrl() || '').split(/\?|#/)[0]
     return defineMockServices.find(function (mockItem) {
       if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
@@ -688,7 +709,7 @@
     })
   }
 
-  function parsePathVariable (val, mockItem) {
+  function parsePathVariable(val, mockItem) {
     if (val && mockItem.options.pathVariable === 'auto') {
       if (!isNaN(val)) {
         return parseFloat(val)
@@ -701,7 +722,7 @@
     return val
   }
 
-  function XEMock (path, method, response, options) {
+  function XEMock(path, method, response, options) {
     if (path && method) {
       this.path = path
       this.method = method
@@ -748,13 +769,17 @@
     }
   })
 
-  function createDefine (method) {
+
+
+
+
+  function createDefine(method) {
     return function (url, response, options) {
       return Mock(url, method, response, options)
     }
   }
 
-  function JSONP (url, response, options) {
+  function JSONP(url, response, options) {
     return Mock(url, 'GET', response, objectAssign({ jsonp: 'callback' }, options))
   }
 
@@ -766,6 +791,9 @@
   var DELETE = createDefine('DELETE')
   var PATCH = createDefine('PATCH')
   var HEAD = createDefine('HEAD')
+
+
+
 
   var exportMethods = {
     template: XETemplate,
@@ -779,12 +807,16 @@
     PATCH: PATCH
   }
 
+
+
+
+
   /**
    * 混合函数
    *
    * @param {Object} methods 扩展
    */
-  function mixin (methods) {
+  function mixin(methods) {
     return objectAssign(XEAjaxMock, methods)
   }
 
@@ -797,6 +829,9 @@
   })
 
   mixin(exportMethods)
+
+
+
 
   return XEAjaxMock
 }))
