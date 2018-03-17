@@ -608,7 +608,7 @@
     timeout: '20-400',
     headers: null,
     error: true,
-    log: 'development' !== 'production'
+    log: false
   }
 
   /**
