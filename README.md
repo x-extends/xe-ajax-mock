@@ -219,8 +219,12 @@ template({
     'password': '{{ $body.password }}'
   }
 })
-
-// 结果: {page: {pageSize: 10, currentPage: 1}, result: [{id: 0, size: 2, name: 'test', password: ''}, {id: 1, size: 2, name: 'test', password: ''}]}
+/*
+{
+  age: {pageSize: 10, currentPage: 1}, 
+  result: [{id: 0, size: 2, name: 'test', password: ''}, {id: 1, size: 2, name: 'test', password: ''}]
+}
+*/
 ```
 ### 直接输出对应值
 !return 当对象中只有一个属性 !return 时直接输出对应值
