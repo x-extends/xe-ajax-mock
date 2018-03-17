@@ -90,7 +90,7 @@ XEAjaxMock.POST('/api/user/save', {msg: 'success'})
 | template | Boolean | 启用数据模板自动编译,可以设置true,false | 默认false |
 | pathVariable | Boolean | 启用路径参数类型自动解析,可以设置false,true,auto | 默认true |
 | timeout | String | 模拟请求时间 | 默认'20-400' |
-| jsonp | String | 调用jsonp服务的属性名参数 | 默认callback |
+| jsonp | String | jsonp入参属性名 | 默认callback |
 | headers | Object | 设置响应头 |  |
 | error | Boolean | 控制台输出错误日志,可以设置true,false | true |
 | log | Boolean | 控制台输出请求详细日志,可以设置true,false | true |
