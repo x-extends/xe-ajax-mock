@@ -15,7 +15,7 @@ objectAssign(XEAjaxMock, {
   mixin: mixin,
   setup: setup,
   install: install,
-  version: '1.6.7',
+  version: '1.6.8',
   $name: 'XEAjaxMock'
 })
 
