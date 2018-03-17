@@ -348,7 +348,7 @@ template({
   }
 })
 ```
-### 混合函数
+### 模板混合函数
 template.mixin({})
 ``` shell
 import { template } from 'xe-ajax-mock'
