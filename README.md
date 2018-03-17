@@ -482,6 +482,8 @@ PATCH('/api/user/update', {msg: 'success'})
 ``` shell
 import { JSONP } from 'xe-ajax-mock'
 
+JSONP('http://xuliangzhan.com/jsonp/user/message', {msg: 'success'})
+
 JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
   response.body = {
     '!return|array(1-3)': {
@@ -490,7 +492,7 @@ JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
     }
   }
   return response
-})
+}， {jsonp: 'cb'})
 ```
 ### AMD 使用方式
 ``` shell
