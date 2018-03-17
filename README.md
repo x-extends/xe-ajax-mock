@@ -93,7 +93,7 @@ XEAjaxMock.POST('/api/user/save', {msg: 'success'})
 | jsonp | String | jsonp入参属性名 | 默认callback |
 | headers | Object | 设置响应头 |  |
 | error | Boolean | 控制台输出错误日志,可以设置true,false | true |
-| log | Boolean | 控制台输出请求详细日志,可以设置true,false | true |
+| log | Boolean | 控制台输出请求详细日志,可以设置true,false | false |
 
 ## 全局参数设置
 ``` shell
@@ -101,8 +101,9 @@ import XEAjaxMock from 'xe-ajax-mock'
 
 XEAjaxMock.setup({
   baseURL: 'http://xuliangzhan.com',
-  template: 'auto',
-  timeout: '100-500',
+  template: true,
+  pathVariable: 'auto',
+  timeout: '100-600',
   headers: {
     'Content-Type': 'application/javascript; charset=UTF-8'
   },
