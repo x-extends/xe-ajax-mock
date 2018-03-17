@@ -219,12 +219,11 @@ template({
     'password': '{{ $body.password }}'
   }
 })
-/*
-{
-  age: {pageSize: 10, currentPage: 1}, 
-  result: [{id: 0, size: 2, name: 'test', password: ''}, {id: 1, size: 2, name: 'test', password: ''}]
-}
-*/
+// 结果：
+// {
+//   age: {pageSize: 10, currentPage: 1}, 
+//   result: [{id: 0, size: 2, name: 'test', password: ''}, {id: 1, size: 2, name: 'test', password: ''}]
+// }
 ```
 ### 直接输出对应值
 !return 当对象中只有一个属性 !return 时直接输出对应值
@@ -251,8 +250,9 @@ template({
     'age|number': '{{ random.num(18,60) }}'
   }
 })
-// 结果: [{id: 1, name: 'test 0', region: ['上海'], active: true, age: 30},
-//       {id: 2, name: 'test 1', region: ['北京'], active: false, age: 42}]
+// 结果：
+// [{id: 1, name: 'test 0', region: ['上海'], active: true, age: 30},
+// {id: 2, name: 'test 1', region: ['北京'], active: false, age: 42}]
 ```
 ## 数据模板 - 高级语法
 ### 随机数值
@@ -286,7 +286,7 @@ template({
 // 结果: {describe: '段生随本段段随机本一段段机本本一本段段随机'}
 
 template({
-  'email': '{{ random.repeat("abcdefg",5,20) }}@{{ random.repeat(["qq","163"],1) }}.{{ random.repeat(["com","net"],1) }}'
+  'email': '{{ random.repeat("abcdefg",5,20) }}@163.{{ random.repeat(["com","net"],1) }}'
 })
 // 结果: {email: 'abcfdgecee@163.com'}
 ```
@@ -333,9 +333,9 @@ template({
     "region|random(1)": ["深圳", "北京", "上海", "广州"],
     "roles|array(1-3)": ["admin", "developer", "tester", "designer"],
     "isLogin|boolean": "{{ random.num(0,1) }}",
-    "email": "{{ random.repeat('abcdefg',5,20) }}@{{ random.repeat(['qq','163'],1) }}.{{ random.repeat(['com','net'],1) }}",
-    "color": "rgb({{ random.num(100,120) }}, {{ random.num(140,180) }}, {{ random.num(140,160) }})",
-    "ip": "{{ random.num(1,254) }}.{{ random.num(1,254) }}.{{ random.num(1,254) }}.{{ random.num(1,254) }}",
+    "email": "{{ random.repeat('abcdefg',5,20) }}@qq.{{ random.repeat(['com','net'],1) }}",
+    "color": "rgb(120, {{ random.num(140,180) }}, {{ random.num(140,160) }})",
+    "ip": "192.168.{{ random.num(1,254) }}.{{ random.num(1,254) }}",
     "age|number": "{{ random.num(18,60) }}",
     "password": "{{ random.num(100000,999999) }}",
     "describe": "{{ random.repeat('描述信息',10,200) }}",
