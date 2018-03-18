@@ -554,7 +554,7 @@ Mock.mixin(customs)
 Mock.POST2('/api/user/save')
 ```
 
-## 完整项目示例
+## Demo
 XEAjaxMock 对虚拟服务目录结构不限制，当虚拟服务配置越来越多时，统一目录结构可维护性会更好
 
 ES6 + Vue + VXEAjax + Mock 项目 [点击查看](https://github.com/xuliangzhan/examples/tree/master/vue-mock1)  
