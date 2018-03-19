@@ -548,7 +548,7 @@ define([
 ```
 
 ## 混合函数
-### 文件 ./customs.js
+### ./customs.js
 ``` shell
 import { POST } from 'xe-ajax-mock'
 
@@ -556,7 +556,7 @@ export function POST2 (path, options) {
   return POST(path, {message: '成功'}, options)
 } 
 ```
-### 示例 ./main.js
+### ./main.js
 ``` shell
 import Vue from 'vue'
 import { Mock } from 'xe-ajax-mock'
