@@ -108,7 +108,7 @@ XEAjaxMock.setup({
   pathVariable: 'auto',
   timeout: '100-600',
   headers: {
-    'Content-Type': 'application/javascript; charset=UTF-8'
+    'Content-Type': 'application/json; charset=utf-8'
   },
   error: true,
   log: true
