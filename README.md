@@ -388,7 +388,7 @@ Mock([{
   },
   {
     method: 'DELETE',
-    path : 'del',
+    path : 'delete/{id}',
     response (request, response) {
       response.status = 500
       response.body = {msg: 'error'}
@@ -473,9 +473,9 @@ PUT('/api/user/update', (request, response) => {
 ``` shell
 import { DELETE } from 'xe-ajax-mock'
 
-DELETE('/api/user/del', {msg: 'success'})
+DELETE('/api/user/delete/{id}', {msg: 'success'})
 
-DELETE('/api/user/del', (request, response) => {
+DELETE('/api/user/delete/{id}', (request, response) => {
   response.body = {msg: 'success'}
   return response
 })

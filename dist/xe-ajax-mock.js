@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.6.9
+ * xe-ajax-mock.js v1.6.10
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -811,7 +811,7 @@
     mixin: mixin,
     setup: setup,
     install: install,
-    version: '1.6.9',
+    version: '1.6.10',
     $name: 'XEAjaxMock'
   })
 
