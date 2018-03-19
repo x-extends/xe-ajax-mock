@@ -300,14 +300,29 @@ random.time(startDate, endDate)
 import { template } from 'xe-ajax-mock'
 
 template({
+  'datetime': '{{ random.time("2018-03-04") }}'
+})
+// 结果: {datetime: '1520092800000'}
+
+template({
   'datetime': '{{ random.time("2018-03-04","2018-03-20") }}'
 })
 // 结果: {datetime: '1520611200000'}
 ```
 ### 随机日期
-random.date(startDate, endDate)
+random.date(startDate, endDate, format)
 ``` shell
 import { template } from 'xe-ajax-mock'
+
+template({
+  'dateStr': '{{ random.date("2018-03-04") }}'
+})
+// 结果: {dateStr: '2018-03-04'}
+
+template({
+  'dateStr': '{{ random.date("2018-03-04",null,"yyyy-MM-dd HH:mm:ss.S") }}'
+})
+// 结果: {dateStr: '2018-03-04 00:00:00.0'}
 
 template({
   'dateStr': '{{ random.date("2018-03-04","2018-03-20") }}'
