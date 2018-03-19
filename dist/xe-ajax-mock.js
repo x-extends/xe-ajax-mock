@@ -433,6 +433,12 @@
         xhr.onerror = function () {
           mockXHR._triggerEvent('error')
         }
+        xhr.ontimeout = function () {
+          mockXHR._triggerEvent('timeout')
+        }
+        xhr.onabort = function () {
+          mockXHR._triggerEvent('abort')
+        }
         xhr.onreadystatechange = function () {
           mockXHR.readyState = xhr.readyState
           mockXHR._updateResponse(request, { status: xhr.status, body: xhr.response })
