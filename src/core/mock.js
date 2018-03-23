@@ -16,16 +16,16 @@ export var setupDefaults = {
 }
 
 /**
- * 设置全局参数
+ * setup defaults
  *
- * @param Object options 参数
+ * @param Object options
  */
 export function setup (options) {
   objectAssign(setupDefaults, options)
 }
 
 /**
- * 初始化安装
+ * install
  */
 export function install (XEAjax) {
   XEAjax.setup({
@@ -36,12 +36,12 @@ export function install (XEAjax) {
 }
 
 /**
-  * XEAjaxMock 虚拟请求
+  * XEAjaxMock
   *
-  * @param Array/String path 路径数组/请求路径
-  * @param String method 请求方法
-  * @param Object/Function response 数据或返回数据方法
-  * @param Object options 参数
+  * @param { Array/String } path Request URL path
+  * @param { String } method Request method
+  * @param { Object/Function } response Object or Function(request, response, context), format: {status: 200, statusText: 'OK', body: {}, headers: {}}
+  * @param { Object } options is an optional options object
   */
 export function XEAjaxMock (path, method, response, options) {
   var opts = objectAssign({}, setupDefaults, options)
