@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.6.11
+ * xe-ajax-mock.js v1.6.12
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -797,7 +797,14 @@
   var PATCH = createDefine('PATCH')
   var HEAD = createDefine('HEAD')
 
+  function asyncRequire (url) {
+    return function (response) {
+      return response.require(url)
+    }
+  }
+
   var exportMethods = {
+    require: asyncRequire,
     template: XETemplate,
     Mock: Mock,
     JSONP: JSONP,
@@ -822,7 +829,7 @@
     mixin: mixin,
     setup: setup,
     install: install,
-    version: '1.6.11',
+    version: '1.6.12',
     $name: 'XEAjaxMock'
   })
 
