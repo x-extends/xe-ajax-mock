@@ -38,10 +38,10 @@ export function install (XEAjax) {
 /**
   * XEAjaxMock
   *
-  * @param { Array/String } path Request URL path
-  * @param { String } method Request method
-  * @param { Object/Function } response Object or Function(request, response, context), format: {status: 200, statusText: 'OK', body: {}, headers: {}}
-  * @param { Object } options is an optional options object
+  * @param { Array/String } path 请求路径
+  * @param { String } method 请求方法
+  * @param { Object/Function } response 响应处理 (request, response, context), format: {status: 200, statusText: 'OK', body: {}, headers: {}}
+  * @param { Object } options 局部参数
   */
 export function XEAjaxMock (path, method, response, options) {
   var opts = objectAssign({}, setupDefaults, options)

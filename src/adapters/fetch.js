@@ -124,11 +124,13 @@ objectAssign(XEXMLHttpRequest.prototype, {
     }
   },
   _updateResponse: function (request, response) {
-    var body = response.body
+    var body = response.body || ''
     this.status = response.status
     this._headers = response.headers
     if (this._mock) {
-      body = response.body && !isString(response.body) ? JSON.stringify(response.body) : ''
+      if (!isString(body)) {
+        body = JSON.stringify(body)
+      }
     }
     if (this.responseType === 'blob') {
       this.response = body instanceof Blob ? body : new Blob([body])

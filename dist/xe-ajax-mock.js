@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.6.10
+ * xe-ajax-mock.js v1.6.11
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -11,12 +11,14 @@
 }(this, function () {
   'use strict'
 
-  var isArray = Array.isArray || function (obj) {
-    return obj ? obj.constructor === Array : false
+  var objectToString = Object.prototype.toString
+
+  var isArray = Array.isArray || function (val) {
+    return objectToString.call(val) === '[object Array]'
   }
 
   function isDate (val) {
-    return val ? val.constructor === Date : false
+    return objectToString.call(val) === '[object Date]'
   }
 
   function isObject (val) {
@@ -77,7 +79,6 @@
   function dateToString (date, format) {
     date = stringToDate(date)
     if (isDate(date)) {
-      var result = format || 'yyyy-MM-dd HH:mm:ss'
       var weeks = ['日', '一', '二', '三', '四', '五', '六']
       var resDate = {
         'q+': Math.floor((date.getMonth() + 3) / 3),
@@ -89,15 +90,17 @@
         's+': date.getSeconds(),
         'S': date.getMilliseconds()
       }
-      if (/(y+)/.test(result)) {
-        result = result.replace(RegExp.$1, ('' + date.getFullYear()).substr(4 - RegExp.$1.length))
-      }
-      arrayEach(objectKeys(resDate), function (key) {
-        if (new RegExp('(' + key + ')').test(result)) {
-          var val = '' + resDate[key]
-          result = result.replace(RegExp.$1, (key === 'q+' || key === 'E+') ? weeks[val] : (RegExp.$1.length === 1 ? val : ('00' + val).substr(val.length)))
-        }
+      var result = String(format || 'yyyy-MM-dd HH:mm:ss').replace(/(y+)/, function ($1) {
+        return ('' + date.getFullYear()).substr(4 - $1.length)
       })
+      for (var key in resDate) {
+        if (resDate.hasOwnProperty(key)) {
+          var val = '' + resDate[key]
+          result = result.replace(new RegExp('(' + key + ')'), function ($1) {
+            return (key === 'q+' || key === 'E+') ? weeks[val] : ($1.length === 1 ? val : ('00' + val).substr(val.length))
+          })
+        }
+      }
       return result
     }
     return date
@@ -493,11 +496,13 @@
       }
     },
     _updateResponse: function (request, response) {
-      var body = response.body
+      var body = response.body || ''
       this.status = response.status
       this._headers = response.headers
       if (this._mock) {
-        body = response.body && !isString(response.body) ? JSON.stringify(response.body) : ''
+        if (!isString(body)) {
+          body = JSON.stringify(body)
+        }
       }
       if (this.responseType === 'blob') {
         this.response = body instanceof Blob ? body : new Blob([body])
@@ -659,10 +664,10 @@
   /**
     * XEAjaxMock
     *
-    * @param { Array/String } path Request URL path
-    * @param { String } method Request method
-    * @param { Object/Function } response Object or Function(request, response, context), format: {status: 200, statusText: 'OK', body: {}, headers: {}}
-    * @param { Object } options is an optional options object
+    * @param { Array/String } path 请求路径
+    * @param { String } method 请求方法
+    * @param { Object/Function } response 响应处理 (request, response, context), format: {status: 200, statusText: 'OK', body: {}, headers: {}}
+    * @param { Object } options 局部参数
     */
   function XEAjaxMock (path, method, response, options) {
     var opts = objectAssign({}, setupDefaults, options)
@@ -817,7 +822,7 @@
     mixin: mixin,
     setup: setup,
     install: install,
-    version: '1.6.10',
+    version: '1.6.11',
     $name: 'XEAjaxMock'
   })
 
