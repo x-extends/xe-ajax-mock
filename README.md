@@ -12,12 +12,7 @@ xe-ajax-mock depends on a native ES6 Promise implementation to be supported. If 
 --- | --- | --- | --- | --- | --- |
 8+ ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | 6.1+ ✔ |
 
-## Installation
-### npm
-``` shell
-npm install xe-ajax xe-ajax-mock --save
-```
-### CDN
+## CDN
 [All cdnjs package](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)
 ``` shell
 <script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
@@ -26,7 +21,8 @@ npm install xe-ajax xe-ajax-mock --save
 ``` shell
 <script src="https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
 ```
-### AMD
+
+## AMD
 ``` shell
 require.config({
   paths: {
@@ -35,6 +31,26 @@ require.config({
     'xe-ajax-mock': './dist/xe-ajax-mock.min'
   }
 })
+```
+
+## NPM
+``` shell
+npm install xe-ajax xe-ajax-mock --save
+```
+
+### NodeJS
+``` shell
+const XEMock = require('xe-ajax-mock')
+```
+
+### ES6 Module import
+``` shell
+import XEMock from 'xe-ajax-mock'
+```
+
+### ES6 Module import
+``` shell
+import { GET, POST, PUT, DELETE, JSONP } from 'xe-ajax-mock'
 ```
 
 ## API
@@ -69,9 +85,9 @@ require.config({
 
 ## Default global settings
 ``` shell
-import XEAjaxMock from 'xe-ajax-mock'
+import XEMock from 'xe-ajax-mock'
 
-XEAjaxMock.setup({
+XEMock.setup({
   baseURL: 'http://xuliangzhan.com',
   template: true,
   pathVariable: 'auto',
@@ -487,10 +503,10 @@ JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
 ``` shell
 define([
   'xe-ajax-mock'
-], function (XEAjaxMock) {
+], function (XEMock) {
 
-  XEAjaxMock.GET('/api/user/list1', {msg: 'success'})
-  XEAjaxMock.GET('/api/user/list2', function (request, response) {
+  XEMock.GET('/api/user/list1', {msg: 'success'})
+  XEMock.GET('/api/user/list2', function (request, response) {
     response.body = {
       '~|array(1-3)': {
         'id|number': '{{ $index+1 }}',
@@ -501,7 +517,7 @@ define([
   })
 
   // Support chain writing
-  XEAjaxMock
+  XEMock
   .GET('/api/user/list3', {msg: 'success'})
   .POST('/api/user/save1', function (request, response) {
     response.body = {msg: 'success'}
