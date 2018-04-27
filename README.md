@@ -40,12 +40,12 @@ npm install xe-ajax xe-ajax-mock --save
 
 ### NodeJS
 ``` shell
-const XEMock = require('xe-ajax-mock')
+const XEAjaxMock = require('xe-ajax-mock')
 ```
 
 ### ES6 Module import
 ``` shell
-import XEMock from 'xe-ajax-mock'
+import XEAjaxMock from 'xe-ajax-mock'
 ```
 
 ### ES6 Module import
@@ -85,9 +85,9 @@ import { GET, POST, PUT, DELETE, JSONP } from 'xe-ajax-mock'
 
 ## Default global settings
 ``` shell
-import XEMock from 'xe-ajax-mock'
+import XEAjaxMock from 'xe-ajax-mock'
 
-XEMock.setup({
+XEAjaxMock.setup({
   baseURL: 'http://xuliangzhan.com',
   template: true,
   pathVariable: 'auto',
@@ -503,10 +503,10 @@ JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
 ``` shell
 define([
   'xe-ajax-mock'
-], function (XEMock) {
+], function (XEAjaxMock) {
 
-  XEMock.GET('/api/user/list1', {msg: 'success'})
-  XEMock.GET('/api/user/list2', function (request, response) {
+  XEAjaxMock.GET('/api/user/list1', {msg: 'success'})
+  XEAjaxMock.GET('/api/user/list2', function (request, response) {
     response.body = {
       '~|array(1-3)': {
         'id|number': '{{ $index+1 }}',
@@ -517,7 +517,7 @@ define([
   })
 
   // Support chain writing
-  XEMock
+  XEAjaxMock
   .GET('/api/user/list3', {msg: 'success'})
   .POST('/api/user/save1', function (request, response) {
     response.body = {msg: 'success'}
