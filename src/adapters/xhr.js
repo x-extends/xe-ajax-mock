@@ -1,3 +1,5 @@
+'use strict'
+
 var utils = require('../core/util')
 
 function XEXMLHttpRequest () {
