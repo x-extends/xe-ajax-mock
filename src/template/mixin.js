@@ -1,30 +1,32 @@
-import { isString, getRandom, arraySample, stringToDate, dateToString } from '../core/util'
+'use strict'
 
-export var tmplMethods = {
+var utils = require('../core/util')
+
+var tmplMixinExports = {
   random: {
-    num: getRandom,
+    num: utils.getRandom,
     time: function (startDate, endDate, format) {
       if (startDate) {
         if (!endDate) {
-          return stringToDate(startDate, format).getTime()
+          return utils.stringToDate(startDate, format).getTime()
         }
-        return getRandom(stringToDate(startDate, format).getTime(), stringToDate(endDate, format).getTime())
+        return utils.getRandom(utils.stringToDate(startDate, format).getTime(), utils.stringToDate(endDate, format).getTime())
       }
       return startDate
     },
     date: function (startDate, endDate, format) {
       if (startDate) {
         if (!endDate) {
-          return dateToString(startDate, format)
+          return utils.dateToString(startDate, format)
         }
-        return dateToString(tmplMethods.random.time(startDate, endDate), format)
+        return utils.dateToString(tmplMixinExports.random.time(startDate, endDate), format)
       }
       return startDate
     },
     repeat: function (array, min, max) {
       min = min || 1
       max = max || min
-      if (isString(array)) {
+      if (utils.isString(array)) {
         array = array.split('')
       }
       if (array.length < max) {
@@ -35,7 +37,9 @@ export var tmplMethods = {
         result.length = max
         array = result
       }
-      return arraySample(array, getRandom(min, max)).join('')
+      return utils.arraySample(array, utils.getRandom(min, max)).join('')
     }
   }
 }
+
+module.exports = tmplMixinExports

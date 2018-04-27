@@ -1,5 +1,6 @@
-import { getScopeNumber } from '../core/util'
-import { mateMockItem } from '../core/mock'
+'use strict'
+
+var utils = require('../core/util')
 
 var $global = typeof window === 'undefined' ? this : window
 
@@ -28,14 +29,14 @@ function jsonpError (request, reject) {
 /**
  * jsonp
  */
-export function xejsonp (script, request) {
+function sendJsonp (script, request) {
   return new Promise(function (resolve, reject) {
-    var mockItem = mateMockItem(request)
+    var mockItem = utils.mateMockItem(request)
     $global[request.jsonpCallback] = function (body) {
       jsonpSuccess(request, {status: 200, body: body}, resolve)
     }
     if (mockItem) {
-      mockItem.time = getScopeNumber(mockItem.options.timeout)
+      mockItem.time = utils.getScopeNumber(mockItem.options.timeout)
       return mockItem.getMockResponse(mockItem, request).then(function (response) {
         if (response.status < 200 || response.status >= 300) {
           jsonpError(request, reject)
@@ -60,3 +61,9 @@ export function xejsonp (script, request) {
     }
   })
 }
+
+var jsonpExports = {
+  sendJsonp: sendJsonp
+}
+
+module.exports = jsonpExports

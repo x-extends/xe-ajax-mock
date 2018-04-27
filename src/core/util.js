@@ -1,28 +1,8 @@
+'use strict'
+
+var mockStore = require('./store')
+
 var objectToString = Object.prototype.toString
-
-export var isArray = Array.isArray || function (val) {
-  return objectToString.call(val) === '[object Array]'
-}
-
-export function isDate (val) {
-  return objectToString.call(val) === '[object Date]'
-}
-
-export function isObject (val) {
-  return typeof val === 'object'
-}
-
-export function isFunction (obj) {
-  return typeof obj === 'function'
-}
-
-export function isString (val) {
-  return typeof val === 'string'
-}
-
-export function getRandom (min, max) {
-  return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
-}
 
 var dateFormatRules = [
   {rules: [['yyyy', 4], ['yyy', 3], ['yy', 2]]},
@@ -34,163 +14,227 @@ var dateFormatRules = [
   {rules: [['SSS', 3], ['SS', 2], ['S', 1]]}
 ]
 
-export function stringToDate (str, format) {
-  if (str) {
-    if (isDate(str)) {
-      return str
-    }
-    if (!isNaN(str)) {
-      return new Date(str)
-    }
-    if (isString(str)) {
-      format = format || 'yyyy-MM-dd HH:mm:ss.SSS'
-      var dates = []
-      arrayEach(dateFormatRules, function (item) {
-        for (var arr, sIndex, index = 0, rules = item.rules, len = rules.length; index < len; index++) {
-          arr = rules[index]
-          sIndex = format.indexOf(arr[0])
-          if (sIndex > -1) {
-            dates.push(parseFloat(str.substring(sIndex, sIndex + arr[1]) || 0) + (item.offset || 0))
-            break
-          } else if (index === len - 1) {
-            dates.push(0)
-          }
-        }
-      })
-      return new Date(dates[0], dates[1], dates[2], dates[3], dates[4], dates[5], dates[6])
-    }
-  }
-  return 'Invalid Date'
-}
+var utils = {
 
-export function dateToString (date, format) {
-  date = stringToDate(date)
-  if (isDate(date)) {
-    var weeks = ['日', '一', '二', '三', '四', '五', '六']
-    var resDate = {
-      'q+': Math.floor((date.getMonth() + 3) / 3),
-      'M+': date.getMonth() + 1,
-      'E+': date.getDay(),
-      'd+': date.getDate(),
-      'H+': date.getHours(),
-      'm+': date.getMinutes(),
-      's+': date.getSeconds(),
-      'S': date.getMilliseconds()
-    }
-    var result = String(format || 'yyyy-MM-dd HH:mm:ss').replace(/(y+)/, function ($1) {
-      return ('' + date.getFullYear()).substr(4 - $1.length)
-    })
-    for (var key in resDate) {
-      if (resDate.hasOwnProperty(key)) {
-        var val = '' + resDate[key]
-        result = result.replace(new RegExp('(' + key + ')'), function ($1) {
-          return (key === 'q+' || key === 'E+') ? weeks[val] : ($1.length === 1 ? val : ('00' + val).substr(val.length))
-        })
+  isArray: Array.isArray || function (val) {
+    return objectToString.call(val) === '[object Array]'
+  },
+
+  isDate: function (val) {
+    return objectToString.call(val) === '[object Date]'
+  },
+
+  isObject: function (val) {
+    return typeof val === 'object'
+  },
+
+  isFunction: function (obj) {
+    return typeof obj === 'function'
+  },
+
+  isString: function (val) {
+    return typeof val === 'string'
+  },
+
+  getRandom: function (min, max) {
+    return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
+  },
+
+  stringToDate: function (str, format) {
+    if (str) {
+      if (utils.isDate(str)) {
+        return str
       }
+      if (!isNaN(str)) {
+        return new Date(str)
+      }
+      if (utils.isString(str)) {
+        format = format || 'yyyy-MM-dd HH:mm:ss.SSS'
+        var dates = []
+        utils.arrayEach(dateFormatRules, function (item) {
+          for (var arr, sIndex, index = 0, rules = item.rules, len = rules.length; index < len; index++) {
+            arr = rules[index]
+            sIndex = format.indexOf(arr[0])
+            if (sIndex > -1) {
+              dates.push(parseFloat(str.substring(sIndex, sIndex + arr[1]) || 0) + (item.offset || 0))
+              break
+            } else if (index === len - 1) {
+              dates.push(0)
+            }
+          }
+        })
+        return new Date(dates[0], dates[1], dates[2], dates[3], dates[4], dates[5], dates[6])
+      }
+    }
+    return 'Invalid Date'
+  },
+
+  dateToString: function (date, format) {
+    date = utils.stringToDate(date)
+    if (utils.isDate(date)) {
+      var weeks = ['日', '一', '二', '三', '四', '五', '六']
+      var resDate = {
+        'q+': Math.floor((date.getMonth() + 3) / 3),
+        'M+': date.getMonth() + 1,
+        'E+': date.getDay(),
+        'd+': date.getDate(),
+        'H+': date.getHours(),
+        'm+': date.getMinutes(),
+        's+': date.getSeconds(),
+        'S': date.getMilliseconds()
+      }
+      var result = String(format || 'yyyy-MM-dd HH:mm:ss').replace(/(y+)/, function ($1) {
+        return ('' + date.getFullYear()).substr(4 - $1.length)
+      })
+      for (var key in resDate) {
+        if (resDate.hasOwnProperty(key)) {
+          var val = '' + resDate[key]
+          result = result.replace(new RegExp('(' + key + ')'), function ($1) {
+            return (key === 'q+' || key === 'E+') ? weeks[val] : ($1.length === 1 ? val : ('00' + val).substr(val.length))
+          })
+        }
+      }
+      return result
+    }
+    return date
+  },
+
+  objectAssign: Object.assign || function (target) {
+    for (var source, index = 1, len = arguments.length; index < len; index++) {
+      source = arguments[index]
+      for (var key in source) {
+        if (source.hasOwnProperty(key)) {
+          target[key] = source[key]
+        }
+      }
+    }
+    return target
+  },
+
+  arrayEach: function (array, callback, context) {
+    if (array.forEach) {
+      return array.forEach(callback, context)
+    }
+    for (var index = 0, len = array.length || 0; index < len; index++) {
+      callback.call(context || global, array[index], index, array)
+    }
+  },
+
+  objectEach: function (obj, iteratee, context) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        iteratee.call(context || this, obj[key], key, obj)
+      }
+    }
+  },
+
+  objectKeys: function (obj) {
+    var result = []
+    if (obj) {
+      if (Object.keys) {
+        return Object.keys(obj)
+      }
+      utils.objectEach(obj, function (val, key) {
+        result.push(key)
+      })
     }
     return result
-  }
-  return date
-}
+  },
 
-export var objectAssign = Object.assign || function (target) {
-  for (var source, index = 1, len = arguments.length; index < len; index++) {
-    source = arguments[index]
-    for (var key in source) {
-      if (source.hasOwnProperty(key)) {
-        target[key] = source[key]
+  objectValues: function (obj) {
+    if (Object.values) {
+      return obj ? Object.values(obj) : []
+    }
+    var result = []
+    utils.arrayEach(utils.objectKeys(obj), function (key) {
+      result.push(obj[key])
+    })
+    return result
+  },
+
+  arrayShuffle: function (array) {
+    var result = []
+    for (var list = utils.objectValues(array), len = list.length - 1; len >= 0; len--) {
+      var index = len > 0 ? utils.getRandom(0, len) : 0
+      result.push(list[index])
+      list.splice(index, 1)
+    }
+    return result
+  },
+
+  arraySample: function (array, number) {
+    var result = utils.arrayShuffle(array)
+    if (arguments.length === 1) {
+      return result[0]
+    }
+    if (number < result.length) {
+      result.length = number || 0
+    }
+    return result
+  },
+
+  getLocatOrigin: function () {
+    return location.origin || (location.protocol + '//' + location.host)
+  },
+
+  getBaseURL: function () {
+    var pathname = location.pathname
+    var lastIndex = utils.lastIndexOf(pathname, '/') + 1
+    return utils.getLocatOrigin() + (lastIndex === pathname.length ? pathname : pathname.substring(0, lastIndex))
+  },
+
+  lastIndexOf: function (str, val) {
+    if (utils.isFunction(str.lastIndexOf)) {
+      return str.lastIndexOf(val)
+    } else {
+      for (var len = str.length - 1; len >= 0; len--) {
+        if (val === str[len]) {
+          return len
+        };
       }
     }
-  }
-  return target
-}
+    return -1
+  },
 
-export function arrayEach (array, callback, context) {
-  if (array.forEach) {
-    return array.forEach(callback, context)
-  }
-  for (var index = 0, len = array.length || 0; index < len; index++) {
-    callback.call(context || global, array[index], index, array)
-  }
-}
+  getScopeNumber: function (str) {
+    var matchs = String(str).match(/(\d+)-(\d+)/)
+    return matchs && matchs.length === 3 ? utils.getRandom(parseInt(matchs[1]), parseInt(matchs[2])) : (isNaN(str) ? 0 : Number(str))
+  },
 
-export function objectEach (obj, iteratee, context) {
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      iteratee.call(context || this, obj[key], key, obj)
-    }
-  }
-}
-
-export function objectKeys (obj) {
-  var result = []
-  if (obj) {
-    if (Object.keys) {
-      return Object.keys(obj)
-    }
-    objectEach(obj, function (val, key) {
-      result.push(key)
+  mateMockItem: function (request) {
+    var url = (request.getUrl() || '').split(/\?|#/)[0]
+    return mockStore.find(function (mockItem) {
+      if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
+        var done = false
+        var pathVariable = []
+        var matchs = url.match(new RegExp(mockItem.path.replace(/{[^{}]+}/g, function (name) {
+          pathVariable.push(name.substring(1, name.length - 1))
+          return '([^/]+)'
+        }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
+        mockItem.pathVariable = {}
+        done = matchs && matchs.length === pathVariable.length + 1
+        if (mockItem.options.pathVariable && done && pathVariable.length) {
+          utils.arrayEach(pathVariable, function (key, index) {
+            mockItem.pathVariable[key] = parsePathVariable(matchs[index + 1], mockItem)
+          })
+        }
+        return done
+      }
     })
   }
-  return result
 }
 
-export function objectValues (obj) {
-  if (Object.values) {
-    return obj ? Object.values(obj) : []
-  }
-  var result = []
-  arrayEach(objectKeys(obj), function (key) {
-    result.push(obj[key])
-  })
-  return result
-}
-
-export function arrayShuffle (array) {
-  var result = []
-  for (var list = objectValues(array), len = list.length - 1; len >= 0; len--) {
-    var index = len > 0 ? getRandom(0, len) : 0
-    result.push(list[index])
-    list.splice(index, 1)
-  }
-  return result
-}
-
-export function arraySample (array, number) {
-  var result = arrayShuffle(array)
-  if (arguments.length === 1) {
-    return result[0]
-  }
-  if (number < result.length) {
-    result.length = number || 0
-  }
-  return result
-}
-
-export function getLocatOrigin () {
-  return location.origin || (location.protocol + '//' + location.host)
-}
-
-export function getBaseURL () {
-  var pathname = location.pathname
-  var lastIndex = lastIndexOf(pathname, '/') + 1
-  return getLocatOrigin() + (lastIndex === pathname.length ? pathname : pathname.substring(0, lastIndex))
-}
-
-export function lastIndexOf (str, val) {
-  if (isFunction(str.lastIndexOf)) {
-    return str.lastIndexOf(val)
-  } else {
-    for (var len = str.length - 1; len >= 0; len--) {
-      if (val === str[len]) {
-        return len
-      };
+function parsePathVariable (val, mockItem) {
+  if (val && mockItem.options.pathVariable === 'auto') {
+    if (!isNaN(val)) {
+      return parseFloat(val)
+    } else if (val === 'true') {
+      return true
+    } else if (val === 'false') {
+      return false
     }
   }
-  return -1
+  return val
 }
 
-export function getScopeNumber (str) {
-  var matchs = String(str).match(/(\d+)-(\d+)/)
-  return matchs && matchs.length === 3 ? getRandom(parseInt(matchs[1]), parseInt(matchs[2])) : (isNaN(str) ? 0 : Number(str))
-}
+module.exports = utils

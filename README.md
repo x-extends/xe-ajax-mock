@@ -198,12 +198,12 @@ template({
 // }
 ```
 ### Directly output the corresponding value.
-**!return** there is only one property in the object. output corresponding value
+**~** there is only one property in the object. output corresponding value
 ``` shell
 import { template } from 'xe-ajax-mock'
 
 template({
-  '!return': {
+  '~': {
     'id|number': '1',
     'name': 'test {{ $index }}',
     'region|array(1)': ["beijing", "shanghai", "guangzhou", "shenzhen"],
@@ -214,7 +214,7 @@ template({
 // {id: 1, name: 'test 0', region: ['shenzhen'], active: true, age: 30}
 
 template({
-  '!return|array(1-2)': {
+  '~|array(1-2)': {
     'id|number': '{{ $index+1 }}',
     'name': 'test {{ $index }}',
     'region|array(1)': ["beijing", "shanghai", "guangzhou", "shenzhen"],
@@ -357,7 +357,7 @@ Mock([{
     method: 'GET',
     path: 'list',
     response: {
-      '!return|array(1-3)': {
+      '~|array(1-3)': {
         'id|number': '{{ $index+1 }}',
         'name': '{{ random.repeat("abcdefg",4,20) }}'
       }
@@ -394,7 +394,7 @@ GET('/api/user/list', (request, response) => {
   response.status = 200
   response.statusText = 'OK'
   response.body = {
-    '!return|array(1-3)': {
+    '~|array(1-3)': {
       'id|number': '{{ $index+1 }}',
       'name': '{{ random.repeat("abcdefg",4,20) }}'
     }
@@ -475,7 +475,7 @@ JSONP('http://xuliangzhan.com/jsonp/user/message', {msg: 'success'})
 
 JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
   response.body = {
-    '!return|array(1-3)': {
+    '~|array(1-3)': {
       'id|number': '{{ $index+1 }}',
       'name': '{{ random.repeat("abcdefg",4,20) }}'
     }
@@ -492,7 +492,7 @@ define([
   XEAjaxMock.GET('/api/user/list1', {msg: 'success'})
   XEAjaxMock.GET('/api/user/list2', function (request, response) {
     response.body = {
-      '!return|array(1-3)': {
+      '~|array(1-3)': {
         'id|number': '{{ $index+1 }}',
         'name': '{{ random.repeat("abcdefg",4,20) }}'
       }

@@ -1,39 +1,12 @@
-import { isFunction, isArray, arrayEach, objectAssign, getLocatOrigin, getBaseURL } from './util'
-import { xefetch, XEXMLHttpRequest } from '../adapters/fetch'
-import { xejsonp } from '../adapters/jsonp'
-import { XEMockResponse } from './response'
+'use strict'
 
-var defineMockServices = []
-
-export var setupDefaults = {
-  baseURL: getBaseURL(),
-  template: false,
-  pathVariable: true,
-  timeout: '20-400',
-  headers: null,
-  error: true,
-  log: false
-}
-
-/**
- * setup defaults
- *
- * @param Object options
- */
-export function setup (options) {
-  objectAssign(setupDefaults, options)
-}
-
-/**
- * install
- */
-export function install (XEAjax) {
-  XEAjax.setup({
-    $fetch: xefetch,
-    $XMLHttpRequest: XEXMLHttpRequest,
-    $jsonp: xejsonp
-  })
-}
+var utils = require('./util')
+var fetchExports = require('../adapters/fetch')
+var xhrExports = require('../adapters/xhr')
+var jsonpExports = require('../adapters/jsonp')
+var XEMockResponse = require('../handle/response')
+var setupDefaults = require('./setup')
+var mockStore = require('./store')
 
 /**
   * XEAjaxMock
@@ -43,18 +16,49 @@ export function install (XEAjax) {
   * @param { Object/Function } response 响应处理 (request, response, context), format: {status: 200, statusText: 'OK', body: {}, headers: {}}
   * @param { Object } options 局部参数
   */
-export function XEAjaxMock (path, method, response, options) {
-  var opts = objectAssign({}, setupDefaults, options)
-  defineMocks(isArray(path) ? (options = method, path) : [{path: path, method: method, response: response}], opts, opts.baseURL, true)
+function XEAjaxMock (path, method, response, options) {
+  var opts = utils.objectAssign({}, setupDefaults, options)
+  defineMocks(utils.isArray(path) ? (options = method, path) : [{path: path, method: method, response: response}], opts, opts.baseURL, true)
   return XEAjaxMock
 }
 
+XEAjaxMock.version = '1.6.12-beta.0'
+
+/**
+ * setup defaults
+ *
+ * @param Object options
+ */
+XEAjaxMock.setup = function (options) {
+  utils.objectAssign(setupDefaults, options)
+}
+
+/**
+ * install
+ */
+XEAjaxMock.install = function (XEAjax) {
+  XEAjax.setup({
+    $fetch: fetchExports.sendJsonp,
+    $XMLHttpRequest: xhrExports.XEXMLHttpRequest,
+    $jsonp: jsonpExports.sendJsonp
+  })
+}
+
+/**
+ * 混合函数
+ *
+ * @param {Object} methods 扩展
+ */
+XEAjaxMock.mixin = function (methods) {
+  return utils.objectAssign(XEAjaxMock, methods)
+}
+
 function defineMocks (list, options, baseURL, first) {
-  if (isArray(list)) {
-    arrayEach(list, function (item) {
+  if (utils.isArray(list)) {
+    utils.arrayEach(list, function (item) {
       if (item.path) {
         if (first && item.path.indexOf('/') === 0) {
-          item.path = getLocatOrigin() + item.path
+          item.path = utils.getLocatOrigin() + item.path
         } else if (first && /\w+:\/{2}.*/.test(item.path)) {
           item.path = item.path
         } else {
@@ -62,7 +66,7 @@ function defineMocks (list, options, baseURL, first) {
         }
         if (item.response !== undefined) {
           item.method = String(item.method || 'GET')
-          defineMockServices.push(new XEMock(item.path, item.method, item.response, options))
+          mockStore.push(new XEMock(item.path, item.method, item.response, options))
         }
         defineMocks(item.children, options, item.path)
       }
@@ -70,42 +74,7 @@ function defineMocks (list, options, baseURL, first) {
   }
 }
 
-export function mateMockItem (request) {
-  var url = (request.getUrl() || '').split(/\?|#/)[0]
-  return defineMockServices.find(function (mockItem) {
-    if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
-      var done = false
-      var pathVariable = []
-      var matchs = url.match(new RegExp(mockItem.path.replace(/{[^{}]+}/g, function (name) {
-        pathVariable.push(name.substring(1, name.length - 1))
-        return '([^/]+)'
-      }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
-      mockItem.pathVariable = {}
-      done = matchs && matchs.length === pathVariable.length + 1
-      if (mockItem.options.pathVariable && done && pathVariable.length) {
-        arrayEach(pathVariable, function (key, index) {
-          mockItem.pathVariable[key] = parsePathVariable(matchs[index + 1], mockItem)
-        })
-      }
-      return done
-    }
-  })
-}
-
-function parsePathVariable (val, mockItem) {
-  if (val && mockItem.options.pathVariable === 'auto') {
-    if (!isNaN(val)) {
-      return parseFloat(val)
-    } else if (val === 'true') {
-      return true
-    } else if (val === 'false') {
-      return false
-    }
-  }
-  return val
-}
-
-export function XEMock (path, method, response, options) {
+function XEMock (path, method, response, options) {
   if (path && method) {
     this.path = path
     this.method = method
@@ -126,7 +95,7 @@ Object.assign(XEMock.prototype, {
     return new Promise(function (resolve, reject) {
       mockItem.asyncTimeout = setTimeout(function () {
         if (!request.$complete) {
-          if (isFunction(mockItem.response)) {
+          if (utils.isFunction(mockItem.response)) {
             return Promise.resolve(mockItem.response(request, new XEMockResponse(mockItem, request, null, 200), mockItem)).then(function (response) {
               resolve(new XEMockResponse(mockItem, request, response, 200))
             })
@@ -151,3 +120,5 @@ Object.assign(XEMock.prototype, {
     }
   }
 })
+
+module.exports = XEAjaxMock

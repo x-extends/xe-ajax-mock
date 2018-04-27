@@ -1,74 +1,76 @@
-import { isObject, isArray, isString, objectEach, arrayEach, getScopeNumber, arraySample, objectAssign, objectKeys } from '../core/util'
-import { buildTemplate } from './bulid'
-import { tmplMethods } from './methods'
+'use strict'
+
+var utils = require('../core/util')
+var buildTemplate = require('./bulid')
+var tmplMixinExports = require('./mixin')
 
 var keyRule = /(.+)\|(array|random)\((.+)\)$/
 
-export function XETemplate (tmpl, fns) {
+function XETemplate (tmpl, fns) {
   var result = null
   result = parseValueRule(tmpl, new TemplateMethods({}, fns))
-  if (isObject(result)) {
-    var keys = objectKeys(result)
-    if (keys.length === 1 && keys[0] === '!return') {
+  if (utils.isObject(result)) {
+    var keys = utils.objectKeys(result)
+    if (keys.length === 1 && (keys[0] === '!return' || keys[0] === '~')) {
       result = result[keys[0]]
     }
   }
   return result
 }
 
-function parseValueRule (value, tmplMethods) {
+function parseValueRule (value, methods) {
   if (value) {
-    if (isArray(value)) {
-      return parseArray(value, tmplMethods)
+    if (utils.isArray(value)) {
+      return parseArray(value, methods)
     }
-    if (isObject(value)) {
-      return parseObject(value, tmplMethods)
+    if (utils.isObject(value)) {
+      return parseObject(value, methods)
     }
-    if (isString(value)) {
-      return buildTemplate(value, tmplMethods)
+    if (utils.isString(value)) {
+      return buildTemplate(value, methods)
     }
   }
   return value
 }
 
-function parseArray (array, tmplMethods) {
+function parseArray (array, methods) {
   var result = []
-  arrayEach(array, function (value, index) {
-    var options = new TemplateMethods({$parent: tmplMethods, $obj: array, $value: value, $size: array.length, $index: index}, tmplMethods.$fns)
+  utils.arrayEach(array, function (value, index) {
+    var options = new TemplateMethods({$parent: methods, $obj: array, $value: value, $size: array.length, $index: index}, methods.$fns)
     result.push(parseValueRule(value, options))
   })
   return result
 }
 
-function parseObject (obj, tmplMethods) {
+function parseObject (obj, methods) {
   var result = {}
-  objectEach(obj, function (value, key) {
+  utils.objectEach(obj, function (value, key) {
     var keyMatch = key.match(keyRule)
     var rest = null
     if (keyMatch && keyMatch.length === 4) {
       key = keyMatch[1]
       var isRandom = keyMatch[2].toLowerCase() === 'random'
       if (keyMatch[2].toLowerCase() === 'array' || isRandom) {
-        var len = getScopeNumber(buildTemplate(keyMatch[3], tmplMethods))
-        if (isArray(value)) {
+        var len = utils.getScopeNumber(buildTemplate(keyMatch[3], methods))
+        if (utils.isArray(value)) {
           if (value.length > len) {
-            rest = parseArray(isRandom ? arraySample(value, len) : value.slice(0, len), tmplMethods)
+            rest = parseArray(isRandom ? utils.arraySample(value, len) : value.slice(0, len), methods)
             if (isRandom && rest.length === 1) {
               rest = rest[0]
             }
           } else {
-            rest = parseArray(value, tmplMethods)
+            rest = parseArray(value, methods)
           }
         } else {
           rest = []
           for (var index = 0; index < len; index++) {
-            var op = new TemplateMethods({$parent: tmplMethods, $obj: rest, $value: null, $size: len, $index: index}, tmplMethods.$fns)
+            var op = new TemplateMethods({$parent: methods, $obj: rest, $value: null, $size: len, $index: index}, methods.$fns)
             rest.push(parseValueRule(value, op))
           }
         }
       }
     } else {
-      rest = parseValueRule(value, tmplMethods)
+      rest = parseValueRule(value, methods)
       keyMatch = key.match(/(.+)\|(number|boolean)$/)
       if (keyMatch && keyMatch.length === 3) {
         key = keyMatch[1]
@@ -86,12 +88,13 @@ function parseObject (obj, tmplMethods) {
 
 function TemplateMethods (methods, fns) {
   this.$fns = fns
-  objectAssign(this, fns, methods)
+  utils.objectAssign(this, fns, methods)
 }
 
-function mixinTemplateMethods (methods) {
-  return objectAssign(TemplateMethods.prototype, methods)
+XETemplate.mixin = function (methods) {
+  return utils.objectAssign(TemplateMethods.prototype, methods)
 }
 
-XETemplate.mixin = mixinTemplateMethods
-mixinTemplateMethods(tmplMethods)
+XETemplate.mixin(tmplMixinExports)
+
+module.exports = XETemplate

@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.6.12
+ * xe-ajax-mock.js v1.6.12-beta.0
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -13,30 +13,6 @@
 
   var objectToString = Object.prototype.toString
 
-  var isArray = Array.isArray || function (val) {
-    return objectToString.call(val) === '[object Array]'
-  }
-
-  function isDate (val) {
-    return objectToString.call(val) === '[object Date]'
-  }
-
-  function isObject (val) {
-    return typeof val === 'object'
-  }
-
-  function isFunction (obj) {
-    return typeof obj === 'function'
-  }
-
-  function isString (val) {
-    return typeof val === 'string'
-  }
-
-  function getRandom (min, max) {
-    return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
-  }
-
   var dateFormatRules = [
     { rules: [['yyyy', 4], ['yyy', 3], ['yy', 2]] },
     { rules: [['MM', 2], ['M', 1]], offset: -1 },
@@ -47,192 +23,266 @@
     { rules: [['SSS', 3], ['SS', 2], ['S', 1]] }
   ]
 
-  function stringToDate (str, format) {
-    if (str) {
-      if (isDate(str)) {
-        return str
-      }
-      if (!isNaN(str)) {
-        return new Date(str)
-      }
-      if (isString(str)) {
-        format = format || 'yyyy-MM-dd HH:mm:ss.SSS'
-        var dates = []
-        arrayEach(dateFormatRules, function (item) {
-          for (var arr, sIndex, index = 0, rules = item.rules, len = rules.length; index < len; index++) {
-            arr = rules[index]
-            sIndex = format.indexOf(arr[0])
-            if (sIndex > -1) {
-              dates.push(parseFloat(str.substring(sIndex, sIndex + arr[1]) || 0) + (item.offset || 0))
-              break
-            } else if (index === len - 1) {
-              dates.push(0)
-            }
-          }
-        })
-        return new Date(dates[0], dates[1], dates[2], dates[3], dates[4], dates[5], dates[6])
-      }
-    }
-    return 'Invalid Date'
-  }
+  var utils = {
 
-  function dateToString (date, format) {
-    date = stringToDate(date)
-    if (isDate(date)) {
-      var weeks = ['日', '一', '二', '三', '四', '五', '六']
-      var resDate = {
-        'q+': Math.floor((date.getMonth() + 3) / 3),
-        'M+': date.getMonth() + 1,
-        'E+': date.getDay(),
-        'd+': date.getDate(),
-        'H+': date.getHours(),
-        'm+': date.getMinutes(),
-        's+': date.getSeconds(),
-        'S': date.getMilliseconds()
-      }
-      var result = String(format || 'yyyy-MM-dd HH:mm:ss').replace(/(y+)/, function ($1) {
-        return ('' + date.getFullYear()).substr(4 - $1.length)
-      })
-      for (var key in resDate) {
-        if (resDate.hasOwnProperty(key)) {
-          var val = '' + resDate[key]
-          result = result.replace(new RegExp('(' + key + ')'), function ($1) {
-            return (key === 'q+' || key === 'E+') ? weeks[val] : ($1.length === 1 ? val : ('00' + val).substr(val.length))
-          })
+    isArray: Array.isArray || function (val) {
+      return objectToString.call(val) === '[object Array]'
+    },
+
+    isDate: function (val) {
+      return objectToString.call(val) === '[object Date]'
+    },
+
+    isObject: function (val) {
+      return typeof val === 'object'
+    },
+
+    isFunction: function (obj) {
+      return typeof obj === 'function'
+    },
+
+    isString: function (val) {
+      return typeof val === 'string'
+    },
+
+    getRandom: function (min, max) {
+      return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
+    },
+
+    stringToDate: function (str, format) {
+      if (str) {
+        if (utils.isDate(str)) {
+          return str
         }
+        if (!isNaN(str)) {
+          return new Date(str)
+        }
+        if (utils.isString(str)) {
+          format = format || 'yyyy-MM-dd HH:mm:ss.SSS'
+          var dates = []
+          utils.arrayEach(dateFormatRules, function (item) {
+            for (var arr, sIndex, index = 0, rules = item.rules, len = rules.length; index < len; index++) {
+              arr = rules[index]
+              sIndex = format.indexOf(arr[0])
+              if (sIndex > -1) {
+                dates.push(parseFloat(str.substring(sIndex, sIndex + arr[1]) || 0) + (item.offset || 0))
+                break
+              } else if (index === len - 1) {
+                dates.push(0)
+              }
+            }
+          })
+          return new Date(dates[0], dates[1], dates[2], dates[3], dates[4], dates[5], dates[6])
+        }
+      }
+      return 'Invalid Date'
+    },
+
+    dateToString: function (date, format) {
+      date = utils.stringToDate(date)
+      if (utils.isDate(date)) {
+        var weeks = ['日', '一', '二', '三', '四', '五', '六']
+        var resDate = {
+          'q+': Math.floor((date.getMonth() + 3) / 3),
+          'M+': date.getMonth() + 1,
+          'E+': date.getDay(),
+          'd+': date.getDate(),
+          'H+': date.getHours(),
+          'm+': date.getMinutes(),
+          's+': date.getSeconds(),
+          'S': date.getMilliseconds()
+        }
+        var result = String(format || 'yyyy-MM-dd HH:mm:ss').replace(/(y+)/, function ($1) {
+          return ('' + date.getFullYear()).substr(4 - $1.length)
+        })
+        for (var key in resDate) {
+          if (resDate.hasOwnProperty(key)) {
+            var val = '' + resDate[key]
+            result = result.replace(new RegExp('(' + key + ')'), function ($1) {
+              return (key === 'q+' || key === 'E+') ? weeks[val] : ($1.length === 1 ? val : ('00' + val).substr(val.length))
+            })
+          }
+        }
+        return result
+      }
+      return date
+    },
+
+    objectAssign: Object.assign || function (target) {
+      for (var source, index = 1, len = arguments.length; index < len; index++) {
+        source = arguments[index]
+        for (var key in source) {
+          if (source.hasOwnProperty(key)) {
+            target[key] = source[key]
+          }
+        }
+      }
+      return target
+    },
+
+    arrayEach: function (array, callback, context) {
+      if (array.forEach) {
+        return array.forEach(callback, context)
+      }
+      for (var index = 0, len = array.length || 0; index < len; index++) {
+        callback.call(context || global, array[index], index, array)
+      }
+    },
+
+    objectEach: function (obj, iteratee, context) {
+      for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          iteratee.call(context || this, obj[key], key, obj)
+        }
+      }
+    },
+
+    objectKeys: function (obj) {
+      var result = []
+      if (obj) {
+        if (Object.keys) {
+          return Object.keys(obj)
+        }
+        utils.objectEach(obj, function (val, key) {
+          result.push(key)
+        })
       }
       return result
-    }
-    return date
-  }
+    },
 
-  var objectAssign = Object.assign || function (target) {
-    for (var source, index = 1, len = arguments.length; index < len; index++) {
-      source = arguments[index]
-      for (var key in source) {
-        if (source.hasOwnProperty(key)) {
-          target[key] = source[key]
+    objectValues: function (obj) {
+      if (Object.values) {
+        return obj ? Object.values(obj) : []
+      }
+      var result = []
+      utils.arrayEach(utils.objectKeys(obj), function (key) {
+        result.push(obj[key])
+      })
+      return result
+    },
+
+    arrayShuffle: function (array) {
+      var result = []
+      for (var list = utils.objectValues(array), len = list.length - 1; len >= 0; len--) {
+        var index = len > 0 ? utils.getRandom(0, len) : 0
+        result.push(list[index])
+        list.splice(index, 1)
+      }
+      return result
+    },
+
+    arraySample: function (array, number) {
+      var result = utils.arrayShuffle(array)
+      if (arguments.length === 1) {
+        return result[0]
+      }
+      if (number < result.length) {
+        result.length = number || 0
+      }
+      return result
+    },
+
+    getLocatOrigin: function () {
+      return location.origin || (location.protocol + '//' + location.host)
+    },
+
+    getBaseURL: function () {
+      var pathname = location.pathname
+      var lastIndex = utils.lastIndexOf(pathname, '/') + 1
+      return utils.getLocatOrigin() + (lastIndex === pathname.length ? pathname : pathname.substring(0, lastIndex))
+    },
+
+    lastIndexOf: function (str, val) {
+      if (utils.isFunction(str.lastIndexOf)) {
+        return str.lastIndexOf(val)
+      } else {
+        for (var len = str.length - 1; len >= 0; len--) {
+          if (val === str[len]) {
+            return len
+          };
         }
       }
-    }
-    return target
-  }
+      return -1
+    },
 
-  function arrayEach (array, callback, context) {
-    if (array.forEach) {
-      return array.forEach(callback, context)
-    }
-    for (var index = 0, len = array.length || 0; index < len; index++) {
-      callback.call(context || global, array[index], index, array)
-    }
-  }
+    getScopeNumber: function (str) {
+      var matchs = String(str).match(/(\d+)-(\d+)/)
+      return matchs && matchs.length === 3 ? utils.getRandom(parseInt(matchs[1]), parseInt(matchs[2])) : (isNaN(str) ? 0 : Number(str))
+    },
 
-  function objectEach (obj, iteratee, context) {
-    for (var key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        iteratee.call(context || this, obj[key], key, obj)
-      }
-    }
-  }
-
-  function objectKeys (obj) {
-    var result = []
-    if (obj) {
-      if (Object.keys) {
-        return Object.keys(obj)
-      }
-      objectEach(obj, function (val, key) {
-        result.push(key)
+    mateMockItem: function (request) {
+      var url = (request.getUrl() || '').split(/\?|#/)[0]
+      return mockStore.find(function (mockItem) {
+        if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
+          var done = false
+          var pathVariable = []
+          var matchs = url.match(new RegExp(mockItem.path.replace(/{[^{}]+}/g, function (name) {
+            pathVariable.push(name.substring(1, name.length - 1))
+            return '([^/]+)'
+          }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
+          mockItem.pathVariable = {}
+          done = matchs && matchs.length === pathVariable.length + 1
+          if (mockItem.options.pathVariable && done && pathVariable.length) {
+            utils.arrayEach(pathVariable, function (key, index) {
+              mockItem.pathVariable[key] = parsePathVariable(matchs[index + 1], mockItem)
+            })
+          }
+          return done
+        }
       })
     }
-    return result
   }
 
-  function objectValues (obj) {
-    if (Object.values) {
-      return obj ? Object.values(obj) : []
-    }
-    var result = []
-    arrayEach(objectKeys(obj), function (key) {
-      result.push(obj[key])
-    })
-    return result
-  }
-
-  function arrayShuffle (array) {
-    var result = []
-    for (var list = objectValues(array), len = list.length - 1; len >= 0; len--) {
-      var index = len > 0 ? getRandom(0, len) : 0
-      result.push(list[index])
-      list.splice(index, 1)
-    }
-    return result
-  }
-
-  function arraySample (array, number) {
-    var result = arrayShuffle(array)
-    if (arguments.length === 1) {
-      return result[0]
-    }
-    if (number < result.length) {
-      result.length = number || 0
-    }
-    return result
-  }
-
-  function getLocatOrigin () {
-    return location.origin || (location.protocol + '//' + location.host)
-  }
-
-  function getBaseURL () {
-    var pathname = location.pathname
-    var lastIndex = lastIndexOf(pathname, '/') + 1
-    return getLocatOrigin() + (lastIndex === pathname.length ? pathname : pathname.substring(0, lastIndex))
-  }
-
-  function lastIndexOf (str, val) {
-    if (isFunction(str.lastIndexOf)) {
-      return str.lastIndexOf(val)
-    } else {
-      for (var len = str.length - 1; len >= 0; len--) {
-        if (val === str[len]) {
-          return len
-        };
+  function parsePathVariable (val, mockItem) {
+    if (val && mockItem.options.pathVariable === 'auto') {
+      if (!isNaN(val)) {
+        return parseFloat(val)
+      } else if (val === 'true') {
+        return true
+      } else if (val === 'false') {
+        return false
       }
     }
-    return -1
+    return val
   }
 
-  function getScopeNumber (str) {
-    var matchs = String(str).match(/(\d+)-(\d+)/)
-    return matchs && matchs.length === 3 ? getRandom(parseInt(matchs[1]), parseInt(matchs[2])) : (isNaN(str) ? 0 : Number(str))
+  var setupDefaults = {
+    baseURL: utils.getBaseURL(),
+    template: false,
+    pathVariable: true,
+    timeout: '20-400',
+    headers: null,
+    error: true,
+    log: false
   }
 
-  var tmplMethods = {
+  var mockStore = []
+
+  var tmplMixinExports = {
     random: {
-      num: getRandom,
+      num: utils.getRandom,
       time: function (startDate, endDate, format) {
         if (startDate) {
           if (!endDate) {
-            return stringToDate(startDate, format).getTime()
+            return utils.stringToDate(startDate, format).getTime()
           }
-          return getRandom(stringToDate(startDate, format).getTime(), stringToDate(endDate, format).getTime())
+          return utils.getRandom(utils.stringToDate(startDate, format).getTime(), utils.stringToDate(endDate, format).getTime())
         }
         return startDate
       },
       date: function (startDate, endDate, format) {
         if (startDate) {
           if (!endDate) {
-            return dateToString(startDate, format)
+            return utils.dateToString(startDate, format)
           }
-          return dateToString(tmplMethods.random.time(startDate, endDate), format)
+          return utils.dateToString(tmplMixinExports.random.time(startDate, endDate), format)
         }
         return startDate
       },
       repeat: function (array, min, max) {
         min = min || 1
         max = max || min
-        if (isString(array)) {
+        if (utils.isString(array)) {
           array = array.split('')
         }
         if (array.length < max) {
@@ -243,7 +293,7 @@
           result.length = max
           array = result
         }
-        return arraySample(array, getRandom(min, max)).join('')
+        return utils.arraySample(array, utils.getRandom(min, max)).join('')
       }
     }
   }
@@ -284,68 +334,68 @@
   function XETemplate (tmpl, fns) {
     var result = null
     result = parseValueRule(tmpl, new TemplateMethods({}, fns))
-    if (isObject(result)) {
-      var keys = objectKeys(result)
-      if (keys.length === 1 && keys[0] === '!return') {
+    if (utils.isObject(result)) {
+      var keys = utils.objectKeys(result)
+      if (keys.length === 1 && (keys[0] === '!return' || keys[0] === '~')) {
         result = result[keys[0]]
       }
     }
     return result
   }
 
-  function parseValueRule (value, tmplMethods) {
+  function parseValueRule (value, methods) {
     if (value) {
-      if (isArray(value)) {
-        return parseArray(value, tmplMethods)
+      if (utils.isArray(value)) {
+        return parseArray(value, methods)
       }
-      if (isObject(value)) {
-        return parseObject(value, tmplMethods)
+      if (utils.isObject(value)) {
+        return parseObject(value, methods)
       }
-      if (isString(value)) {
-        return buildTemplate(value, tmplMethods)
+      if (utils.isString(value)) {
+        return buildTemplate(value, methods)
       }
     }
     return value
   }
 
-  function parseArray (array, tmplMethods) {
+  function parseArray (array, methods) {
     var result = []
-    arrayEach(array, function (value, index) {
-      var options = new TemplateMethods({ $parent: tmplMethods, $obj: array, $value: value, $size: array.length, $index: index }, tmplMethods.$fns)
+    utils.arrayEach(array, function (value, index) {
+      var options = new TemplateMethods({ $parent: methods, $obj: array, $value: value, $size: array.length, $index: index }, methods.$fns)
       result.push(parseValueRule(value, options))
     })
     return result
   }
 
-  function parseObject (obj, tmplMethods) {
+  function parseObject (obj, methods) {
     var result = {}
-    objectEach(obj, function (value, key) {
+    utils.objectEach(obj, function (value, key) {
       var keyMatch = key.match(keyRule)
       var rest = null
       if (keyMatch && keyMatch.length === 4) {
         key = keyMatch[1]
         var isRandom = keyMatch[2].toLowerCase() === 'random'
         if (keyMatch[2].toLowerCase() === 'array' || isRandom) {
-          var len = getScopeNumber(buildTemplate(keyMatch[3], tmplMethods))
-          if (isArray(value)) {
+          var len = utils.getScopeNumber(buildTemplate(keyMatch[3], methods))
+          if (utils.isArray(value)) {
             if (value.length > len) {
-              rest = parseArray(isRandom ? arraySample(value, len) : value.slice(0, len), tmplMethods)
+              rest = parseArray(isRandom ? utils.arraySample(value, len) : value.slice(0, len), methods)
               if (isRandom && rest.length === 1) {
                 rest = rest[0]
               }
             } else {
-              rest = parseArray(value, tmplMethods)
+              rest = parseArray(value, methods)
             }
           } else {
             rest = []
             for (var index = 0; index < len; index++) {
-              var op = new TemplateMethods({ $parent: tmplMethods, $obj: rest, $value: null, $size: len, $index: index }, tmplMethods.$fns)
+              var op = new TemplateMethods({ $parent: methods, $obj: rest, $value: null, $size: len, $index: index }, methods.$fns)
               rest.push(parseValueRule(value, op))
             }
           }
         }
       } else {
-        rest = parseValueRule(value, tmplMethods)
+        rest = parseValueRule(value, methods)
         keyMatch = key.match(/(.+)\|(number|boolean)$/)
         if (keyMatch && keyMatch.length === 3) {
           key = keyMatch[1]
@@ -363,36 +413,21 @@
 
   function TemplateMethods (methods, fns) {
     this.$fns = fns
-    objectAssign(this, fns, methods)
+    utils.objectAssign(this, fns, methods)
   }
 
-  function mixinTemplateMethods (methods) {
-    return objectAssign(TemplateMethods.prototype, methods)
+  XETemplate.mixin = function (methods) {
+    return utils.objectAssign(TemplateMethods.prototype, methods)
   }
 
-  XETemplate.mixin = mixinTemplateMethods
-  mixinTemplateMethods(tmplMethods)
-
-  function xefetch (url, options) {
-    var request = options._request
-    var mockItem = mateMockItem(request)
-    if (mockItem) {
-      mockItem.time = getScopeNumber(mockItem.options.timeout)
-      return mockItem.getMockResponse(request).then(function (response) {
-        mockItem.outMockLog(request, response)
-        return response
-      })
-    } else {
-      return fetch(url, options)
-    }
-  }
+  XETemplate.mixin(tmplMixinExports)
 
   function XEXMLHttpRequest () {
     this._mock = null
     this._xhr = null
   }
 
-  objectAssign(XEXMLHttpRequest.prototype, {
+  utils.objectAssign(XEXMLHttpRequest.prototype, {
     timeout: 0,
     status: 0,
     readyState: 0,
@@ -402,10 +437,10 @@
     response: '',
     responseText: '',
     open: function (method, url) {
-      this._mock = mateMockItem(this._request)
+      this._mock = utils.mateMockItem(this._request)
       if (this._mock) {
         this.readyState = 1
-        if (isFunction(this.onreadystatechange)) {
+        if (utils.isFunction(this.onreadystatechange)) {
           this.onreadystatechange()
         }
       } else {
@@ -418,7 +453,7 @@
       var mockItem = this._mock
       var request = this._request
       if (mockItem) {
-        mockItem.time = getScopeNumber(mockItem.options.timeout)
+        mockItem.time = utils.getScopeNumber(mockItem.options.timeout)
         return mockItem.getMockResponse(request).then(function (response) {
           mockXHR.readyState = 4
           mockXHR._updateResponse(request, response)
@@ -491,7 +526,7 @@
       return result
     },
     _triggerEvent: function (name) {
-      if (isFunction(this['on' + name])) {
+      if (utils.isFunction(this['on' + name])) {
         this['on' + name]({ type: name })
       }
     },
@@ -500,7 +535,7 @@
       this.status = response.status
       this._headers = response.headers
       if (this._mock) {
-        if (!isString(body)) {
+        if (!utils.isString(body)) {
           body = JSON.stringify(body)
         }
       }
@@ -512,6 +547,28 @@
       }
     }
   })
+
+  var xhrExports = {
+    XEXMLHttpRequest: XEXMLHttpRequest
+  }
+
+  function sendFetch (url, options) {
+    var request = options._request
+    var mockItem = utils.mateMockItem(request)
+    if (mockItem) {
+      mockItem.time = utils.getScopeNumber(mockItem.options.timeout)
+      return mockItem.getMockResponse(request).then(function (response) {
+        mockItem.outMockLog(request, response)
+        return response
+      })
+    } else {
+      return fetch(url, options)
+    }
+  }
+
+  var fetchExports = {
+    sendJsonp: sendFetch
+  }
 
   var $global = typeof window === 'undefined' ? this : window
 
@@ -540,14 +597,14 @@
   /**
    * jsonp
    */
-  function xejsonp (script, request) {
+  function sendJsonp (script, request) {
     return new Promise(function (resolve, reject) {
-      var mockItem = mateMockItem(request)
+      var mockItem = utils.mateMockItem(request)
       $global[request.jsonpCallback] = function (body) {
         jsonpSuccess(request, { status: 200, body: body }, resolve)
       }
       if (mockItem) {
-        mockItem.time = getScopeNumber(mockItem.options.timeout)
+        mockItem.time = utils.getScopeNumber(mockItem.options.timeout)
         return mockItem.getMockResponse(mockItem, request).then(function (response) {
           if (response.status < 200 || response.status >= 300) {
             jsonpError(request, reject)
@@ -573,6 +630,10 @@
     })
   }
 
+  var jsonpExports = {
+    sendJsonp: sendJsonp
+  }
+
   var requireMap = {}
 
   function parseRequire (response, path) {
@@ -586,7 +647,7 @@
     var response = this
     return new Promise(function (resolve, reject) {
       if (path.indexOf('/') === 0) {
-        path = getLocatOrigin() + path
+        path = utils.getLocatOrigin() + path
       } else if (!/\w+:\/{2}.*/.test(path)) {
         path = setupDefaults.baseURL.replace(/\/$/, '') + '/' + path
       }
@@ -613,53 +674,21 @@
 
   function XEMockResponse (mockItem, request, response, status) {
     if (response && mockItem.options.template === true) {
-      response = template(response, { $pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {} })
+      response = XETemplate(response, { $pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {} })
     }
     if (response && response.body !== undefined && response.status !== undefined) {
-      response.headers = objectAssign({}, mockItem.options.headers, response.headers)
-      objectAssign(this, response)
+      response.headers = utils.objectAssign({}, mockItem.options.headers, response.headers)
+      utils.objectAssign(this, response)
     } else {
       this.status = status
       this.body = response
-      this.headers = objectAssign({}, mockItem.options.headers)
+      this.headers = utils.objectAssign({}, mockItem.options.headers)
     }
   }
 
-  objectAssign(XEMockResponse.prototype, {
+  utils.objectAssign(XEMockResponse.prototype, {
     require: requireJSON
   })
-
-  var defineMockServices = []
-
-  var setupDefaults = {
-    baseURL: getBaseURL(),
-    template: false,
-    pathVariable: true,
-    timeout: '20-400',
-    headers: null,
-    error: true,
-    log: false
-  }
-
-  /**
-   * setup defaults
-   *
-   * @param Object options
-   */
-  function setup (options) {
-    objectAssign(setupDefaults, options)
-  }
-
-  /**
-   * install
-   */
-  function install (XEAjax) {
-    XEAjax.setup({
-      $fetch: xefetch,
-      $XMLHttpRequest: XEXMLHttpRequest,
-      $jsonp: xejsonp
-    })
-  }
 
   /**
     * XEAjaxMock
@@ -670,17 +699,48 @@
     * @param { Object } options 局部参数
     */
   function XEAjaxMock (path, method, response, options) {
-    var opts = objectAssign({}, setupDefaults, options)
-    defineMocks(isArray(path) ? (options = method, path) : [{ path: path, method: method, response: response }], opts, opts.baseURL, true)
+    var opts = utils.objectAssign({}, setupDefaults, options)
+    defineMocks(utils.isArray(path) ? (options = method, path) : [{ path: path, method: method, response: response }], opts, opts.baseURL, true)
     return XEAjaxMock
   }
 
+  XEAjaxMock.version = '1.6.12-beta.0'
+
+  /**
+   * setup defaults
+   *
+   * @param Object options
+   */
+  XEAjaxMock.setup = function (options) {
+    utils.objectAssign(setupDefaults, options)
+  }
+
+  /**
+   * install
+   */
+  XEAjaxMock.install = function (XEAjax) {
+    XEAjax.setup({
+      $fetch: fetchExports.sendJsonp,
+      $XMLHttpRequest: xhrExports.XEXMLHttpRequest,
+      $jsonp: jsonpExports.sendJsonp
+    })
+  }
+
+  /**
+   * 混合函数
+   *
+   * @param {Object} methods 扩展
+   */
+  XEAjaxMock.mixin = function (methods) {
+    return utils.objectAssign(XEAjaxMock, methods)
+  }
+
   function defineMocks (list, options, baseURL, first) {
-    if (isArray(list)) {
-      arrayEach(list, function (item) {
+    if (utils.isArray(list)) {
+      utils.arrayEach(list, function (item) {
         if (item.path) {
           if (first && item.path.indexOf('/') === 0) {
-            item.path = getLocatOrigin() + item.path
+            item.path = utils.getLocatOrigin() + item.path
           } else if (first && /\w+:\/{2}.*/.test(item.path)) {
             item.path = item.path
           } else {
@@ -688,47 +748,12 @@
           }
           if (item.response !== undefined) {
             item.method = String(item.method || 'GET')
-            defineMockServices.push(new XEMock(item.path, item.method, item.response, options))
+            mockStore.push(new XEMock(item.path, item.method, item.response, options))
           }
           defineMocks(item.children, options, item.path)
         }
       })
     }
-  }
-
-  function mateMockItem (request) {
-    var url = (request.getUrl() || '').split(/\?|#/)[0]
-    return defineMockServices.find(function (mockItem) {
-      if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
-        var done = false
-        var pathVariable = []
-        var matchs = url.match(new RegExp(mockItem.path.replace(/{[^{}]+}/g, function (name) {
-          pathVariable.push(name.substring(1, name.length - 1))
-          return '([^/]+)'
-        }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
-        mockItem.pathVariable = {}
-        done = matchs && matchs.length === pathVariable.length + 1
-        if (mockItem.options.pathVariable && done && pathVariable.length) {
-          arrayEach(pathVariable, function (key, index) {
-            mockItem.pathVariable[key] = parsePathVariable(matchs[index + 1], mockItem)
-          })
-        }
-        return done
-      }
-    })
-  }
-
-  function parsePathVariable (val, mockItem) {
-    if (val && mockItem.options.pathVariable === 'auto') {
-      if (!isNaN(val)) {
-        return parseFloat(val)
-      } else if (val === 'true') {
-        return true
-      } else if (val === 'false') {
-        return false
-      }
-    }
-    return val
   }
 
   function XEMock (path, method, response, options) {
@@ -752,7 +777,7 @@
       return new Promise(function (resolve, reject) {
         mockItem.asyncTimeout = setTimeout(function () {
           if (!request.$complete) {
-            if (isFunction(mockItem.response)) {
+            if (utils.isFunction(mockItem.response)) {
               return Promise.resolve(mockItem.response(request, new XEMockResponse(mockItem, request, null, 200), mockItem)).then(function (response) {
                 resolve(new XEMockResponse(mockItem, request, response, 200))
               })
@@ -780,60 +805,27 @@
 
   function createDefine (method) {
     return function (url, response, options) {
-      return Mock(url, method, response, options)
+      return XEAjaxMock(url, method, response, options)
     }
   }
 
   function JSONP (url, response, options) {
-    return Mock(url, 'GET', response, objectAssign({ jsonp: 'callback' }, options))
+    return XEAjaxMock(url, 'GET', response, utils.objectAssign({ jsonp: 'callback' }, options))
   }
 
-  var template = XETemplate
-  var Mock = XEAjaxMock
-  var GET = createDefine('GET')
-  var POST = createDefine('POST')
-  var PUT = createDefine('PUT')
-  var DELETE = createDefine('DELETE')
-  var PATCH = createDefine('PATCH')
-  var HEAD = createDefine('HEAD')
-
-  function asyncRequire (url) {
-    return function (response) {
-      return response.require(url)
-    }
-  }
-
-  var exportMethods = {
-    require: asyncRequire,
+  var ajaxMockExports = {
     template: XETemplate,
-    Mock: Mock,
+    Mock: XEAjaxMock,
     JSONP: JSONP,
-    HEAD: HEAD,
-    GET: GET,
-    POST: POST,
-    PUT: PUT,
-    DELETE: DELETE,
-    PATCH: PATCH
+    GET: createDefine('GET'),
+    POST: createDefine('POST'),
+    PUT: createDefine('PUT'),
+    DELETE: createDefine('DELETE'),
+    PATCH: createDefine('PATCH'),
+    HEAD: createDefine('HEAD')
   }
 
-  /**
-   * 混合函数
-   *
-   * @param {Object} methods 扩展
-   */
-  function mixin (methods) {
-    return objectAssign(XEAjaxMock, methods)
-  }
-
-  objectAssign(XEAjaxMock, {
-    mixin: mixin,
-    setup: setup,
-    install: install,
-    version: '1.6.12',
-    $name: 'XEAjaxMock'
-  })
-
-  mixin(exportMethods)
+  XEAjaxMock.mixin(ajaxMockExports)
 
   return XEAjaxMock
 }))

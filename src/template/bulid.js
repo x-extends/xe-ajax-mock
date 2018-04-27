@@ -1,3 +1,5 @@
+'use strict'
+
 var tmplJoint = {
   tStart: '__restArr=[]',
   tEnd: "return __restArr.join('');",
@@ -13,7 +15,7 @@ function buildCode (code) {
   return tmplJoint.contEnd + code + tmplJoint.contStart
 }
 
-export function buildTemplate (strTmpl, data) {
+function buildTemplate (strTmpl, data) {
   var restTmpl = strTmpl
   .replace(/[\r\n\t]/g, ' ')
   .replace(/{{\s*(.*?)\s*}}/g, function (matching, code) {
@@ -28,3 +30,5 @@ export function buildTemplate (strTmpl, data) {
   }
   return strTmpl
 }
+
+module.exports = buildTemplate

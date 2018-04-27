@@ -1,6 +1,8 @@
-import { getLocatOrigin, objectAssign } from '../core/util'
-import { template } from './index'
-import { setupDefaults } from './mock'
+'use strict'
+
+var utils = require('../core/utils')
+var XETemplate = require('../template')
+var setupDefaults = require('../core/setup')
 
 var requireMap = {}
 
@@ -11,11 +13,11 @@ function parseRequire (response, path) {
   return requireMap[path]
 }
 
-export function requireJSON (path) {
+function requireJSON (path) {
   var response = this
   return new Promise(function (resolve, reject) {
     if (path.indexOf('/') === 0) {
-      path = getLocatOrigin() + path
+      path = utils.getLocatOrigin() + path
     } else if (!/\w+:\/{2}.*/.test(path)) {
       path = setupDefaults.baseURL.replace(/\/$/, '') + '/' + path
     }
@@ -40,20 +42,22 @@ export function requireJSON (path) {
   })
 }
 
-export function XEMockResponse (mockItem, request, response, status) {
+function XEMockResponse (mockItem, request, response, status) {
   if (response && mockItem.options.template === true) {
-    response = template(response, {$pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {}})
+    response = XETemplate(response, {$pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {}})
   }
   if (response && response.body !== undefined && response.status !== undefined) {
-    response.headers = objectAssign({}, mockItem.options.headers, response.headers)
-    objectAssign(this, response)
+    response.headers = utils.objectAssign({}, mockItem.options.headers, response.headers)
+    utils.objectAssign(this, response)
   } else {
     this.status = status
     this.body = response
-    this.headers = objectAssign({}, mockItem.options.headers)
+    this.headers = utils.objectAssign({}, mockItem.options.headers)
   }
 }
 
-objectAssign(XEMockResponse.prototype, {
+utils.objectAssign(XEMockResponse.prototype, {
   require: requireJSON
 })
+
+module.exports = XEMockResponse
