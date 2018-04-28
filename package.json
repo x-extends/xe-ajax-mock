@@ -1,6 +1,6 @@
 {
   "name": "xe-ajax-mock",
-  "version": "1.6.12-beta.2",
+  "version": "1.6.12-beta.3",
   "description": "Mock services, support xhr、fetch、jsonp、data template - xe-ajax plugin",
   "main": "index.js",
   "scripts": {
