@@ -1,6 +1,6 @@
 'use strict'
 
-var utils = require('../core/utils')
+var utils = require('../core/util')
 var XETemplate = require('../template')
 var setupDefaults = require('../core/setup')
 
