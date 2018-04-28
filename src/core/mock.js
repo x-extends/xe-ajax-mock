@@ -23,7 +23,7 @@ function XEAjaxMock (path, method, response, options) {
   return XEAjaxMock
 }
 
-XEAjaxMock.version = '1.6.12-beta.4'
+XEAjaxMock.version = '1.7.0'
 
 /**
  * setup defaults
