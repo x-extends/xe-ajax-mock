@@ -3,6 +3,7 @@
 var utils = require('./utils')
 var fetchExports = require('../adapters/fetch')
 var xhrExports = require('../adapters/xhr')
+var httpExports = require('../adapters/http')
 var jsonpExports = require('../adapters/jsonp')
 var XEMockResponse = require('../handle/response')
 var setupDefaults = require('./setup')
@@ -22,7 +23,7 @@ function XEAjaxMock (path, method, response, options) {
   return XEAjaxMock
 }
 
-XEAjaxMock.version = '1.6.12-beta.3'
+XEAjaxMock.version = '1.6.12-beta.4'
 
 /**
  * setup defaults
@@ -38,6 +39,7 @@ XEAjaxMock.setup = function (options) {
  */
 XEAjaxMock.install = function (XEAjax) {
   XEAjax.setup({
+    /* nodejs */$http: httpExports.sendHttp,
     $fetch: fetchExports.sendJsonp,
     $XMLHttpRequest: xhrExports.XEXMLHttpRequest,
     $jsonp: jsonpExports.sendJsonp

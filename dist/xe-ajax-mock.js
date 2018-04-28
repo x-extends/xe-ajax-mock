@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.6.12-beta.3
+ * xe-ajax-mock.js v1.6.12-beta.4
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -709,7 +709,7 @@
     return XEAjaxMock
   }
 
-  XEAjaxMock.version = '1.6.12-beta.3'
+  XEAjaxMock.version = '1.6.12-beta.4'
 
   /**
    * setup defaults
@@ -725,6 +725,7 @@
    */
   XEAjaxMock.install = function (XEAjax) {
     XEAjax.setup({
+
       $fetch: fetchExports.sendJsonp,
       $XMLHttpRequest: xhrExports.XEXMLHttpRequest,
       $jsonp: jsonpExports.sendJsonp
