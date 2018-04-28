@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.6.12-beta.1
+ * xe-ajax-mock.js v1.6.12-beta.2
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -527,7 +527,7 @@
         return response
       })
     } else {
-      return fetch(url, options)
+      return self.fetch(url, options)
     }
   }
 
@@ -706,7 +706,7 @@
     return XEAjaxMock
   }
 
-  XEAjaxMock.version = '1.6.12-beta.1'
+  XEAjaxMock.version = '1.6.12-beta.2'
 
   /**
    * setup defaults
