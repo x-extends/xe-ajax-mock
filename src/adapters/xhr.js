@@ -1,6 +1,7 @@
 'use strict'
 
-var utils = require('../core/util')
+var utils = require('../core/utils')
+var handleExports = require('../handle')
 
 function XEXMLHttpRequest () {
   this._mock = null
@@ -17,7 +18,7 @@ utils.objectAssign(XEXMLHttpRequest.prototype, {
   response: '',
   responseText: '',
   open: function (method, url) {
-    this._mock = utils.mateMockItem(this._request)
+    this._mock = handleExports.mateMockItem(this._request)
     if (this._mock) {
       this.readyState = 1
       if (utils.isFunction(this.onreadystatechange)) {

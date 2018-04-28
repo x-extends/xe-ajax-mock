@@ -1,6 +1,6 @@
 'use strict'
 
-var utils = require('./util')
+var utils = require('./utils')
 var setupDefaults = {
   baseURL: utils.getBaseURL(),
   template: false,

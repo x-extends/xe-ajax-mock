@@ -1,6 +1,6 @@
 'use strict'
 
-var utils = require('./util')
+var utils = require('./utils')
 var fetchExports = require('../adapters/fetch')
 var xhrExports = require('../adapters/xhr')
 var jsonpExports = require('../adapters/jsonp')
@@ -22,7 +22,7 @@ function XEAjaxMock (path, method, response, options) {
   return XEAjaxMock
 }
 
-XEAjaxMock.version = '1.6.12-beta.0'
+XEAjaxMock.version = '1.6.12-beta.1'
 
 /**
  * setup defaults

@@ -1,6 +1,6 @@
 'use strict'
 
-var utils = require('../core/util')
+var utils = require('../core/utils')
 
 var tmplMixinExports = {
   random: {

@@ -1,6 +1,6 @@
 'use strict'
 
-var utils = require('../core/util')
+var utils = require('../core/utils')
 var buildTemplate = require('./bulid')
 var tmplMixinExports = require('./mixin')
 

@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.6.12-beta.0
+ * xe-ajax-mock.js v1.6.12-beta.1
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -208,42 +208,7 @@
     getScopeNumber: function (str) {
       var matchs = String(str).match(/(\d+)-(\d+)/)
       return matchs && matchs.length === 3 ? utils.getRandom(parseInt(matchs[1]), parseInt(matchs[2])) : (isNaN(str) ? 0 : Number(str))
-    },
-
-    mateMockItem: function (request) {
-      var url = (request.getUrl() || '').split(/\?|#/)[0]
-      return mockStore.find(function (mockItem) {
-        if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
-          var done = false
-          var pathVariable = []
-          var matchs = url.match(new RegExp(mockItem.path.replace(/{[^{}]+}/g, function (name) {
-            pathVariable.push(name.substring(1, name.length - 1))
-            return '([^/]+)'
-          }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
-          mockItem.pathVariable = {}
-          done = matchs && matchs.length === pathVariable.length + 1
-          if (mockItem.options.pathVariable && done && pathVariable.length) {
-            utils.arrayEach(pathVariable, function (key, index) {
-              mockItem.pathVariable[key] = parsePathVariable(matchs[index + 1], mockItem)
-            })
-          }
-          return done
-        }
-      })
     }
-  }
-
-  function parsePathVariable (val, mockItem) {
-    if (val && mockItem.options.pathVariable === 'auto') {
-      if (!isNaN(val)) {
-        return parseFloat(val)
-      } else if (val === 'true') {
-        return true
-      } else if (val === 'false') {
-        return false
-      }
-    }
-    return val
   }
 
   var setupDefaults = {
@@ -437,7 +402,7 @@
     response: '',
     responseText: '',
     open: function (method, url) {
-      this._mock = utils.mateMockItem(this._request)
+      this._mock = handleExports.mateMockItem(this._request)
       if (this._mock) {
         this.readyState = 1
         if (utils.isFunction(this.onreadystatechange)) {
@@ -554,7 +519,7 @@
 
   function sendFetch (url, options) {
     var request = options._request
-    var mockItem = utils.mateMockItem(request)
+    var mockItem = handleExports.mateMockItem(request)
     if (mockItem) {
       mockItem.time = utils.getScopeNumber(mockItem.options.timeout)
       return mockItem.getMockResponse(request).then(function (response) {
@@ -599,7 +564,7 @@
    */
   function sendJsonp (script, request) {
     return new Promise(function (resolve, reject) {
-      var mockItem = utils.mateMockItem(request)
+      var mockItem = handleExports.mateMockItem(request)
       $global[request.jsonpCallback] = function (body) {
         jsonpSuccess(request, { status: 200, body: body }, resolve)
       }
@@ -690,6 +655,43 @@
     require: requireJSON
   })
 
+  function parsePathVariable (val, mockItem) {
+    if (val && mockItem.options.pathVariable === 'auto') {
+      if (!isNaN(val)) {
+        return parseFloat(val)
+      } else if (val === 'true') {
+        return true
+      } else if (val === 'false') {
+        return false
+      }
+    }
+    return val
+  }
+
+  var handleExports = {
+    mateMockItem: function (request) {
+      var url = (request.getUrl() || '').split(/\?|#/)[0]
+      return mockStore.find(function (mockItem) {
+        if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
+          var done = false
+          var pathVariable = []
+          var matchs = url.match(new RegExp(mockItem.path.replace(/{[^{}]+}/g, function (name) {
+            pathVariable.push(name.substring(1, name.length - 1))
+            return '([^/]+)'
+          }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
+          mockItem.pathVariable = {}
+          done = matchs && matchs.length === pathVariable.length + 1
+          if (mockItem.options.pathVariable && done && pathVariable.length) {
+            utils.arrayEach(pathVariable, function (key, index) {
+              mockItem.pathVariable[key] = parsePathVariable(matchs[index + 1], mockItem)
+            })
+          }
+          return done
+        }
+      })
+    }
+  }
+
   /**
     * XEAjaxMock
     *
@@ -704,7 +706,7 @@
     return XEAjaxMock
   }
 
-  XEAjaxMock.version = '1.6.12-beta.0'
+  XEAjaxMock.version = '1.6.12-beta.1'
 
   /**
    * setup defaults

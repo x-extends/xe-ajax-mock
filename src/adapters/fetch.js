@@ -1,10 +1,11 @@
 'use strict'
 
-var utils = require('../core/util')
+var utils = require('../core/utils')
+var handleExports = require('../handle')
 
 function sendFetch (url, options) {
   var request = options._request
-  var mockItem = utils.mateMockItem(request)
+  var mockItem = handleExports.mateMockItem(request)
   if (mockItem) {
     mockItem.time = utils.getScopeNumber(mockItem.options.timeout)
     return mockItem.getMockResponse(request).then(function (response) {
@@ -12,7 +13,7 @@ function sendFetch (url, options) {
       return response
     })
   } else {
-    return fetch(url, options)
+    return self.fetch(url, options)
   }
 }
 

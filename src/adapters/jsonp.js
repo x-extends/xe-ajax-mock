@@ -1,6 +1,7 @@
 'use strict'
 
-var utils = require('../core/util')
+var utils = require('../core/utils')
+var handleExports = require('../handle')
 
 var $global = typeof window === 'undefined' ? this : window
 
@@ -31,7 +32,7 @@ function jsonpError (request, reject) {
  */
 function sendJsonp (script, request) {
   return new Promise(function (resolve, reject) {
-    var mockItem = utils.mateMockItem(request)
+    var mockItem = handleExports.mateMockItem(request)
     $global[request.jsonpCallback] = function (body) {
       jsonpSuccess(request, {status: 200, body: body}, resolve)
     }
