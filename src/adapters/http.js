@@ -3,7 +3,7 @@
 var utils = require('../core/utils')
 var handleExports = require('../handle')
 
-function sendHttp (request, next, finish) {
+function sendHttp (request, next, finish, failed) {
   var mockItem = handleExports.mateMockItem(request)
   if (mockItem) {
     mockItem.time = utils.getScopeNumber(mockItem.options.timeout)

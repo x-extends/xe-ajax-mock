@@ -39,7 +39,7 @@ XEAjaxMock.setup = function (options) {
  */
 XEAjaxMock.install = function (XEAjax) {
   XEAjax.setup({
-    /* nodejs */$http: httpExports.sendHttp,
+    /* CommonJS */$http: httpExports.sendHttp,
     $fetch: fetchExports.sendJsonp,
     $XMLHttpRequest: xhrExports.XEXMLHttpRequest,
     $jsonp: jsonpExports.sendJsonp
