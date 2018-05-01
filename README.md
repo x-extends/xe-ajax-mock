@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/xe-ajax-mock.svg?style=flat-square)](https://www.npmjs.org/package/xe-ajax-mock)
 [![npm downloads](https://img.shields.io/npm/dm/xe-ajax-mock.svg?style=flat-square)](http://npm-stat.com/charts.html?package=xe-ajax-mock)
 
-The Mock virtual service plug-in based on XEAjax extension supports XHR, fetch, jsonp request simulation, logic validation simulation, data template;For the development mode of the front and back separation, ajax+mock makes the front end no longer depend on the back-end interface development efficiency.
+The Mock virtual service plug-in based on XEAjax
 
 ## Browser Support
 xe-ajax-mock depends on a native ES6 Promise implementation to be supported. If your environment doesn't support ES6 Promises, you can polyfill.
