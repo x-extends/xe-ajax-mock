@@ -14,16 +14,16 @@ xe-ajax-mock depends on a native ES6 Promise implementation to be supported. If 
 
 ## CDN
 [All cdnjs package](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)
-``` shell
+```HTML
 <script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
 ```
 [All unpkg package](https://unpkg.com/xe-ajax-mock/)
-``` shell
+```HTML
 <script src="https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
 ```
 
 ## AMD
-``` shell
+```JavaScript
 require.config({
   paths: {
     // ...,
@@ -34,22 +34,22 @@ require.config({
 ```
 
 ## NPM
-``` shell
+```JavaScript
 npm install xe-ajax xe-ajax-mock --save
 ```
 
 ### NodeJS
-``` shell
+```JavaScript
 const XEAjaxMock = require('xe-ajax-mock')
 ```
 
 ### ES6 Module import
-``` shell
+```JavaScript
 import XEAjaxMock from 'xe-ajax-mock'
 ```
 
 ### ES6 Module import
-``` shell
+```JavaScript
 import { GET, POST, PUT, DELETE, JSONP } from 'xe-ajax-mock'
 ```
 
@@ -84,7 +84,7 @@ import { GET, POST, PUT, DELETE, JSONP } from 'xe-ajax-mock'
 | log | Boolean | console output request log, You can set [**true**,**false**] | defaults to false |
 
 ## Default global settings
-``` shell
+```JavaScript
 import XEAjaxMock from 'xe-ajax-mock'
 
 XEAjaxMock.setup({
@@ -103,7 +103,7 @@ XEAjaxMock.setup({
 ## Template - Base
 ### Number
 [key]|number
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -113,7 +113,7 @@ template({
 ```
 ### Boolean
 [key]|boolean
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -124,7 +124,7 @@ template({
 ```
 ### generate one or more values.
 [key]|array([min]-[max])
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -144,7 +144,7 @@ template({
 ```
 ### Randomly generate one or more values.
 [key]|random([min]-[max])
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -163,7 +163,7 @@ template({
 // {region: ['beijing', 'guangzhou']}
 ```
 ### Object
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -176,7 +176,7 @@ template({
 // {id: 1,name: 'test 1', region: ['shanghai'], active: true, age: 30}
 ```
 ### Array
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 template(['{{ random.repeat("abcdefg",10,20) }}', '{{ random.date("2018-03-04","2018-03-20") }}'])
@@ -197,7 +197,7 @@ template([{
 **$params** get query parameters  
 **$body** get request body  
 **$pathVariable** get path variable
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -215,7 +215,7 @@ template({
 ```
 ### Directly output the corresponding value.
 **~** there is only one property in the object. output corresponding value
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -244,7 +244,7 @@ template({
 ## Template - Advanced
 ### Random number
 random.num(min, max)
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -264,7 +264,7 @@ template({
 ```
 ### Randomly generate values based on content.
 random.repeat(array|string, min, max)
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -279,7 +279,7 @@ template({
 ```
 ### Random timestamp
 random.time(startDate, endDate)
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -294,7 +294,7 @@ template({
 ```
 ### Random Date
 random.date(startDate, endDate, format)
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -318,7 +318,7 @@ template({
 // {dateStr: '2018-03-10 10:30:20.500'}
 ```
 ### Paging configuration
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 // GET('http://xuliangzhan.com/api/user/list/{pageSize/{currentPage}') ==> XEAjax.fetchGet('api/user/list/10/1')
@@ -347,7 +347,7 @@ template({
 ```
 ### Template functions of mixing
 template.mixin({})
-``` shell
+```JavaScript
 import { template } from 'xe-ajax-mock'
 
 template.mixin({
@@ -364,7 +364,7 @@ template({
 
 ## Examples
 ### Mock
-``` shell
+```JavaScript
 import { Mock } from 'xe-ajax-mock'
 
 Mock([{
@@ -395,13 +395,13 @@ Mock([{
 }])
 ```
 ### HEAD
-``` shell
+```JavaScript
 import { HEAD } from 'xe-ajax-mock'
 
 HEAD('/api/user/head', null)
 ```
 ### GET
-``` shell
+```JavaScript
 import { GET } from 'xe-ajax-mock'
 
 GET('/api/user/list', {msg: 'success'})
@@ -433,7 +433,7 @@ GET('/api/user/list/{pageSize}/{currentPage}', (request, response, context) => {
 })
 ```
 ### POST
-``` shell
+```JavaScript
 import { template, POST } from 'xe-ajax-mock'
 
 POST('/api/user/save', {msg: 'success'})
@@ -455,7 +455,7 @@ POST('/api/user/save', (request, response) => {
 })
 ```
 ### PUT
-``` shell
+```JavaScript
 import { PUT } from 'xe-ajax-mock'
 
 PUT('/api/user/update', {msg: 'success'})
@@ -467,7 +467,7 @@ PUT('/api/user/update', (request, response) => {
 })
 ```
 ### DELETE
-``` shell
+```JavaScript
 import { DELETE } from 'xe-ajax-mock'
 
 DELETE('/api/user/delete/{id}', {msg: 'success'})
@@ -478,13 +478,13 @@ DELETE('/api/user/delete/{id}', (request, response) => {
 })
 ```
 ### PATCH
-``` shell
+```JavaScript
 import { PATCH } from 'xe-ajax-mock'
 
 PATCH('/api/user/update', {msg: 'success'})
 ```
 ### JSONP
-``` shell
+```JavaScript
 import { JSONP } from 'xe-ajax-mock'
 
 JSONP('http://xuliangzhan.com/jsonp/user/message', {msg: 'success'})
@@ -500,7 +500,7 @@ JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
 }， {jsonp: 'cb'})
 ```
 ### AMD
-``` shell
+```JavaScript
 define([
   'xe-ajax-mock'
 ], function (XEAjaxMock) {
@@ -531,7 +531,7 @@ define([
 
 ## Functions of mixing
 ### ./customs.js
-``` shell
+```JavaScript
 import { POST } from 'xe-ajax-mock'
 
 export function POST2 (path, options) {
@@ -539,7 +539,7 @@ export function POST2 (path, options) {
 } 
 ```
 ### ./main.js
-``` shell
+```JavaScript
 import { Mock } from 'xe-ajax-mock'
 import customs from './customs'
 
