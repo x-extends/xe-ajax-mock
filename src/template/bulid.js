@@ -17,10 +17,10 @@ function buildCode (code) {
 
 function buildTemplate (strTmpl, data) {
   var restTmpl = strTmpl
-  .replace(/[\r\n\t]/g, ' ')
-  .replace(/{{\s*(.*?)\s*}}/g, function (matching, code) {
-    return buildCode(tmplJoint.cStart + code + tmplJoint.cEnd)
-  })
+    .replace(/[\r\n\t]/g, ' ')
+    .replace(/{{\s*(.*?)\s*}}/g, function (matching, code) {
+      return buildCode(tmplJoint.cStart + code + tmplJoint.cEnd)
+    })
   try {
     restTmpl = 'var ' + tmplJoint.tStart + ';with(opts){' + tmplJoint.contStart + restTmpl + tmplJoint.contEnd + '};' + tmplJoint.tEnd
     /* eslint-disable no-new-func */

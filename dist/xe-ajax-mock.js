@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.7.1
+ * xe-ajax-mock.js v1.7.2
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -709,7 +709,7 @@
     return XEAjaxMock
   }
 
-  XEAjaxMock.version = '1.7.1'
+  XEAjaxMock.version = '1.7.2'
 
   /**
    * setup defaults

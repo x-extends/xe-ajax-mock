@@ -3,26 +3,30 @@
 [![npm version](https://img.shields.io/npm/v/xe-ajax-mock.svg?style=flat-square)](https://www.npmjs.org/package/xe-ajax-mock)
 [![npm downloads](https://img.shields.io/npm/dm/xe-ajax-mock.svg?style=flat-square)](http://npm-stat.com/charts.html?package=xe-ajax-mock)
 
-The Mock request plug-in based on XEAjax
+基于 xe-ajax 的 Mock 虚拟服务
 
 ## Browser Support
-xe-ajax-mock depends on a native ES6 Promise implementation to be supported. If your environment doesn't support ES6 Promises, you can polyfill.
 
-![IE](https://raw.github.com/alrra/browser-logos/master/src/archive/internet-explorer_7-8/internet-explorer_7-8_48x48.png) | ![Edge](https://raw.github.com/alrra/browser-logos/master/src/edge/edge_48x48.png) | ![Chrome](https://raw.github.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/src/opera/opera_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/src/safari/safari_48x48.png)
+![IE](https://raw.github.com/alrra/browser-logos/master/src/archive/internet-explorer_9-11/internet-explorer_9-11_48x48.png) | ![Edge](https://raw.github.com/alrra/browser-logos/master/src/edge/edge_48x48.png) | ![Chrome](https://raw.github.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/src/opera/opera_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/src/safari/safari_48x48.png)
 --- | --- | --- | --- | --- | --- |
-8+ ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | 6.1+ ✔ |
+9+ ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | 6.1+ ✔ |
 
 ## CDN
+
 [All cdnjs package](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)
+
 ```HTML
 <script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
 ```
+
 [All unpkg package](https://unpkg.com/xe-ajax-mock/)
+
 ```HTML
 <script src="https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
 ```
 
 ## AMD
+
 ```JavaScript
 require.config({
   paths: {
@@ -33,30 +37,10 @@ require.config({
 })
 ```
 
-## NPM
-```JavaScript
-npm install xe-ajax xe-ajax-mock --save
-```
-
-### NodeJS
-```JavaScript
-const XEAjaxMock = require('xe-ajax-mock')
-```
-
-### ES6 Module import
-```JavaScript
-import XEAjaxMock from 'xe-ajax-mock'
-```
-
-### ES6 Module import
-```JavaScript
-import { GET, POST, PUT, DELETE, JSONP } from 'xe-ajax-mock'
-```
-
 ## API
+
 * Mock( defines, options )
 * Mock( path, method, response, options )
-* 
 * HEAD( path, response, options )
 * GET( path, response, options )
 * POST( path, response, options )
@@ -66,31 +50,34 @@ import { GET, POST, PUT, DELETE, JSONP } from 'xe-ajax-mock'
 * JSONP( path, response, options )
 
 ### Arguments
-* **path** request URL path
-* **method** request method
-* **response** Object or Function(request, response, context), format: {status: 200, statusText: 'OK', body: {}, headers: {}}
-* **options** is an optional options object
 
-### Options
+* **path** 请求路径
+* **method** 请求方法
+* **response** 对象或者函数(request, response, context), 格式: {status: 200, statusText: 'OK', body: {}, headers: {}}
+* **options** 参数
+
+### 参数
+
 | Name | Type | Description | default value |
 |------|------|-----|----|
-| baseURL | String | base URL | defaults to context path |
-| template | Boolean | Enable data templates to compile automatically, You can set [**true**,**false**] | defaults to false |
-| pathVariable | Boolean | Enable path parameter type automatic parsing, You can set [**true**,**false**] | defaults to true |
-| timeout | String | Simulated request time | defaults to '20-400' |
-| jsonp | String | set jsonp callback parameter name |  |
-| headers | Object | optional header fields |  |
-| error | Boolean | console output error log, You can set [**true**,**false**] | defaults to true |
-| log | Boolean | console output request log, You can set [**true**,**false**] | defaults to false |
+| baseURL | String | 基础路径 | 默认上下文路径 |
+| template | Boolean | 是否允许数据模板自动编译, 可以设置 [**true**,**false**] | 默认 false |
+| pathVariable | Boolean | 是否启用路径参数类型自动解析, 可以设置 [**true**,**false**,'auto'] | 默认 true |
+| timeout | String | 设置请求响应的时间 | 默认 '20-400' |
+| jsonp | String | 设置jsonp回调参数名称 |  |
+| headers | Object | 设置响应头信息 |  |
+| error | Boolean | 控制台输出请求错误日志, 可以设置 [**true**,**false**] | 默认 true |
+| log | Boolean | 控制台输出请求请求日志, 可以设置 [**true**,**false**] | 默认 false |
 
-## Default global settings
+## 全局参数
+
 ```JavaScript
 import XEAjaxMock from 'xe-ajax-mock'
 
 XEAjaxMock.setup({
   baseURL: 'http://xuliangzhan.com',
   template: true,
-  pathVariable: 'auto',
+  pathVariable: 'auto', // 如果为auto则支持自动转换类型
   timeout: '100-600',
   headers: {
     'Content-Type': 'application/json; charset=utf-8'
@@ -100,9 +87,12 @@ XEAjaxMock.setup({
 })
 ```
 
-## Template - Base
-### Number
+## Template - 基础语法
+
+### Number 数值
+
 [key]|number
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -111,8 +101,11 @@ template({
 })
 // {num: 123}
 ```
-### Boolean
+
+### Boolean 布尔值
+
 [key]|boolean
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -122,8 +115,11 @@ template({
 })
 // {flag1: true, flag2: false}
 ```
-### generate one or more values.
+
+### 指定生成一个或多个值
+
 [key]|array([min]-[max])
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -142,8 +138,11 @@ template({
 })
 // {region: ['shenzhen', 'shanghai']}
 ```
-### Randomly generate one or more values.
+
+### 随机生成一个或多个值
+
 [key]|random([min]-[max])
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -162,7 +161,9 @@ template({
 })
 // {region: ['beijing', 'guangzhou']}
 ```
-### Object
+
+### Object 对象
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -175,7 +176,9 @@ template({
 })
 // {id: 1,name: 'test 1', region: ['shanghai'], active: true, age: 30}
 ```
-### Array
+
+### Array 数组
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -191,12 +194,15 @@ template([{
 }])
 // [{id: 1,name: 'test 0', region: ['guangzhou'], active: false, age: 30}]
 ```
-### Buildin object
-**$size** get the array size  
-**$index** get array index  
-**$params** get query parameters  
-**$body** get request body  
-**$pathVariable** get path variable
+
+### 内置变量
+
+**$size** 获取数组大小
+**$index** 获取数组索引
+**$params** 获取请求查询参数
+**$body** 获取请求提交参数
+**$pathVariable** 获取请求路径参数
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -213,8 +219,11 @@ template({
 //   result: [{id: 0, size: 2, name: 'test', password: ''}, {id: 1, size: 2, name: 'test', password: ''}]
 // }
 ```
-### Directly output the corresponding value.
-**~** there is only one property in the object. output corresponding value
+
+### 直接返回对应的值
+
+**~** 如果对象中只有一个属性，返回对应值
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -241,9 +250,13 @@ template({
 // [{id: 1, name: 'test 0', region: ['shanghai'], active: true, age: 30},
 // {id: 2, name: 'test 1', region: ['shenzhen'], active: false, age: 42}]
 ```
-## Template - Advanced
-### Random number
+
+## Template - 函数的使用
+
+### 随机生成数值
+
 random.num(min, max)
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -262,8 +275,11 @@ template({
 })
 // {color: 'rgb(242, 121, 132)'}
 ```
-### Randomly generate values based on content.
+
+### 根据内容随机生成（可以是字符串或数组）
+
 random.repeat(array|string, min, max)
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -277,8 +293,11 @@ template({
 })
 // {email: 'abcfdgecee@163.com'}
 ```
-### Random timestamp
+
+### 随机时间戳
+
 random.time(startDate, endDate)
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -292,8 +311,11 @@ template({
 })
 // {datetime: '1520611200000'}
 ```
-### Random Date
+
+### 随机日期
+
 random.date(startDate, endDate, format)
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -317,7 +339,9 @@ template({
 })
 // {dateStr: '2018-03-10 10:30:20.500'}
 ```
-### Paging configuration
+
+### 完整配置
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -345,8 +369,11 @@ template({
   }
 })
 ```
-### Template functions of mixing
+
+### Template 模板混合函数
+
 template.mixin({})
+
 ```JavaScript
 import { template } from 'xe-ajax-mock'
 
@@ -362,8 +389,10 @@ template({
 // {val: 'format: 2018-01-01'}
 ```
 
-## Examples
+## 例子
+
 ### Mock
+
 ```JavaScript
 import { Mock } from 'xe-ajax-mock'
 
@@ -394,13 +423,17 @@ Mock([{
   ]
 }])
 ```
+
 ### HEAD
+
 ```JavaScript
 import { HEAD } from 'xe-ajax-mock'
 
 HEAD('/api/user/head', null)
 ```
+
 ### GET
+
 ```JavaScript
 import { GET } from 'xe-ajax-mock'
 
@@ -432,7 +465,9 @@ GET('/api/user/list/{pageSize}/{currentPage}', (request, response, context) => {
   return response
 })
 ```
+
 ### POST
+
 ```JavaScript
 import { template, POST } from 'xe-ajax-mock'
 
@@ -444,7 +479,7 @@ POST('/api/user/save', (request, response) => {
 })
 
 POST('/api/user/save', (request, response) => {
-  // The simulation logic verifies the parameters
+  // 简单模拟后台校验
   if (request.params.id) {
     response.body = {msg: 'success'}
   } else {
@@ -454,7 +489,9 @@ POST('/api/user/save', (request, response) => {
   return response
 })
 ```
+
 ### PUT
+
 ```JavaScript
 import { PUT } from 'xe-ajax-mock'
 
@@ -466,7 +503,9 @@ PUT('/api/user/update', (request, response) => {
   return response
 })
 ```
+
 ### DELETE
+
 ```JavaScript
 import { DELETE } from 'xe-ajax-mock'
 
@@ -477,13 +516,17 @@ DELETE('/api/user/delete/{id}', (request, response) => {
   return response
 })
 ```
+
 ### PATCH
+
 ```JavaScript
 import { PATCH } from 'xe-ajax-mock'
 
 PATCH('/api/user/update', {msg: 'success'})
 ```
+
 ### JSONP
+
 ```JavaScript
 import { JSONP } from 'xe-ajax-mock'
 
@@ -499,57 +542,11 @@ JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
   return response
 }， {jsonp: 'cb'})
 ```
-### AMD
-```JavaScript
-define([
-  'xe-ajax-mock'
-], function (XEAjaxMock) {
 
-  XEAjaxMock.GET('/api/user/list1', {msg: 'success'})
-  XEAjaxMock.GET('/api/user/list2', function (request, response) {
-    response.body = {
-      '~|array(1-3)': {
-        'id|number': '{{ $index+1 }}',
-        'name': '{{ random.repeat("abcdefg",4,20) }}'
-      }
-    }
-    return response
-  })
+## 项目
 
-  // Support chain writing
-  XEAjaxMock
-  .GET('/api/user/list3', {msg: 'success'})
-  .POST('/api/user/save1', function (request, response) {
-    response.body = {msg: 'success'}
-    return response
-  })
-  .POST('/api/user/save2', function (request, response) {
-    return response.require('mock/json/api/user/save/data.json')
-  })
-})
-```
-
-## Functions of mixing
-### ./customs.js
-```JavaScript
-import { POST } from 'xe-ajax-mock'
-
-export function POST2 (path, options) {
-  return POST(path, {message: 'success'}, options)
-} 
-```
-### ./main.js
-```JavaScript
-import { Mock } from 'xe-ajax-mock'
-import customs from './customs'
-
-Mock.mixin(customs)
-
-Mock.POST2('/api/user/save')
-```
-
-## Project Demos
-[project examples.](https://github.com/xuliangzhan/examples)  
+[项目示例](https://github.com/xuliangzhan/examples)  
 
 ## License
+
 Copyright (c) 2017-present, Xu Liangzhan
