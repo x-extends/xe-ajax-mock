@@ -53,7 +53,7 @@ require.config({
 
 * **path** 请求路径
 * **method** 请求方法
-* **response** 对象或者函数(request, response, context), 格式: {status: 200, statusText: 'OK', body: {}, headers: {}}
+* **response** 对象或者函数(request, response, context)，格式: {status: 200, statusText: 'OK', body: {}, headers: {}}
 * **options** 参数
 
 ### 参数
@@ -78,7 +78,7 @@ XEAjaxMock.setup({
   baseURL: 'http://xuliangzhan.com',
   template: true,
   pathVariable: 'auto', // 如果为auto则支持自动转换类型
-  timeout: '100-600',
+  timeout: '50-600',
   headers: {
     'Content-Type': 'application/json; charset=utf-8'
   },
@@ -542,10 +542,6 @@ JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
   return response
 }， {jsonp: 'cb'})
 ```
-
-## 项目
-
-[项目示例](https://github.com/xuliangzhan/examples)  
 
 ## License
 
