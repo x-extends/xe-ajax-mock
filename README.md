@@ -13,13 +13,13 @@
 
 ## CDN
 
-[All cdnjs package](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)
+[点击浏览](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)
 
 ```HTML
 <script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
 ```
 
-[All unpkg package](https://unpkg.com/xe-ajax-mock/)
+[点击浏览](https://unpkg.com/xe-ajax-mock/)
 
 ```HTML
 <script src="https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
