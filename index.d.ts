@@ -31,9 +31,9 @@ export interface XEAjaxMockMethods {
       }
     })
     // {
-    //   age: {pageSize: 10, currentPage: 1}, 
+    //   age: {pageSize: 10, currentPage: 1},
     //   result: [
-    //     {id: 0, size: 2, name: 'test', password: ''}, 
+    //     {id: 0, size: 2, name: 'test', password: ''},
     //     {id: 1, size: 2, name: 'test', password: ''}
     //   ]
     // }
