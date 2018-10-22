@@ -3,6 +3,7 @@
   "version": "1.7.3",
   "description": "基于 xe-ajax 的 Mock 虚拟服务",
   "main": "index.js",
+  "typing": "index.d.ts",
   "scripts": {
     "test": "make test"
   },
