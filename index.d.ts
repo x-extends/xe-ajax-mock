@@ -20,6 +20,24 @@ export interface XEAjaxMockMethods {
   /**
    * 
    * @param tmpl 编译的模板对象
+   * @example 
+    ```javascript
+    template({
+      'result|array(1-5)': {
+        'id|number': '{{ $index }}',
+        'size|number': '{{ $size }}',
+        'name': '{{ $params.name }}',
+        'password': '{{ $body.password }}'
+      }
+    })
+    // {
+    //   age: {pageSize: 10, currentPage: 1}, 
+    //   result: [
+    //     {id: 0, size: 2, name: 'test', password: ''}, 
+    //     {id: 1, size: 2, name: 'test', password: ''}
+    //   ]
+    // }
+    ```
    */
   template(tmpl: any): Promise<any>;
 
@@ -29,6 +47,11 @@ export interface XEAjaxMockMethods {
    * @param method 请求方法
    * @param response 响应结果
    * @param options 可选参数
+   * @example 
+    ```javascript
+    Mock('/api/test/message/list', 'GET', [{id: 1, name: 'u1'}])
+    Mock('/api/test/message/list', 'POST', {status: 1})
+    ```
    */
   Mock(path: string, method: string, response: any, options?: object): Promise<any>;
 
@@ -37,6 +60,10 @@ export interface XEAjaxMockMethods {
    * @param path 请求路径
    * @param response 响应结果
    * @param options 可选参数
+   * @example 
+    ```javascript
+    JSONP('/api/test/message/list', [{id: 1, name: 'u1'}])
+    ```
    */
   JSONP(path: string, response: any, options?: object): Promise<any>;
 
@@ -45,6 +72,10 @@ export interface XEAjaxMockMethods {
    * @param path 请求路径
    * @param response 响应结果
    * @param options 可选参数
+   * @example 
+    ```javascript
+    GET('/api/test/message/list', [{id: 1, name: 'u1'}])
+    ```
    */
   GET(path: string, response: any, options?: object): Promise<any>;
 
@@ -53,6 +84,10 @@ export interface XEAjaxMockMethods {
    * @param path 请求路径
    * @param response 响应结果
    * @param options 可选参数
+   * @example 
+    ```javascript
+    POST('/api/test/message/list', {status: 1})
+    ```
    */
   POST(path: string, response: any, options?: object): Promise<any>;
 
@@ -61,6 +96,10 @@ export interface XEAjaxMockMethods {
    * @param path 请求路径
    * @param response 响应结果
    * @param options 可选参数
+   * @example 
+    ```javascript
+    PUT('/api/test/message/list', {status: 1})
+    ```
    */
   PUT(path: string, response: any, options?: object): Promise<any>;
 
@@ -69,6 +108,10 @@ export interface XEAjaxMockMethods {
    * @param path 请求路径
    * @param response 响应结果
    * @param options 
+   * @example 
+    ```javascript
+    DELETE('/api/test/message/list', {status: 1})
+    ```
    */
   DELETE(path: string, response: any, options?: object): Promise<any>;
 
@@ -77,6 +120,10 @@ export interface XEAjaxMockMethods {
    * @param path 请求路径
    * @param response 响应结果
    * @param options 可选参数
+   * @example 
+    ```javascript
+    PATCH('/api/test/message/list', null)
+    ```
    */
   PATCH(path: string, response: any, options?: object): Promise<any>;
 
@@ -85,6 +132,10 @@ export interface XEAjaxMockMethods {
    * @param path 请求路径
    * @param response 响应结果
    * @param options 可选参数
+   * @example 
+    ```javascript
+    HEAD('/api/test/message/list', null)
+    ```
    */
   HEAD(path: string, response: any, options?: object): Promise<any>;
 }
@@ -92,10 +143,10 @@ export interface XEAjaxMockMethods {
 /**
  * 基于 xe-ajax 的 Mock 虚拟服务
  * @example 
- ```javascript
- GET('/api/test/message/list', [{id: 1, name: 'u1'}])
- POST('/api/test/message/save', {status: 1})
- ```
+  ```javascript
+  GET('/api/test/message/list', [{id: 1, name: 'u1'}])
+  POST('/api/test/message/save', {status: 1})
+  ```
  */
 declare var XEAjaxMock: XEAjaxMockMethods;
 
