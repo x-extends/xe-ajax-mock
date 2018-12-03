@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.7.4
+ * xe-ajax-mock.js v1.7.5
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -708,8 +708,6 @@
     defineMocks(utils.isArray(path) ? (options = method, path) : [{ path: path, method: method, response: response }], opts, opts.baseURL, true)
     return XEAjaxMock
   }
-
-  XEAjaxMock.version = '1.7.3'
 
   /**
    * setup defaults
