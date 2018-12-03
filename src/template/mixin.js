@@ -8,18 +8,18 @@ var tmplMixinExports = {
     time: function (startDate, endDate, format) {
       if (startDate) {
         if (!endDate) {
-          return utils.stringToDate(startDate, format).getTime()
+          return utils.toStringDate(startDate, format).getTime()
         }
-        return utils.getRandom(utils.stringToDate(startDate, format).getTime(), utils.stringToDate(endDate, format).getTime())
+        return utils.getRandom(utils.toStringDate(startDate, format).getTime(), utils.toStringDate(endDate, format).getTime())
       }
       return startDate
     },
     date: function (startDate, endDate, format) {
       if (startDate) {
         if (!endDate) {
-          return utils.dateToString(startDate, format)
+          return utils.toDateString(startDate, format)
         }
-        return utils.dateToString(tmplMixinExports.random.time(startDate, endDate), format)
+        return utils.toDateString(tmplMixinExports.random.time(startDate, endDate), format)
       }
       return startDate
     },

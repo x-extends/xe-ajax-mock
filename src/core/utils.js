@@ -38,7 +38,7 @@ var utils = {
     return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
   },
 
-  stringToDate: function (str, format) {
+  toStringDate: function (str, format) {
     if (str) {
       if (utils.isDate(str)) {
         return str
@@ -67,8 +67,8 @@ var utils = {
     return 'Invalid Date'
   },
 
-  dateToString: function (date, format) {
-    date = utils.stringToDate(date)
+  toDateString: function (date, format) {
+    date = utils.toStringDate(date)
     if (utils.isDate(date)) {
       var weeks = ['日', '一', '二', '三', '四', '五', '六']
       var resDate = {
