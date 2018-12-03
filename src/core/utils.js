@@ -3,13 +3,13 @@
 var objectToString = Object.prototype.toString
 
 var dateFormatRules = [
-  {rules: [['yyyy', 4], ['yyy', 3], ['yy', 2]]},
-  {rules: [['MM', 2], ['M', 1]], offset: -1},
-  {rules: [['dd', 2], ['d', 1]]},
-  {rules: [['HH', 2], ['H', 1]]},
-  {rules: [['mm', 2], ['m', 1]]},
-  {rules: [['ss', 2], ['s', 1]]},
-  {rules: [['SSS', 3], ['SS', 2], ['S', 1]]}
+  { rules: [['yyyy', 4], ['yyy', 3], ['yy', 2]] },
+  { rules: [['MM', 2], ['M', 1]], offset: -1 },
+  { rules: [['dd', 2], ['d', 1]] },
+  { rules: [['HH', 2], ['H', 1]] },
+  { rules: [['mm', 2], ['m', 1]] },
+  { rules: [['ss', 2], ['s', 1]] },
+  { rules: [['SSS', 3], ['SS', 2], ['S', 1]] }
 ]
 
 var utils = {

@@ -19,11 +19,9 @@ var mockStore = require('./store')
   */
 function XEAjaxMock (path, method, response, options) {
   var opts = utils.objectAssign({}, setupDefaults, options)
-  defineMocks(utils.isArray(path) ? (options = method, path) : [{path: path, method: method, response: response}], opts, opts.baseURL, true)
+  defineMocks(utils.isArray(path) ? (options = method, path) : [{ path: path, method: method, response: response }], opts, opts.baseURL, true)
   return XEAjaxMock
 }
-
-XEAjaxMock.version = '1.7.3'
 
 /**
  * setup defaults
@@ -62,7 +60,7 @@ function defineMocks (list, options, baseURL, first) {
         if (first && item.path.indexOf('/') === 0) {
           item.path = utils.getLocatOrigin() + item.path
         } else if (first && /\w+:\/{2}.*/.test(item.path)) {
-          item.path = item.path
+
         } else {
           item.path = baseURL.replace(/\/$/, '') + '/' + item.path.replace(/^\//, '')
         }

@@ -49,7 +49,7 @@
       return min >= max ? min : ((min = min || 0) + Math.round(Math.random() * ((max || 9) - min)))
     },
 
-    stringToDate: function (str, format) {
+    toStringDate: function (str, format) {
       if (str) {
         if (utils.isDate(str)) {
           return str
@@ -78,8 +78,8 @@
       return 'Invalid Date'
     },
 
-    dateToString: function (date, format) {
-      date = utils.stringToDate(date)
+    toDateString: function (date, format) {
+      date = utils.toStringDate(date)
       if (utils.isDate(date)) {
         var weeks = ['日', '一', '二', '三', '四', '五', '六']
         var resDate = {
@@ -232,18 +232,18 @@
       time: function (startDate, endDate, format) {
         if (startDate) {
           if (!endDate) {
-            return utils.stringToDate(startDate, format).getTime()
+            return utils.toStringDate(startDate, format).getTime()
           }
-          return utils.getRandom(utils.stringToDate(startDate, format).getTime(), utils.stringToDate(endDate, format).getTime())
+          return utils.getRandom(utils.toStringDate(startDate, format).getTime(), utils.toStringDate(endDate, format).getTime())
         }
         return startDate
       },
       date: function (startDate, endDate, format) {
         if (startDate) {
           if (!endDate) {
-            return utils.dateToString(startDate, format)
+            return utils.toDateString(startDate, format)
           }
-          return utils.dateToString(tmplMixinExports.random.time(startDate, endDate), format)
+          return utils.toDateString(tmplMixinExports.random.time(startDate, endDate), format)
         }
         return startDate
       },
@@ -748,7 +748,7 @@
           if (first && item.path.indexOf('/') === 0) {
             item.path = utils.getLocatOrigin() + item.path
           } else if (first && /\w+:\/{2}.*/.test(item.path)) {
-            item.path = item.path
+
           } else {
             item.path = baseURL.replace(/\/$/, '') + '/' + item.path.replace(/^\//, '')
           }

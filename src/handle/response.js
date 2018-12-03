@@ -44,7 +44,7 @@ function requireJSON (path) {
 
 function XEMockResponse (mockItem, request, response, status) {
   if (response && mockItem.options.template === true) {
-    response = XETemplate(response, {$pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {}})
+    response = XETemplate(response, { $pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {} })
   }
   if (response && response.body !== undefined && response.status !== undefined) {
     response.headers = utils.objectAssign({}, mockItem.options.headers, response.headers)

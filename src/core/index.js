@@ -11,7 +11,7 @@ function createDefine (method) {
 }
 
 function JSONP (url, response, options) {
-  return XEAjaxMock(url, 'GET', response, utils.objectAssign({jsonp: 'callback'}, options))
+  return XEAjaxMock(url, 'GET', response, utils.objectAssign({ jsonp: 'callback' }, options))
 }
 
 var ajaxMockExports = {

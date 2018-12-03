@@ -36,7 +36,7 @@ function parseValueRule (value, methods) {
 function parseArray (array, methods) {
   var result = []
   utils.arrayEach(array, function (value, index) {
-    var options = new TemplateMethods({$parent: methods, $obj: array, $value: value, $size: array.length, $index: index}, methods.$fns)
+    var options = new TemplateMethods({ $parent: methods, $obj: array, $value: value, $size: array.length, $index: index }, methods.$fns)
     result.push(parseValueRule(value, options))
   })
   return result
@@ -64,7 +64,7 @@ function parseObject (obj, methods) {
         } else {
           rest = []
           for (var index = 0; index < len; index++) {
-            var op = new TemplateMethods({$parent: methods, $obj: rest, $value: null, $size: len, $index: index}, methods.$fns)
+            var op = new TemplateMethods({ $parent: methods, $obj: rest, $value: null, $size: len, $index: index }, methods.$fns)
             rest.push(parseValueRule(value, op))
           }
         }

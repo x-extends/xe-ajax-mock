@@ -60,7 +60,7 @@ utils.objectAssign(XEXMLHttpRequest.prototype, {
       }
       xhr.onreadystatechange = function () {
         mockXHR.readyState = xhr.readyState
-        mockXHR._updateResponse(request, {status: xhr.status, body: xhr.response})
+        mockXHR._updateResponse(request, { status: xhr.status, body: xhr.response })
         mockXHR._triggerEvent('readystatechange')
       }
       xhr.send(body)
@@ -74,7 +74,7 @@ utils.objectAssign(XEXMLHttpRequest.prototype, {
       if (mockItem) {
         if (mockXHR.readyState !== 0) {
           clearTimeout(mockItem.asyncTimeout)
-          var response = {status: 0, body: ''}
+          var response = { status: 0, body: '' }
           mockXHR._updateResponse(mockXHR._request, response)
           mockXHR.readyState = 4
           mockXHR._triggerEvent('timeout')
@@ -108,7 +108,7 @@ utils.objectAssign(XEXMLHttpRequest.prototype, {
   },
   _triggerEvent: function (name) {
     if (utils.isFunction(this['on' + name])) {
-      this['on' + name]({type: name})
+      this['on' + name]({ type: name })
     }
   },
   _updateResponse: function (request, response) {

@@ -34,7 +34,7 @@ function sendJsonp (script, request) {
   return new Promise(function (resolve, reject) {
     var mockItem = handleExports.mateMockItem(request)
     $global[request.jsonpCallback] = function (body) {
-      jsonpSuccess(request, {status: 200, body: body}, resolve)
+      jsonpSuccess(request, { status: 200, body: body }, resolve)
     }
     if (mockItem) {
       mockItem.time = utils.getScopeNumber(mockItem.options.timeout)
