@@ -13,7 +13,7 @@
 --- | --- | --- | --- | --- | --- |
 9+ ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | 8+ ✔ |
 
-## CDN
+## CDN install
 
 [点击浏览](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)
 
@@ -27,7 +27,7 @@
 <script src="https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
 ```
 
-## AMD
+## AMD install
 
 ```JavaScript
 require.config({
