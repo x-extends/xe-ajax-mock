@@ -13,21 +13,19 @@
 --- | --- | --- | --- | --- | --- |
 9+ ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | 8+ ✔ |
 
-## CDN install
+## Installing
 
-[点击浏览](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)
+[Using cdnjs](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)
 
 ```HTML
 <script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
 ```
 
-[点击浏览](https://unpkg.com/xe-ajax-mock/)
+[Using unpkg](https://unpkg.com/xe-ajax-mock/)
 
 ```HTML
 <script src="https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
 ```
-
-## AMD install
 
 ```JavaScript
 require.config({
@@ -36,6 +34,9 @@ require.config({
     'xe-ajax': './dist/xe-ajax.min',
     'xe-ajax-mock': './dist/xe-ajax-mock.min'
   }
+})
+define(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
+  XEAjax.use(XEAjaxMock)
 })
 ```
 
@@ -394,7 +395,7 @@ template({
 // {val: 'format: 2018-01-01'}
 ```
 
-## 例子
+## Example
 
 ### Mock
 
