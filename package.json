@@ -3,7 +3,7 @@
   "version": "1.7.6",
   "description": "Mock services based on xe-ajax.",
   "main": "index.js",
-  "typing": "types/index.d.ts",
+  "typings": "types/index.d.ts",
   "scripts": {
     "lint": "eslint dist/xe-ajax-mock.js src/**/*.js",
     "unit": "jest",
