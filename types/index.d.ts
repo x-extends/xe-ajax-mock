@@ -141,12 +141,7 @@ export interface XEAjaxMockMethods {
 }
 
 /**
- * 基于 xe-ajax 的 Mock 虚拟服务
- * @example 
-  ```javascript
-  GET('/api/test/message/list', [{id: 1, name: 'u1'}])
-  POST('/api/test/message/save', {status: 1})
-  ```
+ * Mock services based on xe-ajax.
  */
 declare var XEAjaxMock: XEAjaxMockMethods;
 
