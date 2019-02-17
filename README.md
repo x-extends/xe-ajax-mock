@@ -397,7 +397,7 @@ template({
 
 ## Example
 
-[example](https://github.com/xuliangzhan/vue-mock)
+[example](https://github.com/xuliangzhan/vue-mock-template)
 
 ### Mock
 
