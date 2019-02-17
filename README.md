@@ -397,6 +397,8 @@ template({
 
 ## Example
 
+[example](https://github.com/xuliangzhan/vue-mock)
+
 ### Mock
 
 ```JavaScript
