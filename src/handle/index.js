@@ -20,7 +20,7 @@ function parsePathVariable (val, mockItem) {
 var handleExports = {
   mateMockItem: function (request) {
     var url = (request.getUrl() || '').split(/\?|#/)[0]
-    return mockStore.find(function (mockItem) {
+    return utils.arrayFind(mockStore, function (mockItem) {
       if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
         var done = false
         var pathVariable = []

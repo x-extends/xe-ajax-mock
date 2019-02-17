@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.7.6
+ * xe-ajax-mock.js v1.7.7
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -126,6 +126,17 @@
       }
       for (var index = 0, len = array.length || 0; index < len; index++) {
         callback.call(context || global, array[index], index, array)
+      }
+    },
+
+    arrayFind: function (array, callback, context) {
+      if (array.find) {
+        return array.find(callback, context)
+      }
+      for (var index = 0, len = array.length || 0; index < len; index++) {
+        if (callback.call(context || global, array[index], index, array)) {
+          return array[index]
+        }
       }
     },
 
@@ -674,7 +685,7 @@
   var handleExports = {
     mateMockItem: function (request) {
       var url = (request.getUrl() || '').split(/\?|#/)[0]
-      return mockStore.find(function (mockItem) {
+      return utils.arrayFind(mockStore, function (mockItem) {
         if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
           var done = false
           var pathVariable = []

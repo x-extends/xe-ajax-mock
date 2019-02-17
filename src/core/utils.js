@@ -114,7 +114,18 @@ var utils = {
       return array.forEach(callback, context)
     }
     for (var index = 0, len = array.length || 0; index < len; index++) {
-      callback.call(context || global, array[index], index, array)
+      callback.call(context || this, array[index], index, array)
+    }
+  },
+
+  arrayFind: function (array, callback, context) {
+    if (array.find) {
+      return array.find(callback, context)
+    }
+    for (var index = 0, len = array.length || 0; index < len; index++) {
+      if (callback.call(context || this, array[index], index, array)) {
+        return array[index]
+      }
     }
   },
 
