@@ -27,7 +27,7 @@
 <script src="https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
 ```
 
-```JavaScript
+```javascript
 require.config({
   paths: {
     // ...,
@@ -74,7 +74,7 @@ define(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
 
 ## 全局参数
 
-```JavaScript
+```javascript
 import XEAjaxMock from 'xe-ajax-mock'
 
 XEAjaxMock.setup({
@@ -96,7 +96,7 @@ XEAjaxMock.setup({
 
 [key]|number
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -109,7 +109,7 @@ template({
 
 [key]|boolean
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -123,7 +123,7 @@ template({
 
 [key]|array([min]-[max])
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -146,7 +146,7 @@ template({
 
 [key]|random([min]-[max])
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -167,7 +167,7 @@ template({
 
 ### Object 对象
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -182,7 +182,7 @@ template({
 
 ### Array 数组
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 template(['{{ random.repeat("abcdefg",10,20) }}', '{{ random.date("2018-03-04","2018-03-20") }}'])
@@ -206,7 +206,7 @@ template([{
 **$body** 获取请求提交参数
 **$pathVariable** 获取请求路径参数
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -230,7 +230,7 @@ template({
 
 **~** 如果对象中只有一个属性，返回对应值
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -263,7 +263,7 @@ template({
 
 random.num(min, max)
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -286,7 +286,7 @@ template({
 
 random.repeat(array|string, min, max)
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -304,7 +304,7 @@ template({
 
 random.time(startDate, endDate)
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -322,7 +322,7 @@ template({
 
 random.date(startDate, endDate, format)
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 template({
@@ -348,7 +348,7 @@ template({
 
 ### 完整配置
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 // GET('http://xuliangzhan.com/api/user/list/{pageSize/{currentPage}') ==> XEAjax.fetchGet('api/user/list/10/1')
@@ -380,7 +380,7 @@ template({
 
 template.mixin({})
 
-```JavaScript
+```javascript
 import { template } from 'xe-ajax-mock'
 
 template.mixin({
@@ -401,7 +401,7 @@ template({
 
 ### Mock
 
-```JavaScript
+```javascript
 import { Mock } from 'xe-ajax-mock'
 
 Mock([{
@@ -434,7 +434,7 @@ Mock([{
 
 ### HEAD
 
-```JavaScript
+```javascript
 import { HEAD } from 'xe-ajax-mock'
 
 HEAD('/api/user/head', null)
@@ -442,7 +442,7 @@ HEAD('/api/user/head', null)
 
 ### GET
 
-```JavaScript
+```javascript
 import { GET } from 'xe-ajax-mock'
 
 GET('/api/user/list', {msg: 'success'})
@@ -476,7 +476,7 @@ GET('/api/user/list/{pageSize}/{currentPage}', (request, response, context) => {
 
 ### POST
 
-```JavaScript
+```javascript
 import { template, POST } from 'xe-ajax-mock'
 
 POST('/api/user/save', {msg: 'success'})
@@ -500,7 +500,7 @@ POST('/api/user/save', (request, response) => {
 
 ### PUT
 
-```JavaScript
+```javascript
 import { PUT } from 'xe-ajax-mock'
 
 PUT('/api/user/update', {msg: 'success'})
@@ -514,7 +514,7 @@ PUT('/api/user/update', (request, response) => {
 
 ### DELETE
 
-```JavaScript
+```javascript
 import { DELETE } from 'xe-ajax-mock'
 
 DELETE('/api/user/delete/{id}', {msg: 'success'})
@@ -527,7 +527,7 @@ DELETE('/api/user/delete/{id}', (request, response) => {
 
 ### PATCH
 
-```JavaScript
+```javascript
 import { PATCH } from 'xe-ajax-mock'
 
 PATCH('/api/user/update', {msg: 'success'})
@@ -535,7 +535,7 @@ PATCH('/api/user/update', {msg: 'success'})
 
 ### JSONP
 
-```JavaScript
+```javascript
 import { JSONP } from 'xe-ajax-mock'
 
 JSONP('http://xuliangzhan.com/jsonp/user/message', {msg: 'success'})
