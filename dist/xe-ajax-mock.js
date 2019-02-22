@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.7.7
+ * xe-ajax-mock.js v1.7.8
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -108,6 +108,17 @@
       return date
     },
 
+    getHeaderObjs: function (headers) {
+      if (headers && headers.forEach) {
+        var result = {}
+        headers.forEach(function (value, key) {
+          result[key] = value
+        })
+        return result
+      }
+      return headers || {}
+    },
+
     objectAssign: Object.assign || function (target) {
       for (var source, index = 1, len = arguments.length; index < len; index++) {
         source = arguments[index]
@@ -125,7 +136,7 @@
         return array.forEach(callback, context)
       }
       for (var index = 0, len = array.length || 0; index < len; index++) {
-        callback.call(context || global, array[index], index, array)
+        callback.call(context || this, array[index], index, array)
       }
     },
 
@@ -134,7 +145,7 @@
         return array.find(callback, context)
       }
       for (var index = 0, len = array.length || 0; index < len; index++) {
-        if (callback.call(context || global, array[index], index, array)) {
+        if (callback.call(context || this, array[index], index, array)) {
           return array[index]
         }
       }
@@ -786,6 +797,29 @@
     }
   }
 
+  function XHR (url, request, response, mockItem) {
+    var statusText = response.statusText
+    this.Headers = {
+      General: {
+        'Request URL': url,
+        'Request Method': request.method,
+        'Status Code': response.status + (statusText ? ' ' + statusText : '')
+      },
+      'Response Headers': utils.getHeaderObjs(response.headers),
+      'Request Headers': utils.getHeaderObjs(request.headers)
+    }
+    if (request.body) {
+      this.Headers[request.bodyType === 'json-data' ? 'Request Payload' : 'Form Data'] = request.body
+    }
+    if (request.params === '') {
+      this.Headers['Query String Parameters'] = request.params
+    }
+    this.Response = response.body
+    this.Timing = {
+      Waiting: mockItem.time + ' ms'
+    }
+  }
+
   Object.assign(XEMock.prototype, {
     getMockResponse: function (request) {
       var mockItem = this
@@ -808,12 +842,14 @@
     },
     outMockLog: function (request, response) {
       var url = request.getUrl()
-      if (this.options.error && (response.status < 200 || response.status >= 300)) {
-        console.error(request.method + ' ' + url + ' ' + response.status)
+      var options = this.options
+      var method = request.method
+      var isError = options.error && (response.status < 200 || response.status >= 300)
+      if (isError) {
+        console.error(['[XEAjaxMock] ' + method, url, response.status].join(' '))
       }
-      if (this.options.log) {
-        console.info('[XEAjaxMock] URL: ' + url + '\nMethod: ' + request.method + ' => Status: ' + (response ? response.status : 'canceled') + ' => Time: ' + this.time + 'ms')
-        console.info(response)
+      if (isError || options.log) {
+        console.info(new XHR(url, request, response, this))
       }
     }
   })

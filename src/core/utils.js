@@ -97,6 +97,17 @@ var utils = {
     return date
   },
 
+  getHeaderObjs: function (headers) {
+    if (headers && headers.forEach) {
+      var result = {}
+      headers.forEach(function (value, key) {
+        result[key] = value
+      })
+      return result
+    }
+    return headers || {}
+  },
+
   objectAssign: Object.assign || function (target) {
     for (var source, index = 1, len = arguments.length; index < len; index++) {
       source = arguments[index]

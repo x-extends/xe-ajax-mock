@@ -1,6 +1,6 @@
 {
   "name": "xe-ajax-mock",
-  "version": "1.7.7",
+  "version": "1.7.8",
   "description": "Mock services based on xe-ajax.",
   "main": "index.js",
   "typings": "types/index.d.ts",
