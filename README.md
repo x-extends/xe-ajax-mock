@@ -40,6 +40,10 @@ define(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
 })
 ```
 
+## Docs
+
+[https://xuliangzhan.github.io/vue-mock-template/](https://xuliangzhan.github.io/vue-mock-template/)
+
 ## API
 
 * Mock( defines, options )
