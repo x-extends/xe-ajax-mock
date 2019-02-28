@@ -32,9 +32,7 @@
   "keywords": [
     "ajax-mock",
     "fetch-mock",
-    "xe-ajax-mock",
-    "vxe-ajax-mock",
-    "XEAjaxMock"
+    "xe-ajax-mock"
   ],
   "author": {
     "name": "Xu Liangzhan",
