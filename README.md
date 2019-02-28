@@ -16,29 +16,15 @@
 
 ## Installing
 
-[Using cdnjs](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)
-
-```HTML
-<script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock/dist/xe-ajax-mock.min.js"></script>
+```shell
+npm install xe-ajax xe-ajax-mock --save
 ```
 
-[Using unpkg](https://unpkg.com/xe-ajax-mock/)
+在 [unpkg](https://unpkg.com/xe-ajax-mock/) 和 [cdnjs](https://cdn.jsdelivr.net/npm/xe-ajax-mock/) 上获取
 
 ```HTML
+<script src="https://unpkg.com/xe-ajax/dist/xe-ajax.min.js"></script>
 <script src="https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.min.js"></script>
-```
-
-```javascript
-require.config({
-  paths: {
-    // ...,
-    'xe-ajax': './dist/xe-ajax.min',
-    'xe-ajax-mock': './dist/xe-ajax-mock.min'
-  }
-})
-define(['xe-ajax', 'xe-ajax-mock'], function (XEAjax, XEAjaxMock) {
-  XEAjax.use(XEAjaxMock)
-})
 ```
 
 ## Docs
