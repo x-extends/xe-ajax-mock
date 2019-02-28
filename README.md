@@ -3,6 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/xe-ajax-mock.svg?style=flat-square)](https://www.npmjs.org/package/xe-ajax-mock)
 [![npm build](https://travis-ci.org/xuliangzhan/xe-ajax-mock.svg?branch=master)](https://travis-ci.org/xuliangzhan/xe-ajax-mock)
 [![npm downloads](https://img.shields.io/npm/dm/xe-ajax-mock.svg?style=flat-square)](http://npm-stat.com/charts.html?package=xe-ajax-mock)
+[![gzip size: JS](http://img.badgesize.io/https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.min.js?compression=gzip&label=gzip%20size:%20JS)](http://img.badgesize.io/https://unpkg.com/xe-ajax-mock/lib/index.umd.min.js?compression=gzip&label=gzip%20size:%20JS)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/xuliangzhan/xe-ajax-mock/blob/master/LICENSE)
 
 基于 xe-ajax 的 Mock 虚拟服务
@@ -18,13 +19,13 @@
 [Using cdnjs](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)
 
 ```HTML
-<script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock/dist/xe-ajax-mock.min.js"></script>
 ```
 
 [Using unpkg](https://unpkg.com/xe-ajax-mock/)
 
 ```HTML
-<script src="https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.js"></script>
+<script src="https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.min.js"></script>
 ```
 
 ```javascript
