@@ -20,7 +20,7 @@
 npm install xe-ajax xe-ajax-mock --save
 ```
 
-在 [unpkg](https://unpkg.com/xe-ajax-mock/) 和 [cdnjs](https://cdn.jsdelivr.net/npm/xe-ajax-mock/) 上获取
+Get on [unpkg](https://unpkg.com/xe-ajax-mock/) and [cdnjs](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)
 
 ```HTML
 <script src="https://unpkg.com/xe-ajax/dist/xe-ajax.min.js"></script>
