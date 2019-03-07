@@ -23,8 +23,8 @@ npm install xe-ajax xe-ajax-mock --save
 Get on [unpkg](https://unpkg.com/xe-ajax-mock/) and [cdnjs](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)
 
 ```HTML
-<script src="https://unpkg.com/xe-ajax/dist/xe-ajax.min.js"></script>
-<script src="https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xe-ajax"></script>
+<script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock"></script>
 ```
 
 ## Docs
