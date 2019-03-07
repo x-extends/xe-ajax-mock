@@ -14,6 +14,9 @@
     "types",
     "dist"
   ],
+  "dependencies": {
+    "xe-ajax": "^3.5.3"
+  },
   "devDependencies": {
     "eslint": "^5.15.1",
     "eslint-config-standard": "^12.0.0",
@@ -23,8 +26,7 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "jest": "^24.1.0",
-    "markdown-doctest": "^0.9.1",
-    "xe-ajax": "^3.5.2"
+    "markdown-doctest": "^0.9.1"
   },
   "repository": {
     "type": "git",
