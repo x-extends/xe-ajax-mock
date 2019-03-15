@@ -31,16 +31,15 @@ utils.objectAssign(XEXMLHttpRequest.prototype, {
   },
   send: function (body) {
     var mockXHR = this
-    var mockItem = this._mock
+    var matchRest = this._mock
     var request = this._request
-    if (mockItem) {
-      mockItem.time = utils.getScopeNumber(mockItem.options.timeout)
-      return mockItem.getMockResponse(request).then(function (response) {
+    if (matchRest) {
+      return handleExports.getMockResponse(request, matchRest).then(function (response) {
         mockXHR.readyState = 4
         mockXHR._updateResponse(request, response)
         mockXHR._triggerEvent('readystatechange')
         mockXHR._triggerEvent('load')
-        mockItem.outMockLog(request, response)
+        handleExports.outMockLog(request, response, matchRest)
       })
     } else {
       var xhr = this._xhr
@@ -68,18 +67,18 @@ utils.objectAssign(XEXMLHttpRequest.prototype, {
   },
   abort: function () {
     var mockXHR = this
-    var mockItem = this._mock
+    var matchRest = this._mock
     var request = this._request
     setTimeout(function () {
-      if (mockItem) {
+      if (matchRest) {
         if (mockXHR.readyState !== 0) {
-          clearTimeout(mockItem.asyncTimeout)
+          clearTimeout(matchRest._waitingTimeout)
           var response = { status: 0, body: '' }
           mockXHR._updateResponse(mockXHR._request, response)
           mockXHR.readyState = 4
           mockXHR._triggerEvent('timeout')
           mockXHR.readyState = 0
-          mockItem.outMockLog(request, response)
+          handleExports.outMockLog(request, response, matchRest)
         }
       } else if (mockXHR._xhr) {
         mockXHR._xhr.abort()

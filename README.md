@@ -450,7 +450,7 @@ GET('/api/user/list', (request, response) => {
   return response
 })
 
-GET('/api/user/list/{pageSize}/{currentPage}', (request, response, context) => {
+GET('/api/user/list/{pageSize}/{currentPage}', (request, response, { pathVariable }) => {
   response.body = {
     'page': {
       'currentPage|number': '{{ $pathVariable.currentPage }}',

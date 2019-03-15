@@ -1,6 +1,5 @@
 'use strict'
 
-var utils = require('../core/utils')
 var handleExports = require('../handle')
 
 var $global = typeof window === 'undefined' ? this : window
@@ -32,22 +31,22 @@ function jsonpError (request, reject) {
  */
 function sendJsonp (script, request) {
   return new Promise(function (resolve, reject) {
-    var mockItem = handleExports.mateMockItem(request)
+    var url
+    var matchRest = handleExports.mateMockItem(request)
     $global[request.jsonpCallback] = function (body) {
       jsonpSuccess(request, { status: 200, body: body }, resolve)
     }
-    if (mockItem) {
-      mockItem.time = utils.getScopeNumber(mockItem.options.timeout)
-      return mockItem.getMockResponse(mockItem, request).then(function (response) {
+    if (matchRest) {
+      return handleExports.getMockResponse(request, matchRest).then(function (response) {
         if (response.status < 200 || response.status >= 300) {
           jsonpError(request, reject)
         } else {
           jsonpSuccess(request, response.body, resolve)
         }
-        mockItem.outMockLog(request, response)
+        handleExports.outMockLog(request, response, matchRest)
       })
     } else {
-      var url = request.getUrl()
+      url = request.getUrl()
       script.type = 'text/javascript'
       script.src = url + (url.indexOf('?') === -1 ? '?' : '&') + request.jsonp + '=' + request.jsonpCallback
       script.onerror = function () {

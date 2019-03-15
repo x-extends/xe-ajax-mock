@@ -1,6 +1,6 @@
 {
   "name": "xe-ajax-mock",
-  "version": "1.7.8",
+  "version": "1.7.9",
   "description": "Mock services based on xe-ajax.",
   "main": "index.js",
   "unpkg": "dist/xe-ajax-mock.js",

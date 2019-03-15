@@ -1,15 +1,13 @@
 'use strict'
 
-var utils = require('../core/utils')
 var handleExports = require('../handle')
 
 function sendFetch (url, options) {
   var request = options._request
-  var mockItem = handleExports.mateMockItem(request)
-  if (mockItem) {
-    mockItem.time = utils.getScopeNumber(mockItem.options.timeout)
-    return mockItem.getMockResponse(request).then(function (response) {
-      mockItem.outMockLog(request, response)
+  var matchRest = handleExports.mateMockItem(request)
+  if (matchRest) {
+    return handleExports.getMockResponse(request, matchRest).then(function (response) {
+      handleExports.outMockLog(request, response, matchRest)
       return response
     })
   } else {

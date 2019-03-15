@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.7.8
+ * xe-ajax-mock.js v1.7.9
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -440,16 +440,15 @@
     },
     send: function (body) {
       var mockXHR = this
-      var mockItem = this._mock
+      var matchRest = this._mock
       var request = this._request
-      if (mockItem) {
-        mockItem.time = utils.getScopeNumber(mockItem.options.timeout)
-        return mockItem.getMockResponse(request).then(function (response) {
+      if (matchRest) {
+        return handleExports.getMockResponse(request, matchRest).then(function (response) {
           mockXHR.readyState = 4
           mockXHR._updateResponse(request, response)
           mockXHR._triggerEvent('readystatechange')
           mockXHR._triggerEvent('load')
-          mockItem.outMockLog(request, response)
+          handleExports.outMockLog(request, response, matchRest)
         })
       } else {
         var xhr = this._xhr
@@ -477,18 +476,18 @@
     },
     abort: function () {
       var mockXHR = this
-      var mockItem = this._mock
+      var matchRest = this._mock
       var request = this._request
       setTimeout(function () {
-        if (mockItem) {
+        if (matchRest) {
           if (mockXHR.readyState !== 0) {
-            clearTimeout(mockItem.asyncTimeout)
+            clearTimeout(matchRest._waitingTimeout)
             var response = { status: 0, body: '' }
             mockXHR._updateResponse(mockXHR._request, response)
             mockXHR.readyState = 4
             mockXHR._triggerEvent('timeout')
             mockXHR.readyState = 0
-            mockItem.outMockLog(request, response)
+            handleExports.outMockLog(request, response, matchRest)
           }
         } else if (mockXHR._xhr) {
           mockXHR._xhr.abort()
@@ -544,11 +543,10 @@
 
   function sendFetch (url, options) {
     var request = options._request
-    var mockItem = handleExports.mateMockItem(request)
-    if (mockItem) {
-      mockItem.time = utils.getScopeNumber(mockItem.options.timeout)
-      return mockItem.getMockResponse(request).then(function (response) {
-        mockItem.outMockLog(request, response)
+    var matchRest = handleExports.mateMockItem(request)
+    if (matchRest) {
+      return handleExports.getMockResponse(request, matchRest).then(function (response) {
+        handleExports.outMockLog(request, response, matchRest)
         return response
       })
     } else {
@@ -589,22 +587,22 @@
    */
   function sendJsonp (script, request) {
     return new Promise(function (resolve, reject) {
-      var mockItem = handleExports.mateMockItem(request)
+      var url
+      var matchRest = handleExports.mateMockItem(request)
       $global[request.jsonpCallback] = function (body) {
         jsonpSuccess(request, { status: 200, body: body }, resolve)
       }
-      if (mockItem) {
-        mockItem.time = utils.getScopeNumber(mockItem.options.timeout)
-        return mockItem.getMockResponse(mockItem, request).then(function (response) {
+      if (matchRest) {
+        return handleExports.getMockResponse(request, matchRest).then(function (response) {
           if (response.status < 200 || response.status >= 300) {
             jsonpError(request, reject)
           } else {
             jsonpSuccess(request, response.body, resolve)
           }
-          mockItem.outMockLog(request, response)
+          handleExports.outMockLog(request, response, matchRest)
         })
       } else {
-        var url = request.getUrl()
+        url = request.getUrl()
         script.type = 'text/javascript'
         script.src = url + (url.indexOf('?') === -1 ? '?' : '&') + request.jsonp + '=' + request.jsonpCallback
         script.onerror = function () {
@@ -662,23 +660,55 @@
     })
   }
 
-  function XEMockResponse (mockItem, request, response, status) {
-    if (response && mockItem.options.template === true) {
-      response = XETemplate(response, { $pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {} })
+  function XEMockResponse (matchRest, request, response, status) {
+    var options = matchRest.context.options
+    if (response && options.template === true) {
+      response = XETemplate(response, { $pathVariable: matchRest.pathVariable, $params: request.params || {}, $body: request.body || {} })
     }
     if (response && response.body !== undefined && response.status !== undefined) {
-      response.headers = utils.objectAssign({}, mockItem.options.headers, response.headers)
+      response.headers = utils.objectAssign({}, options.headers, response.headers)
       utils.objectAssign(this, response)
     } else {
       this.status = status
       this.body = response
-      this.headers = utils.objectAssign({}, mockItem.options.headers)
+      this.headers = utils.objectAssign({}, options.headers)
     }
   }
 
   utils.objectAssign(XEMockResponse.prototype, {
     require: requireJSON
   })
+
+  function MockResult (request, mockItem, pathVariable) {
+    this.request = request
+    this.pathVariable = pathVariable
+    this.context = mockItem
+    this.waiting = utils.getScopeNumber(mockItem.options.timeout)
+    this._waitingTimeout = null
+  }
+
+  function XHR (url, request, response, matchRest) {
+    var statusText = response.statusText
+    this.Headers = {
+      General: {
+        'Request URL': url,
+        'Request Method': request.method,
+        'Status Code': response.status + (statusText ? ' ' + statusText : '')
+      },
+      'Response Headers': utils.getHeaderObjs(response.headers),
+      'Request Headers': utils.getHeaderObjs(request.headers)
+    }
+    if (request.body) {
+      this.Headers[request.bodyType === 'json-data' ? 'Request Payload' : 'Form Data'] = request.body
+    }
+    if (request.params === '') {
+      this.Headers['Query String Parameters'] = request.params
+    }
+    this.Response = response.body
+    this.Timing = {
+      Waiting: matchRest.waiting + ' ms'
+    }
+  }
 
   function parsePathVariable (val, mockItem) {
     if (val && mockItem.options.pathVariable === 'auto') {
@@ -694,26 +724,63 @@
   }
 
   var handleExports = {
-    mateMockItem: function (request) {
-      var url = (request.getUrl() || '').split(/\?|#/)[0]
-      return utils.arrayFind(mockStore, function (mockItem) {
-        if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
-          var done = false
-          var pathVariable = []
-          var matchs = url.match(new RegExp(mockItem.path.replace(/{[^{}]+}/g, function (name) {
-            pathVariable.push(name.substring(1, name.length - 1))
-            return '([^/]+)'
-          }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
-          mockItem.pathVariable = {}
-          done = matchs && matchs.length === pathVariable.length + 1
-          if (mockItem.options.pathVariable && done && pathVariable.length) {
-            utils.arrayEach(pathVariable, function (key, index) {
-              mockItem.pathVariable[key] = parsePathVariable(matchs[index + 1], mockItem)
+    outMockLog: function (request, response, matchRest) {
+      var url = request.getUrl()
+      var options = matchRest.context.options
+      var method = request.method
+      var isError = options.error && (response.status < 200 || response.status >= 300)
+      if (isError) {
+        console.error(['[XEAjaxMock] ' + method, url, response.status].join(' '))
+      }
+      if (isError || options.log) {
+        console.info(new XHR(url, request, response, matchRest))
+      }
+    },
+    getMockResponse: function (request, matchRest) {
+      var mockItem = matchRest.context
+      return new Promise(function (resolve, reject) {
+        matchRest._waitingTimeout = setTimeout(function () {
+          if (!request.$complete) {
+            if (utils.isFunction(mockItem.response)) {
+              return Promise.resolve(mockItem.response(request, new XEMockResponse(matchRest, request, null, 200), matchRest)).then(function (response) {
+                resolve(new XEMockResponse(matchRest, request, response, 200))
+              })
+            }
+            return Promise.resolve(mockItem.response).then(function (response) {
+              resolve(new XEMockResponse(matchRest, request, response, 200))
+            }).catch(function (response) {
+              reject(new XEMockResponse(matchRest, request, response, 500))
             })
           }
-          return done
-        }
+        }, matchRest.waiting)
       })
+    },
+    mateMockItem: function (request) {
+      var mockItem
+      var pathParams
+      var matchs
+      var pathVariable = {}
+      var url = (request.getUrl() || '').split(/\?|#/)[0]
+      var index = 0
+      var len = mockStore.length
+      for (; index < len; index++) {
+        mockItem = mockStore[index]
+        if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
+          pathParams = []
+          matchs = url.match(new RegExp(mockItem.path.replace(/{[^{}]+}/g, function (name) {
+            pathParams.push(name.substring(1, name.length - 1))
+            return '([^/]+)'
+          }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
+          if (matchs && matchs.length === pathParams.length + 1) {
+            if (mockItem.options.pathVariable && pathParams.length) {
+              utils.arrayEach(pathParams, function (key, index) {
+                pathVariable[key] = parsePathVariable(matchs[index + 1], mockItem)
+              })
+            }
+            return new MockResult(request, mockItem, pathVariable)
+          }
+        }
+      }
     }
   }
 
@@ -786,73 +853,14 @@
     if (path && method) {
       this.path = path
       this.method = method
-      this.time = 0
       this.response = response
       this.options = options
-      this.asyncTimeout = null
     } else {
       if (this.options.error) {
         console.error('path and method cannot be empty')
       }
     }
   }
-
-  function XHR (url, request, response, mockItem) {
-    var statusText = response.statusText
-    this.Headers = {
-      General: {
-        'Request URL': url,
-        'Request Method': request.method,
-        'Status Code': response.status + (statusText ? ' ' + statusText : '')
-      },
-      'Response Headers': utils.getHeaderObjs(response.headers),
-      'Request Headers': utils.getHeaderObjs(request.headers)
-    }
-    if (request.body) {
-      this.Headers[request.bodyType === 'json-data' ? 'Request Payload' : 'Form Data'] = request.body
-    }
-    if (request.params === '') {
-      this.Headers['Query String Parameters'] = request.params
-    }
-    this.Response = response.body
-    this.Timing = {
-      Waiting: mockItem.time + ' ms'
-    }
-  }
-
-  Object.assign(XEMock.prototype, {
-    getMockResponse: function (request) {
-      var mockItem = this
-      return new Promise(function (resolve, reject) {
-        mockItem.asyncTimeout = setTimeout(function () {
-          if (!request.$complete) {
-            if (utils.isFunction(mockItem.response)) {
-              return Promise.resolve(mockItem.response(request, new XEMockResponse(mockItem, request, null, 200), mockItem)).then(function (response) {
-                resolve(new XEMockResponse(mockItem, request, response, 200))
-              })
-            }
-            return Promise.resolve(mockItem.response).then(function (response) {
-              resolve(new XEMockResponse(mockItem, request, response, 200))
-            }).catch(function (response) {
-              reject(new XEMockResponse(mockItem, request, response, 500))
-            })
-          }
-        }, mockItem.time)
-      })
-    },
-    outMockLog: function (request, response) {
-      var url = request.getUrl()
-      var options = this.options
-      var method = request.method
-      var isError = options.error && (response.status < 200 || response.status >= 300)
-      if (isError) {
-        console.error(['[XEAjaxMock] ' + method, url, response.status].join(' '))
-      }
-      if (isError || options.log) {
-        console.info(new XHR(url, request, response, this))
-      }
-    }
-  })
 
   function createDefine (method) {
     return function (url, response, options) {

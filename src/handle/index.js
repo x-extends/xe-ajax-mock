@@ -3,6 +3,31 @@
 
 var utils = require('../core/utils')
 var mockStore = require('../core/store')
+var XEMockResponse = require('./response')
+var MockResult = require('./result')
+
+function XHR (url, request, response, matchRest) {
+  var statusText = response.statusText
+  this.Headers = {
+    General: {
+      'Request URL': url,
+      'Request Method': request.method,
+      'Status Code': response.status + (statusText ? ' ' + statusText : '')
+    },
+    'Response Headers': utils.getHeaderObjs(response.headers),
+    'Request Headers': utils.getHeaderObjs(request.headers)
+  }
+  if (request.body) {
+    this.Headers[request.bodyType === 'json-data' ? 'Request Payload' : 'Form Data'] = request.body
+  }
+  if (request.params === '') {
+    this.Headers['Query String Parameters'] = request.params
+  }
+  this.Response = response.body
+  this.Timing = {
+    Waiting: matchRest.waiting + ' ms'
+  }
+}
 
 function parsePathVariable (val, mockItem) {
   if (val && mockItem.options.pathVariable === 'auto') {
@@ -18,26 +43,63 @@ function parsePathVariable (val, mockItem) {
 }
 
 var handleExports = {
-  mateMockItem: function (request) {
-    var url = (request.getUrl() || '').split(/\?|#/)[0]
-    return utils.arrayFind(mockStore, function (mockItem) {
-      if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
-        var done = false
-        var pathVariable = []
-        var matchs = url.match(new RegExp(mockItem.path.replace(/{[^{}]+}/g, function (name) {
-          pathVariable.push(name.substring(1, name.length - 1))
-          return '([^/]+)'
-        }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
-        mockItem.pathVariable = {}
-        done = matchs && matchs.length === pathVariable.length + 1
-        if (mockItem.options.pathVariable && done && pathVariable.length) {
-          utils.arrayEach(pathVariable, function (key, index) {
-            mockItem.pathVariable[key] = parsePathVariable(matchs[index + 1], mockItem)
+  outMockLog: function (request, response, matchRest) {
+    var url = request.getUrl()
+    var options = matchRest.context.options
+    var method = request.method
+    var isError = options.error && (response.status < 200 || response.status >= 300)
+    if (isError) {
+      console.error(['[XEAjaxMock] ' + method, url, response.status].join(' '))
+    }
+    if (isError || options.log) {
+      console.info(new XHR(url, request, response, matchRest))
+    }
+  },
+  getMockResponse: function (request, matchRest) {
+    var mockItem = matchRest.context
+    return new Promise(function (resolve, reject) {
+      matchRest._waitingTimeout = setTimeout(function () {
+        if (!request.$complete) {
+          if (utils.isFunction(mockItem.response)) {
+            return Promise.resolve(mockItem.response(request, new XEMockResponse(matchRest, request, null, 200), matchRest)).then(function (response) {
+              resolve(new XEMockResponse(matchRest, request, response, 200))
+            })
+          }
+          return Promise.resolve(mockItem.response).then(function (response) {
+            resolve(new XEMockResponse(matchRest, request, response, 200))
+          }).catch(function (response) {
+            reject(new XEMockResponse(matchRest, request, response, 500))
           })
         }
-        return done
-      }
+      }, matchRest.waiting)
     })
+  },
+  mateMockItem: function (request) {
+    var mockItem
+    var pathParams
+    var matchs
+    var pathVariable = {}
+    var url = (request.getUrl() || '').split(/\?|#/)[0]
+    var index = 0
+    var len = mockStore.length
+    for (; index < len; index++) {
+      mockItem = mockStore[index]
+      if ((mockItem.jsonp ? (mockItem.jsonp === request.jsonp) : true) && request.method.toLowerCase() === mockItem.method.toLowerCase()) {
+        pathParams = []
+        matchs = url.match(new RegExp(mockItem.path.replace(/{[^{}]+}/g, function (name) {
+          pathParams.push(name.substring(1, name.length - 1))
+          return '([^/]+)'
+        }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
+        if (matchs && matchs.length === pathParams.length + 1) {
+          if (mockItem.options.pathVariable && pathParams.length) {
+            utils.arrayEach(pathParams, function (key, index) {
+              pathVariable[key] = parsePathVariable(matchs[index + 1], mockItem)
+            })
+          }
+          return new MockResult(request, mockItem, pathVariable)
+        }
+      }
+    }
   }
 }
 

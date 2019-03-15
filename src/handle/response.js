@@ -42,17 +42,18 @@ function requireJSON (path) {
   })
 }
 
-function XEMockResponse (mockItem, request, response, status) {
-  if (response && mockItem.options.template === true) {
-    response = XETemplate(response, { $pathVariable: mockItem.pathVariable, $params: request.params || {}, $body: request.body || {} })
+function XEMockResponse (matchRest, request, response, status) {
+  var options = matchRest.context.options
+  if (response && options.template === true) {
+    response = XETemplate(response, { $pathVariable: matchRest.pathVariable, $params: request.params || {}, $body: request.body || {} })
   }
   if (response && response.body !== undefined && response.status !== undefined) {
-    response.headers = utils.objectAssign({}, mockItem.options.headers, response.headers)
+    response.headers = utils.objectAssign({}, options.headers, response.headers)
     utils.objectAssign(this, response)
   } else {
     this.status = status
     this.body = response
-    this.headers = utils.objectAssign({}, mockItem.options.headers)
+    this.headers = utils.objectAssign({}, options.headers)
   }
 }
 
