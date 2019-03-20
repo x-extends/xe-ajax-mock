@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.7.9
+ * xe-ajax-mock.js v1.7.10
  * (c) 2017-2018 Xu Liangzhan
  * ISC License.
  * @preserve
@@ -241,7 +241,9 @@
     template: false,
     pathVariable: true,
     timeout: '20-400',
-    headers: null,
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8'
+    },
     error: true,
     log: false
   }
@@ -728,11 +730,12 @@
       var url = request.getUrl()
       var options = matchRest.context.options
       var method = request.method
-      var isError = options.error && (response.status < 200 || response.status >= 300)
-      if (isError) {
-        console.error(['[XEAjaxMock] ' + method, url, response.status].join(' '))
+      var isError = response.status < 200 || response.status >= 300
+      if (isError && options.error) {
+        console.error(['[Mock]', method, url, response.status].join(' '))
       }
       if (isError || options.log) {
+        console.log(['[Mock]', isError ? 'failed' : 'finished', 'loading:', method, url].join(' '))
         console.info(new XHR(url, request, response, matchRest))
       }
     },

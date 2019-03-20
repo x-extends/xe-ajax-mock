@@ -6,7 +6,9 @@ var setupDefaults = {
   template: false,
   pathVariable: true,
   timeout: '20-400',
-  headers: null,
+  headers: {
+    'Content-Type': 'application/json; charset=UTF-8'
+  },
   error: true,
   log: false
 }

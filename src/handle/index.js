@@ -47,11 +47,12 @@ var handleExports = {
     var url = request.getUrl()
     var options = matchRest.context.options
     var method = request.method
-    var isError = options.error && (response.status < 200 || response.status >= 300)
-    if (isError) {
-      console.error(['[XEAjaxMock] ' + method, url, response.status].join(' '))
+    var isError = response.status < 200 || response.status >= 300
+    if (isError && options.error) {
+      console.error(['[Mock]', method, url, response.status].join(' '))
     }
     if (isError || options.log) {
+      console.log(['[Mock]', isError ? 'failed' : 'finished', 'loading:', method, url].join(' '))
       console.info(new XHR(url, request, response, matchRest))
     }
   },
