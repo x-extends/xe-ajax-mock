@@ -20,7 +20,7 @@ function XHR (url, request, response, matchRest) {
   if (request.body) {
     this.Headers[request.bodyType === 'json-data' ? 'Request Payload' : 'Form Data'] = request.body
   }
-  if (request.params === '') {
+  if (request.params) {
     this.Headers['Query String Parameters'] = request.params
   }
   this.Response = response.body
