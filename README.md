@@ -544,4 +544,4 @@ JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
 
 ## License
 
-Copyright (c) 2017-present, Xu Liangzhan
+MIT License, 2017-present, Xu Liangzhan
