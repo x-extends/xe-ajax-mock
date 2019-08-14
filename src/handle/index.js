@@ -93,9 +93,9 @@ var handleExports = {
         }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
         if (matchs && matchs.length === pathParams.length + 1) {
           if (mockItem.options.pathVariable && pathParams.length) {
-            utils.arrayEach(pathParams, function (key, index) {
-              pathVariable[key] = parsePathVariable(matchs[index + 1], mockItem)
-            })
+            for (var pIndex = 0; pIndex < pathParams.length; pIndex++) {
+              pathVariable[pathParams[pIndex]] = parsePathVariable(matchs[pIndex + 1], mockItem)
+            }
           }
           return new MockResult(request, mockItem, pathVariable)
         }
