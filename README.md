@@ -18,6 +18,14 @@
 
 ```shell
 npm install xe-ajax xe-ajax-mock
+
+```
+
+```javascript
+import XEAjax from 'xe-ajax'
+import XEAjaxMock from 'xe-ajax-mock'
+
+XEAjax.use(XEAjaxMock)
 ```
 
 Get on [unpkg](https://unpkg.com/xe-ajax-mock/) and [cdnjs](https://cdn.jsdelivr.net/npm/xe-ajax-mock/)

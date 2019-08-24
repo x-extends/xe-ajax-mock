@@ -1,6 +1,6 @@
 /**
- * xe-ajax-mock.js v1.8.0
- * (c) 2017-2018 Xu Liangzhan
+ * xe-ajax-mock.js v1.9.0
+ * (c) 2017-present Xu Liangzhan
  * ISC License.
  * @preserve
  */
@@ -224,7 +224,7 @@
         for (var len = str.length - 1; len >= 0; len--) {
           if (val === str[len]) {
             return len
-          };
+          }
         }
       }
       return -1
@@ -776,9 +776,9 @@
           }).replace(/\/[*]{2}/g, '/.+').replace(/\/[*]{1}/g, '/[^/]+') + '/?$'))
           if (matchs && matchs.length === pathParams.length + 1) {
             if (mockItem.options.pathVariable && pathParams.length) {
-              utils.arrayEach(pathParams, function (key, index) {
-                pathVariable[key] = parsePathVariable(matchs[index + 1], mockItem)
-              })
+              for (var pIndex = 0; pIndex < pathParams.length; pIndex++) {
+                pathVariable[pathParams[pIndex]] = parsePathVariable(matchs[pIndex + 1], mockItem)
+              }
             }
             return new MockResult(request, mockItem, pathVariable)
           }
@@ -797,7 +797,7 @@
     */
   function XEAjaxMock (path, method, response, options) {
     var opts = utils.objectAssign({}, setupDefaults, options)
-    defineMocks(utils.isArray(path) ? (options = method, path) : [{ path: path, method: method, response: response }], opts, opts.baseURL, true)
+    defineMocks(utils.isArray(path) ? path : [{ path: path, method: method, response: response }], opts, opts.baseURL, true)
     return XEAjaxMock
   }
 
@@ -837,9 +837,7 @@
         if (item.path) {
           if (first && item.path.indexOf('/') === 0) {
             item.path = utils.getLocatOrigin() + item.path
-          } else if (first && /\w+:\/{2}.*/.test(item.path)) {
-
-          } else {
+          } else if (first && !/\w+:\/{2}.*/.test(item.path)) {
             item.path = baseURL.replace(/\/$/, '') + '/' + item.path.replace(/^\//, '')
           }
           if (item.response !== undefined) {

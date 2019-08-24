@@ -1,11 +1,11 @@
 {
   "name": "xe-ajax-mock",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Mock services based on xe-ajax.",
   "main": "index.js",
   "unpkg": "dist/xe-ajax-mock.js",
   "jsdelivr": "dist/xe-ajax-mock.js",
-  "typings": "types/index.d.ts",
+  "typings": "index.d.ts",
   "scripts": {
     "lint": "eslint dist/xe-ajax-mock.js src/**/*.js",
     "unit": "jest",
@@ -13,11 +13,11 @@
   },
   "files": [
     "src",
-    "types",
-    "dist"
+    "dist",
+    "*.d.ts"
   ],
-  "dependencies": {
-    "xe-ajax": "^3.5.0"
+  "peerDependencies": {
+    "xe-ajax": "^3.8.0"
   },
   "devDependencies": {
     "eslint": "^5.15.1",
@@ -35,6 +35,8 @@
     "url": "git+https://github.com/xuliangzhan/xe-ajax-mock.git"
   },
   "keywords": [
+    "xhr-ajax",
+    "xe-ajax",
     "ajax-mock",
     "fetch-mock",
     "xe-ajax-mock"
