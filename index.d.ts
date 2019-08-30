@@ -1,12 +1,37 @@
 import XEAjax from 'xe-ajax'
 
 export interface XEAjaxMockOptions {
+  /**
+   * 基础路径
+   */
   baseURL?: string;
+  /**
+   * 是否允许数据模板自动编译
+   */
   template?: boolean;
+  /**
+   * 是否启用路径参数类型自动解析
+   */
   pathVariable?: string | boolean;
-  timeout?: string | number,
+  /**
+   * 设置请求响应的时间
+   */
+  timeout?: string | number;
+  /**
+   * 设置jsonp回调参数名称
+   */
+  jsonp?: string;
+  /**
+   * 设置响应头信息
+   */
   headers?: string;
+  /**
+   * 控制台输出请求错误日志
+   */
   error?: boolean;
+  /**
+   * 控制台输出请求请求日志
+   */
   log?: boolean;
 }
 
@@ -15,12 +40,12 @@ export interface XEAjaxMockMethods {
 
   /**
    * 允许用您自己的实用函数扩展到 XEAjaxMock
-   * @param methods 扩展函数集
+   * @param methods 函数集
    */
   mixin(methods: object): void;
 
   /**
-   * 
+   * 编译模板
    * @param tmpl 编译的模板对象
     ```
    */
@@ -93,7 +118,7 @@ export interface XEAjaxMockMethods {
 }
 
 /**
- * Mock services based on xe-ajax.
+ * 基于 xe-ajax 的 Mock 虚拟服务
  */
 declare var XEAjaxMock: XEAjaxMockMethods;
 

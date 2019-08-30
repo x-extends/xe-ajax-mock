@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.9.1
+ * xe-ajax-mock.js v1.9.2
  * (c) 2017-present Xu Liangzhan
  * ISC License.
  * @preserve

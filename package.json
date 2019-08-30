@@ -1,7 +1,7 @@
 {
   "name": "xe-ajax-mock",
-  "version": "1.9.1",
-  "description": "Mock services based on xe-ajax.",
+  "version": "1.9.2",
+  "description": "基于 xe-ajax 的 Mock 虚拟服务",
   "main": "index.js",
   "unpkg": "dist/xe-ajax-mock.js",
   "jsdelivr": "dist/xe-ajax-mock.js",
