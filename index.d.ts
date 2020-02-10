@@ -33,7 +33,94 @@ export interface XEAjaxMockOptions {
    * 控制台输出请求请求日志
    */
   log?: boolean;
+  [propertys: string]: any;
 }
+
+export declare function install(xAjax: typeof XEAjax): void;
+
+/**
+ * 允许用您自己的实用函数扩展到 XEAjaxMock
+ * @param methods 函数集
+ */
+export declare function mixin(methods: object): void;
+
+/**
+ * 设置全局默认参数
+ * @param Object options
+ */
+export declare function setup(options: XEAjaxMockOptions): XEAjaxMockOptions;
+
+/**
+ * 编译模板
+ * @param tmpl 编译的模板对象
+  ```
+  */
+ export declare function template(tmpl: any): Promise<any>;
+
+/**
+ * 创建虚拟请求
+ * @param path 请求路径
+ * @param method 请求方法
+ * @param response 响应结果
+ * @param options 可选参数
+ */
+export declare function Mock(path: string, method: string, response: any, options?: object): Promise<any>;
+
+/**
+ * 创建 JSONP 类型请求
+ * @param path 请求路径
+ * @param response 响应结果
+ * @param options 可选参数
+ */
+export declare function JSONP(path: string, response: any, options?: object): Promise<any>;
+
+/**
+ * 创建 GET 方法请求
+ * @param path 请求路径
+ * @param response 响应结果
+ * @param options 可选参数
+ */
+export declare function GET(path: string, response: any, options?: object): Promise<any>;
+
+/**
+ * 创建 POST 方法请求
+ * @param path 请求路径
+ * @param response 响应结果
+ * @param options 可选参数
+ */
+export declare function POST(path: string, response: any, options?: object): Promise<any>;
+
+/**
+ * 创建 PUT 方法请求
+ * @param path 请求路径
+ * @param response 响应结果
+ * @param options 可选参数
+ */
+export declare function PUT(path: string, response: any, options?: object): Promise<any>;
+
+/**
+ * 创建 DELETE 方法请求
+ * @param path 请求路径
+ * @param response 响应结果
+ * @param options 
+ */
+export declare function DELETE(path: string, response: any, options?: object): Promise<any>;
+
+/**
+ * 创建 PATCH 方法请求
+ * @param path 请求路径
+ * @param response 响应结果
+ * @param options 可选参数
+ */
+export declare function PATCH(path: string, response: any, options?: object): Promise<any>;
+
+/**
+ * 创建 HEAD 方法请求
+ * @param path 请求路径
+ * @param response 响应结果
+ * @param options 可选参数
+ */
+export declare function HEAD(path: string, response: any, options?: object): Promise<any>;
 
 export interface XEAjaxMockMethods {
   install(xAjax: typeof XEAjax): void;
@@ -43,6 +130,12 @@ export interface XEAjaxMockMethods {
    * @param methods 函数集
    */
   mixin(methods: object): void;
+
+  /**
+   * 设置全局默认参数
+   * @param Object options
+   */
+  setup(options: XEAjaxMockOptions): XEAjaxMockOptions;
 
   /**
    * 编译模板

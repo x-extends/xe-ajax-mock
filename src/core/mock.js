@@ -28,7 +28,7 @@ function XEAjaxMock (path, method, response, options) {
  * @param Object options
  */
 XEAjaxMock.setup = function (options) {
-  utils.objectAssign(setupDefaults, options)
+  return utils.objectAssign(setupDefaults, options)
 }
 
 /**

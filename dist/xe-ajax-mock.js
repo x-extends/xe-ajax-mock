@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.9.2
+ * xe-ajax-mock.js v1.9.3
  * ISC License.
  * @preserve
  */
@@ -806,7 +806,7 @@
    * @param Object options
    */
   XEAjaxMock.setup = function (options) {
-    utils.objectAssign(setupDefaults, options)
+    return utils.objectAssign(setupDefaults, options)
   }
 
   /**

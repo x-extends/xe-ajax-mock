@@ -1,6 +1,6 @@
 {
   "name": "xe-ajax-mock",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "基于 xe-ajax 的 Mock 虚拟服务",
   "main": "index.js",
   "unpkg": "dist/xe-ajax-mock.js",
@@ -17,9 +17,6 @@
     "*.ts",
     "*.d.ts"
   ],
-  "peerDependencies": {
-    "xe-ajax": ">=3.8.0"
-  },
   "devDependencies": {
     "eslint": "^5.15.1",
     "eslint-config-standard": "^12.0.0",
@@ -29,7 +26,11 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "jest": "^24.1.0",
-    "markdown-doctest": "^0.9.1"
+    "markdown-doctest": "^0.9.1",
+    "xe-ajax": "^4.0.1"
+  },
+  "peerDependencies": {
+    "xe-ajax": ">=3.8.0"
   },
   "repository": {
     "type": "git",
