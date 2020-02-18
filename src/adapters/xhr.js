@@ -17,6 +17,7 @@ utils.objectAssign(XEXMLHttpRequest.prototype, {
   withCredentials: false,
   response: '',
   responseText: '',
+  upload: {},
   open: function (method, url) {
     this._mock = handleExports.mateMockItem(this._request)
     if (this._mock) {
@@ -61,6 +62,10 @@ utils.objectAssign(XEXMLHttpRequest.prototype, {
         mockXHR.readyState = xhr.readyState
         mockXHR._updateResponse(request, { status: xhr.status, body: xhr.response })
         mockXHR._triggerEvent('readystatechange')
+      }
+      var upload = this.upload
+      if (upload.onprogress && xhr.upload) {
+        xhr.upload.onprogress = upload.onprogress
       }
       xhr.send(body)
     }

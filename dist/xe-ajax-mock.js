@@ -1,5 +1,5 @@
 /**
- * xe-ajax-mock.js v1.9.3
+ * xe-ajax-mock.js v1.9.4
  * ISC License.
  * @preserve
  */
@@ -427,6 +427,7 @@
     withCredentials: false,
     response: '',
     responseText: '',
+    upload: {},
     open: function (method, url) {
       this._mock = handleExports.mateMockItem(this._request)
       if (this._mock) {
@@ -471,6 +472,10 @@
           mockXHR.readyState = xhr.readyState
           mockXHR._updateResponse(request, { status: xhr.status, body: xhr.response })
           mockXHR._triggerEvent('readystatechange')
+        }
+        var upload = this.upload
+        if (upload.onprogress && xhr.upload) {
+          xhr.upload.onprogress = upload.onprogress
         }
         xhr.send(body)
       }
