@@ -1,6 +1,6 @@
 /**
  * xe-ajax-mock.js v1.9.4
- * ISC License.
+ * MIT License.
  * @preserve
  */
 (function (global, factory) {
