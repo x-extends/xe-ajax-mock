@@ -5,7 +5,7 @@
 [![npm build](https://travis-ci.org/xuliangzhan/xe-ajax-mock.svg?branch=master)](https://travis-ci.org/xuliangzhan/xe-ajax-mock)
 [![npm downloads](https://img.shields.io/npm/dm/xe-ajax-mock.svg?style=flat-square)](http://npm-stat.com/charts.html?package=xe-ajax-mock)
 [![gzip size: JS](http://img.badgesize.io/https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.min.js?compression=gzip&label=gzip%20size:%20JS)](https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.min.js)
-[![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/xuliangzhan/xe-ajax-mock/blob/master/LICENSE)
+[![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
 基于 xe-ajax 的 Mock 虚拟服务
 
@@ -35,10 +35,6 @@ Get on [unpkg](https://unpkg.com/xe-ajax-mock/) and [cdnjs](https://cdn.jsdelivr
 <script src="https://cdn.jsdelivr.net/npm/xe-ajax"></script>
 <script src="https://cdn.jsdelivr.net/npm/xe-ajax-mock"></script>
 ```
-
-## Docs
-
-[https://xuliangzhan.github.io/vue-mock-template/](https://xuliangzhan.github.io/vue-mock-template/)
 
 ## API
 
@@ -553,4 +549,4 @@ JSONP('http://xuliangzhan.com/jsonp/user/message', (request, response) => {
 
 ## License
 
-MIT License, 2017-present, Xu Liangzhan
+[MIT](LICENSE) © 2017-present, Xu Liangzhan
