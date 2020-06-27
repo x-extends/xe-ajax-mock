@@ -7,9 +7,8 @@
   "jsdelivr": "dist/xe-ajax-mock.js",
   "typings": "index.d.ts",
   "scripts": {
-    "lint": "eslint dist/xe-ajax-mock.js src/**/*.js",
-    "unit": "jest",
-    "test": "npm run lint && npm run unit"
+    "format": "eslint --fix dist/*.ts",
+    "test": "jest"
   },
   "files": [
     "src",
