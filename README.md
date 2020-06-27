@@ -2,7 +2,7 @@
 
 [![gitee star](https://gitee.com/xuliangzhan_admin/xe-ajax-mock/badge/star.svg?theme=dark)](https://gitee.com/xuliangzhan_admin/xe-ajax-mock/stargazers)
 [![npm version](https://img.shields.io/npm/v/xe-ajax-mock.svg?style=flat-square)](https://www.npmjs.com/package/xe-ajax-mock)
-[![npm build](https://travis-ci.org/xuliangzhan/xe-ajax-mock.svg?branch=master)](https://travis-ci.org/xuliangzhan/xe-ajax-mock)
+[![npm build](https://travis-ci.org/x-extends/xe-ajax-mock.svg?branch=master)](https://travis-ci.org/x-extends/xe-ajax-mock)
 [![npm downloads](https://img.shields.io/npm/dm/xe-ajax-mock.svg?style=flat-square)](http://npm-stat.com/charts.html?package=xe-ajax-mock)
 [![gzip size: JS](http://img.badgesize.io/https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.min.js?compression=gzip&label=gzip%20size:%20JS)](https://unpkg.com/xe-ajax-mock/dist/xe-ajax-mock.min.js)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
